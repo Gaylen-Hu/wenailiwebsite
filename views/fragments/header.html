@@ -2,11 +2,15 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-08 13:56:54
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-11 17:47:30
+ * @LastEditTime: 2025-11-12 00:53:01
  * @FilePath: \myapp\apos-app\views\fragments\header.html
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 {% fragment header(data) %}
+{% set global = data.global or {} %}
+{% set rawUrl = (data.page and data.page._url) or data.url or (data.req and data.req.url) or '/' %}
+{% set normalizedUrl = rawUrl or '/' %}
+{% set isEnglish = normalizedUrl == '/en' or normalizedUrl == '/en/' or '/en/' in normalizedUrl %}
 <header
   class="sticky top-0 z-50 bg-white bg-opacity-95 backdrop-blur-sm shadow-sm dark:bg-gray-900 dark:bg-opacity-95 dark:shadow-gray-900/40"
   data-theme-root
@@ -15,195 +19,105 @@
     <div class="flex items-center justify-between h-16 md:h-20">
       <div class="flex items-center">
         <a class="flex items-center" href="/" data-discover="true">
-          <div class="text-2xl font-bold text-blue-600">Wenaili 奈李</div>
+          <div class="text-2xl font-bold text-blue-600">
+            {{ global.title or 'Wenaili 奈李' }}
+          </div>
         </a>
       </div>
 
       <nav class="hidden md:flex items-center space-x-8">
-        <div class="relative">
+        {% if global.headerNav and global.headerNav | length %}
+          {% for item in global.headerNav %}
+            {% set hasSubmenu = item.hasSubmenu and item.submenuItems and item.submenuItems | length %}
+            {% set navKey = 'nav-' ~ loop.index0 %}
+            {% set href = apos.modules['@apostrophecms/global'].linkPath(item) %}
+            <div class="relative" {% if hasSubmenu %}data-nav="{{ navKey }}"{% endif %}>
+              {% if hasSubmenu %}
+                <button
+                  type="button"
+                  class="flex items-center text-gray-700 hover:text-blue-600 font-medium text-base transition-all duration-300 dark:text-gray-200 dark:hover:text-blue-400"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                  data-nav-toggle="{{ navKey }}"
+                >
+                  <span>{{ item.linkText }}</span>
+                  {% if item.badge %}
+                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-200">
+                      {{ item.badge }}
+                    </span>
+                  {% endif %}
+                  <i
+                    class="fa-solid fa-chevron-down ml-1 text-xs transition-transform duration-300"
+                    aria-hidden="true"
+                  ></i>
+                </button>
+                <div
+                  class="hidden absolute top-full left-1/2 md:left-0 mt-3 md:mt-2 w-60 md:w-52 -translate-x-1/2 md:translate-x-0 bg-white rounded-xl shadow-xl border border-gray-100 py-2 dark:bg-gray-800 dark:border-gray-700"
+                  role="menu"
+                  data-nav-menu="{{ navKey }}"
+                >
+                  {% for sub in item.submenuItems %}
+                    {% set subHref = apos.modules['@apostrophecms/global'].linkPath(sub) %}
+                    <a
+                      class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
+                      href="{{ subHref }}"
+                      data-discover="true"
+                      role="menuitem"
+                    >
+                      {{ sub.linkText }}
+                    </a>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <a
+                  class="text-gray-700 hover:text-blue-600 font-medium text-base transition-colors duration-300 dark:text-gray-200 dark:hover:text-blue-400"
+                  href="{{ href }}"
+                  data-discover="true"
+                >
+                  <span>{{ item.linkText }}</span>
+                  {% if item.badge %}
+                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-200">
+                      {{ item.badge }}
+                    </span>
+                  {% endif %}
+                </a>
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        {% if global.phone %}
           <a
-            class="text-gray-700 hover:text-blue-600 font-medium text-base transition-colors duration-300 dark:text-gray-200 dark:hover:text-blue-400"
-            href="/"
-            data-discover="true"
+            href="tel:{{ global.phone }}"
+            class="flex items-center text-gray-700 hover:text-blue-600 font-medium text-base transition-colors duration-300 ml-4 pl-4 border-l border-gray-200 dark:text-gray-200 dark:hover:text-blue-400 dark:border-gray-700"
           >
-            首页
+            <i class="fa-solid fa-phone mr-2 text-blue-600"></i>
+            {{ global.phone }}
           </a>
-        </div>
-
-        <div class="relative" data-nav="services">
-          <button
-            type="button"
-            class="flex items-center text-gray-700 hover:text-blue-600 font-medium text-base transition-all duration-300 dark:text-gray-200 dark:hover:text-blue-400"
-            aria-haspopup="true"
-            aria-expanded="false"
-            data-nav-toggle="services"
-          >
-            服务内容
-            <i
-              class="fa-solid fa-chevron-down ml-1 text-xs transition-transform duration-300"
-              aria-hidden="true"
-            ></i>
-          </button>
-          <div
-            class="hidden absolute top-full left-1/2 md:left-0 mt-3 md:mt-2 w-60 md:w-52 -translate-x-1/2 md:translate-x-0 bg-white rounded-xl shadow-xl border border-gray-100 py-2 dark:bg-gray-800 dark:border-gray-700"
-            role="menu"
-            data-nav-menu="services"
-          >
-            <a
-              class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-              href="/services/marketing"
-              data-discover="true"
-              role="menuitem"
-            >
-              市场部代运营
-            </a>
-            <a
-              class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-              href="/services/tech"
-              data-discover="true"
-              role="menuitem"
-            >
-              技术部代运营
-            </a>
-            <a
-              class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-              href="/services/brand"
-              data-discover="true"
-              role="menuitem"
-            >
-              品牌设计与建设
-            </a>
-            <a
-              class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-              href="/services/website"
-              data-discover="true"
-              role="menuitem"
-            >
-              网站建设与优化
-            </a>
-            <a
-              class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-              href="/services/data"
-              data-discover="true"
-              role="menuitem"
-            >
-              数据分析与运营
-            </a>
-            <a
-              class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-              href="/services/team"
-              data-discover="true"
-              role="menuitem"
-            >
-              数字化 AI 工具
-            </a>
-          </div>
-        </div>
-
-        <div class="relative">
-          <a
-            class="text-gray-700 hover:text-blue-600 font-medium text-base transition-colors duration-300 dark:text-gray-200 dark:hover:text-blue-400"
-            href="/cases"
-            data-discover="true"
-          >
-            成功案例
-          </a>
-        </div>
-
-        <div class="relative" data-nav="news">
-          <button
-            type="button"
-            class="flex items-center text-gray-700 hover:text-blue-600 font-medium text-base transition-all duration-300 dark:text-gray-200 dark:hover:text-blue-400"
-            aria-haspopup="true"
-            aria-expanded="false"
-            data-nav-toggle="news"
-          >
-            新闻资讯
-            <i class="fa-solid fa-chevron-down ml-1 text-xs transition-transform duration-300" aria-hidden="true"></i>
-          </button>
-          <div
-            class="hidden absolute top-full left-1/2 md:left-0 mt-3 md:mt-2 w-52 -translate-x-1/2 md:translate-x-0 bg-white rounded-xl shadow-xl border border-gray-100 py-2 dark:bg-gray-800 dark:border-gray-700"
-            role="menu"
-            data-nav-menu="news"
-          >
-            <a
-              class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-              href="/news/logistics"
-              data-discover="true"
-              role="menuitem"
-            >
-              物流资讯
-            </a>
-            <a
-              class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-              href="/news/exhibition"
-              data-discover="true"
-              role="menuitem"
-            >
-              展会资讯
-            </a>
-            <a
-              class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-              href="/news/company"
-              data-discover="true"
-              role="menuitem"
-            >
-              公司新闻
-            </a>
-          </div>
-        </div>
-
-        <div class="relative" data-nav="about">
-          <button
-            type="button"
-            class="flex items-center text-gray-700 hover:text-blue-600 font-medium text-base transition-all duration-300 dark:text-gray-200 dark:hover:text-blue-400"
-            aria-haspopup="true"
-            aria-expanded="false"
-            data-nav-toggle="about"
-          >
-            关于我们
-            <i class="fa-solid fa-chevron-down ml-1 text-xs transition-transform duration-300" aria-hidden="true"></i>
-          </button>
-          <div
-            class="hidden absolute top-full left-1/2 md:left-0 mt-3 md:mt-2 w-48 -translate-x-1/2 md:translate-x-0 bg-white rounded-xl shadow-xl border border-gray-100 py-2 dark:bg-gray-800 dark:border-gray-700"
-            role="menu"
-            data-nav-menu="about"
-          >
-            <a
-              class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-              href="/about/intro"
-              data-discover="true"
-              role="menuitem"
-            >
-              奈李介绍
-            </a>
-            <a
-              class="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors duration-300 dark:text-gray-200 dark:hover:bg-gray-700 dark:hover:text-blue-400"
-              href="/contact"
-              data-discover="true"
-              role="menuitem"
-            >
-              联系我们
-            </a>
-          </div>
-        </div>
-
-        <a
-          href="tel:17367332304"
-          class="flex items-center text-gray-700 hover:text-blue-600 font-medium text-base transition-colors duration-300 ml-4 pl-4 border-l border-gray-200 dark:text-gray-200 dark:hover:text-blue-400 dark:border-gray-700"
-        >
-          <i class="fa-solid fa-phone mr-2 text-blue-600"></i>
-          17367332304
-        </a>
+        {% endif %}
       </nav>
 
       <div class="flex items-center space-x-2">
-        <button
-          class="hidden md:inline-flex p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors duration-300 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
-          aria-label="Switch to English"
+        {%if isEnglish %}
+        <a
+          class="hidden md:inline-flex px-3 py-2 rounded-full text-sm font-medium transition-colors duration-300 {{ 'bg-blue-600 text-white hover:bg-blue-600 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-500' if not isEnglish else 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700' }}"
+          href="/"
+          data-discover="true"
+          aria-label="切换到中文"
         >
-          EN
-        </button>
+          中
+        </a>
+        {% else %}
+        <a
+        class="hidden md:inline-flex px-3 py-2 rounded-full text-sm font-medium transition-colors duration-300 {{ 'bg-blue-600 text-white hover:bg-blue-600 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-500' if isEnglish else 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700' }}"
+        href="/en"
+        data-discover="true"
+        aria-label="Switch to English"
+      >
+        EN
+      </a>
+       
+        {%endif%}
         <button
           class="hidden md:inline-flex p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors duration-300 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
           aria-label="切换到暗色模式"
@@ -211,7 +125,7 @@
         >
           <span class="inline-flex items-center justify-center">
             <i class="fa-solid fa-moon text-base dark:hidden"></i>
-            <i class="fa-solid fa-sun text-base hidden dark:inline text-amber-400"></i>
+            <!-- <i class="fa-solid fa-sun text-base hidden dark:inline text-amber-400"></i> -->
           </span>
         </button>
         <button
@@ -246,95 +160,75 @@
     </div>
 
     <nav class="px-5 py-6 space-y-4">
-      <a
-        class="block text-gray-800 font-medium text-base dark:text-gray-100"
-        href="/"
-        data-discover="true"
-      >
-        首页
-      </a>
+      {% if global.headerNav and global.headerNav | length %}
+        {% for item in global.headerNav %}
+          {% set hasSubmenu = item.hasSubmenu and item.submenuItems and item.submenuItems | length %}
+          {% set navKey = 'mobile-' ~ loop.index0 %}
+          {% set href = apos.modules['@apostrophecms/global'].linkPath(item) %}
 
-      <div class="border border-gray-100 rounded-lg dark:border-gray-800" data-mobile-disclosure="services">
-        <button
-          type="button"
-          class="w-full flex items-center justify-between px-4 py-3 text-gray-800 font-medium text-base dark:text-gray-100"
-          data-mobile-disclosure-toggle="services"
-          aria-expanded="false"
+          {% if hasSubmenu %}
+            <div class="border border-gray-100 rounded-lg dark:border-gray-800" data-mobile-disclosure="{{ navKey }}">
+              <button
+                type="button"
+                class="w-full flex items-center justify-between px-4 py-3 text-gray-800 font-medium text-base dark:text-gray-100"
+                data-mobile-disclosure-toggle="{{ navKey }}"
+                aria-expanded="false"
+              >
+                <span>
+                  {{ item.linkText }}
+                  {% if item.badge %}
+                    <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-200">
+                      {{ item.badge }}
+                    </span>
+                  {% endif %}
+                </span>
+                <i class="fa-solid fa-chevron-down text-xs transition-transform duration-300"></i>
+              </button>
+              <div class="hidden border-t border-gray-100 dark:border-gray-800" data-mobile-disclosure-panel="{{ navKey }}">
+                {% for sub in item.submenuItems %}
+                  {% set subHref = apos.modules['@apostrophecms/global'].linkPath(sub) %}
+                  <a
+                    class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300"
+                    href="{{ subHref }}"
+                    data-discover="true"
+                  >
+                    {{ sub.linkText }}
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+          {% else %}
+            <a
+              class="block text-gray-800 font-medium text-base dark:text-gray-100"
+              href="{{ href }}"
+              data-discover="true"
+            >
+              <span>{{ item.linkText }}</span>
+              {% if item.badge %}
+                <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-200">
+                  {{ item.badge }}
+                </span>
+              {% endif %}
+            </a>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      <div class="flex items-center justify-between gap-3 px-4 py-3 bg-gray-50 rounded-lg dark:bg-gray-800">
+        <a
+          href="/en"
+          data-discover="true"
+          class="flex-1 text-center px-3 py-2 rounded-full text-sm font-medium transition-colors duration-300 {{ 'bg-blue-600 text-white hover:bg-blue-600 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-500' if isEnglish else 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-700' }}"
         >
-          服务内容
-          <i class="fa-solid fa-chevron-down text-xs transition-transform duration-300"></i>
-        </button>
-        <div class="hidden border-t border-gray-100 dark:border-gray-800" data-mobile-disclosure-panel="services">
-          <a class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300" href="/services/marketing" data-discover="true">
-            市场部代运营
-          </a>
-          <a class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300" href="/services/tech" data-discover="true">
-            技术部代运营
-          </a>
-          <a class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300" href="/services/brand" data-discover="true">
-            品牌设计与建设
-          </a>
-          <a class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300" href="/services/website" data-discover="true">
-            网站建设与优化
-          </a>
-          <a class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300" href="/services/data" data-discover="true">
-            数据分析与运营
-          </a>
-          <a class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300" href="/services/team" data-discover="true">
-            数字化 AI 工具
-          </a>
-        </div>
-      </div>
-
-      <a
-        class="block text-gray-800 font-medium text-base dark:text-gray-100"
-        href="/cases"
-        data-discover="true"
-      >
-        成功案例
-      </a>
-
-      <div class="border border-gray-100 rounded-lg dark:border-gray-800" data-mobile-disclosure="news">
-        <button
-          type="button"
-          class="w-full flex items-center justify-between px-4 py-3 text-gray-800 font-medium text-base dark:text-gray-100"
-          data-mobile-disclosure-toggle="news"
-          aria-expanded="false"
+          EN
+        </a>
+        <a
+          href="/"
+          data-discover="true"
+          class="flex-1 text-center px-3 py-2 rounded-full text-sm font-medium transition-colors duration-300 {{ 'bg-blue-600 text-white hover:bg-blue-600 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-500' if not isEnglish else 'bg-white text-gray-700 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-700' }}"
         >
-          新闻资讯
-          <i class="fa-solid fa-chevron-down text-xs transition-transform duration-300"></i>
-        </button>
-        <div class="hidden border-t border-gray-100 dark:border-gray-800" data-mobile-disclosure-panel="news">
-          <a class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300" href="/news/logistics" data-discover="true">
-            物流资讯
-          </a>
-          <a class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300" href="/news/exhibition" data-discover="true">
-            展会资讯
-          </a>
-          <a class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300" href="/news/company" data-discover="true">
-            公司新闻
-          </a>
-        </div>
-      </div>
-
-      <div class="border border-gray-100 rounded-lg dark:border-gray-800" data-mobile-disclosure="about">
-        <button
-          type="button"
-          class="w-full flex items-center justify-between px-4 py-3 text-gray-800 font-medium text-base dark:text-gray-100"
-          data-mobile-disclosure-toggle="about"
-          aria-expanded="false"
-        >
-          关于我们
-          <i class="fa-solid fa-chevron-down text-xs transition-transform duration-300"></i>
-        </button>
-        <div class="hidden border-t border-gray-100 dark:border-gray-800" data-mobile-disclosure-panel="about">
-          <a class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300" href="/about/intro" data-discover="true">
-            奈李介绍
-          </a>
-          <a class="block px-4 py-2 text-sm text-gray-600 dark:text-gray-300" href="/contact" data-discover="true">
-            联系我们
-          </a>
-        </div>
+          中
+        </a>
       </div>
 
       <button
@@ -350,13 +244,15 @@
         </span>
       </button>
 
-      <a
-        class="flex items-center justify-between px-4 py-3 bg-blue-50 rounded-lg text-blue-600 font-semibold dark:bg-blue-500/10 dark:text-blue-300"
-        href="tel:17367332304"
-      >
-        <span>立即咨询</span>
-        <span>17367332304</span>
-      </a>
+      {% if global.phone %}
+        <a
+          class="flex items-center justify-between px-4 py-3 bg-blue-50 rounded-lg text-blue-600 font-semibold dark:bg-blue-500/10 dark:text-blue-300"
+          href="tel:{{ global.phone }}"
+        >
+          <span>立即咨询</span>
+          <span>{{ global.phone }}</span>
+        </a>
+      {% endif %}
     </nav>
   </div>
 </header>

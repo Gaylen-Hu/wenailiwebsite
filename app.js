@@ -39,6 +39,7 @@ apostrophe({
     },
     'basiclayout-widget': {},
     'about-section-widget': {},
+    'banner-widget': {},
     'contact-wrap-widget': {},
 
 
