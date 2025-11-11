@@ -36,11 +36,17 @@ export default {
         label: '作者',
         def: '奈李资讯团队'
       },  
+      
       coverImage: {
-        type: 'attachment',
+        type: 'area',
         label: '封面图片',
+        max: 1,
         required: true,
-        help: '推荐 16:9 比例'
+        options: {
+          widgets: {
+            '@apostrophecms/image': {}
+          }
+        }
       },
       excerpt: {
         type: 'string',

@@ -34,49 +34,57 @@ export default {
       title: {
         type: 'string',
         label: '网站标题',
-        required: true
+        required: true,
+        def: 'Wenaili 奈李'
       },
       detail: {
         type: 'string',
         label: '详情',
         required: true,
-        help: '公司简短介绍'
+        help: '公司简短介绍',
+        def:'Wenaili 奈李是一家专注于为物流货代公司提供市场部及技术部代运营服务的专业机构。凭借10年的货代行业经验和专业团队，服务合作客户50+，我们已经成为众多货代企业信赖的合作伙伴。'
       },
       // 邮箱
       email: {
         type: 'string',
         label: '邮箱',
-        required: true
+        required: true,
+        def:'melanie@wenaili.com'
       },
       // 电话
       phone: {
         type: 'string',
         label: '电话',
-        required: true
+        required: true,
+        def:'17367332304'
       },
       // 地址
       address: {
         type: 'string',
         label: '地址',
-        required: true
+        required: true,
+        def:'上海市奉贤区场中路629号'
       },
 
       workTime: {
         type: 'string',
         label: '工作时间',
-        required: true
+        required: true,
+        def:'周一至周五 9:00-18:00'
       },
       // 版权
       copyright: {
         type: 'string',
         label: '版权',
-        required: true
+        required: true,
+        def:'©2025 Wenaili 奈李 版权所有'
       },
       // 备
       filingNumber: {
         type: 'string',
         label: '备案号',
-        required: true
+        required: true,
+        def:'沪ICP备2025020000号-1'
       },
       // 备案号
       headerBtns: {
@@ -127,7 +135,8 @@ export default {
       footerNavtitle: {
         label: '底部导航项目标题',
         type: 'string',
-        required: true
+        required: true,
+        def:'快速链接'
       },
       footerNav: {
         label: '底部导航项目',
@@ -140,35 +149,16 @@ export default {
           }
         }
       },
-      productCategories: {
-        label: '产品分类',
-        type: 'array',
-        titleField: 'linkText',
-        limit: 8,
-        fields: {
-          add: {
-            ...linkSchema
-          }
-        }
-      },
-
-      footerNav2title: {
-        label: '底部导航项目2标题',
+      // 联系我们标题
+      contactUsTitle: {
+        label: '联系我们标题',
         type: 'string',
-        required: true
+        required: true,
+        def:'联系我们'
       },
+     
 
-      footerNav2: {
-        label: '底部导航项目2',
-        type: 'array',
-        titleField: 'linkText',
-        limit: 5,
-        fields: {
-          add: {
-            ...linkSchema
-          }
-        }
-      },
+      
       social: {
         label: '社交媒体账户',
         type: 'array',

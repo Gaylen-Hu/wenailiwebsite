@@ -1,3 +1,11 @@
+<!--
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-11-11 23:39:06
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-11-11 23:40:30
+ * @FilePath: \wenaili\views\fragments\footer.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 
 {% fragment footer(data) %}
 {% set global = data.global or {} %}
@@ -49,29 +57,9 @@
           </ul>
         {% endif %}
       </div>
+ 
       <div>
-        <h3 class="text-lg font-semibold mb-4">产品分类</h3>
-        {% if global.productCategories and global.productCategories | length %}
-          <ul class="space-y-2">
-            {% for category in global.productCategories %}
-              {% set href = apos.modules['@apostrophecms/global'].linkPath(category) %}
-              <li>
-                <a
-                  class="text-gray-400 hover:text-white transition-colors duration-300"
-                  href="{{ href }}"
-                  data-discover="true"
-                >
-                  {{ category.linkText }}
-                </a>
-              </li>
-            {% endfor %}
-          </ul>
-        {% else %}
-          <p class="text-gray-400">暂无产品分类信息</p>
-        {% endif %}
-      </div>
-      <div>
-        <h3 class="text-lg font-semibold mb-4">联系我们</h3>
+        <h3 class="text-lg font-semibold mb-4">{{ global.contactUsTitle }}</h3>
         <ul class="space-y-2 text-gray-400">
           {% if global.address %}
             <li class="flex items-start">
@@ -93,6 +81,12 @@
               <a class="hover:text-white transition-colors duration-300" href="mailto:{{ global.email }}">
                 {{ global.email }}
               </a>
+            </li>
+          {% endif %}
+          {% if global.workTime %}
+            <li class="flex items-center">
+              <i class="fa-solid fa-clock mr-3 text-blue-400"></i>
+              <span>{{ global.workTime }}</span>
             </li>
           {% endif %}
         </ul>
