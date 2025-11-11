@@ -1,0 +1,422 @@
+{% extends "layout.html" %}
+{% import '@apostrophecms/pager:macros.html' as pager with context %}
+
+{% block main %}
+  {% set categoryLabels = {
+    'industry': '物流资讯',
+    'exhibition': '展会资讯',
+    'company': '公司新闻'
+  } %}
+
+  {% set filters = data.page.filters or [] %}
+  {% if not filters.length %}
+    {% set filters = [
+      { label: '全部', value: '', primary: true },
+      { label: '物流资讯', value: 'industry' },
+      { label: '展会资讯', value: 'exhibition' },
+      { label: '公司新闻', value: 'company' }
+    ] %}
+  {% endif %}
+
+  {% set hasCustomPopular = data.page.popularItems and data.page.popularItems.length %}
+  {% set activeCategory = data.query.category or '' %}
+  {% set searchTerm = data.query.q or '' %}
+  {% set activeTag = data.query.tag or '' %}
+  {% set highlightOnly = data.query.highlight == 'true' %}
+  {% set persistentHighlightParam = null %}
+  {% if highlightOnly %}
+    {% set persistentHighlightParam = 'true' %}
+  {% endif %}
+
+  <main class="flex-grow">
+    <section class="relative bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-24 overflow-hidden">
+      <div class="absolute inset-0 overflow-hidden">
+        {% if data.page.heroBackground %}
+          <div
+            class="absolute top-0 left-0 w-full h-full opacity-10 bg-cover bg-center"
+            style="background-image: url('{{ data.page.heroBackground | escape }}');"
+          ></div>
+        {% endif %}
+      </div>
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6 text-center">
+          {{ data.page.heroTitle or '行业资讯' }}
+        </h1>
+        {% if data.page.heroSubtitle %}
+          <div class="max-w-3xl mx-auto text-center">
+            <p class="text-xl text-blue-100 mb-8">
+              {{ data.page.heroSubtitle }}
+            </p>
+            <form class="relative max-w-2xl mx-auto" method="get" action="{{ data.page._url }}">
+              <input
+                type="text"
+                name="q"
+                value="{{ searchTerm | escape }}"
+                placeholder="{{ data.page.searchPlaceholder or '搜索资讯...' | escape }}"
+                class="w-full px-5 py-4 pl-14 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 shadow-lg"
+              />
+              <i class="fa-solid fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-xl"></i>
+              {% if activeCategory %}
+                <input type="hidden" name="category" value="{{ activeCategory | escape }}">
+              {% endif %}
+              {% if activeTag %}
+                <input type="hidden" name="tag" value="{{ activeTag | escape }}">
+              {% endif %}
+              {% if highlightOnly %}
+                <input type="hidden" name="highlight" value="true">
+              {% endif %}
+            </form>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="bg-white sticky top-16 z-30 shadow-md">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap items-center justify-between py-4 gap-4">
+          <div class="flex flex-wrap items-center gap-3">
+            {% for filter in filters %}
+              {% set filterValue = filter.value or '' %}
+              {% set isActiveCategory = activeCategory == filterValue %}
+              {% set filterParams = {
+                q: searchTerm or null,
+                category: filterValue or null,
+                tag: activeTag or null,
+                highlight: persistentHighlightParam,
+                page: null
+              } %}
+              <a
+                class="px-5 py-2 rounded-full transition-all duration-300 whitespace-nowrap text-sm md:text-base {{ 'bg-blue-600 text-white font-medium shadow-md' if isActiveCategory else 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}"
+                href="{{ data.page._url | build(filterParams) }}"
+                data-filter="{{ filterValue | escape }}"
+              >
+                {{ filter.label | escape }}
+              </a>
+            {% endfor %}
+            {% set toggleHighlightParam = 'true' %}
+            {% if highlightOnly %}
+              {% set toggleHighlightParam = null %}
+            {% endif %}
+            {% set highlightParams = {
+              q: searchTerm or null,
+              category: activeCategory or null,
+              tag: activeTag or null,
+              highlight: toggleHighlightParam,
+              page: null
+            } %}
+           
+          </div>
+          <div class="ml-auto text-gray-600 text-sm">
+            <i class="fa-solid fa-newspaper text-blue-600 mr-2"></i>
+            共 {{ data.totalPieces or data.pieces.length }} 条新闻
+            {% if searchTerm %}
+              ，搜索“{{ searchTerm | escape }}”
+            {% endif %}
+            {% if activeTag %}
+              ，标签“{{ activeTag | escape }}”
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          <aside class="lg:col-span-1 space-y-8">
+            <div class="bg-white p-6 rounded-xl shadow-md">
+              <h3 class="text-xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
+                <i class="fa-solid fa-chart-line text-red-500 mr-2"></i>{{ data.page.popularTitle or '热门资讯' }}
+              </h3>
+              <ul class="space-y-5">
+                {% if hasCustomPopular %}
+                  {% for item in data.page.popularItems %}
+                    <li class="flex gap-4 group">
+                      <div class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300">
+                        {% if item.image %}
+                          <img
+                            src="{{ item.image | escape }}"
+                            alt="{{ item.title | escape }}"
+                            class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                            loading="lazy"
+                          />
+                        {% endif %}
+                      </div>
+                      <div>
+                        <h4 class="font-medium text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors duration-300">
+                          {% if item.url %}
+                            <a href="{{ item.url | escape }}" data-discover="true">{{ item.title | escape }}</a>
+                          {% else %}
+                            {{ item.title | escape }}
+                          {% endif %}
+                        </h4>
+                        {% if item.publishedAt %}
+                          <p class="text-gray-500 text-xs mt-2 flex items-center">
+                            <i class="fa-solid fa-calendar-alt mr-1 text-gray-400"></i>
+                            {{ item.publishedAt | date('YYYY-MM-DD') }}
+                          </p>
+                        {% endif %}
+                      </div>
+                    </li>
+                  {% endfor %}
+                {% else %}
+                  {% set popularRendered = 0 %}
+                  {% for piece in data.pieces %}
+                    {% if piece.highlight and popularRendered < 5 %}
+                      <li class="flex gap-4 group">
+                        <div class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300">
+                          {% if piece.coverImage %}
+                            <img
+                              src="{{ piece.coverImage | escape }}"
+                              alt="{{ piece.title | escape }}"
+                              class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                              loading="lazy"
+                            />
+                          {% endif %}
+                        </div>
+                        <div>
+                          <h4 class="font-medium text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors duration-300">
+                            <a href="{{ piece.readUrl or piece._url | escape }}" data-discover="true">
+                              {{ piece.title | escape }}
+                            </a>
+                          </h4>
+                          {% if piece.publishedAt %}
+                            <p class="text-gray-500 text-xs mt-2 flex items-center">
+                              <i class="fa-solid fa-calendar-alt mr-1 text-gray-400"></i>
+                              {{ piece.publishedAt | date('YYYY-MM-DD') }}
+                            </p>
+                          {% endif %}
+                        </div>
+                      </li>
+                      {% set popularRendered = popularRendered + 1 %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if popularRendered < 5 %}
+                    {% for piece in data.pieces %}
+                      {% if not piece.highlight and popularRendered < 5 %}
+                        <li class="flex gap-4 group">
+                          <div class="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden shadow-sm group-hover:shadow-md transition-shadow duration-300">
+                            {% if piece.coverImage %}
+                              <img
+                                src="{{ piece.coverImage | escape }}"
+                                alt="{{ piece.title | escape }}"
+                                class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                                loading="lazy"
+                              />
+                            {% endif %}
+                          </div>
+                          <div>
+                            <h4 class="font-medium text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors duration-300">
+                              <a href="{{ piece.readUrl or piece._url | escape }}" data-discover="true">
+                                {{ piece.title | escape }}
+                              </a>
+                            </h4>
+                            {% if piece.publishedAt %}
+                              <p class="text-gray-500 text-xs mt-2 flex items-center">
+                                <i class="fa-solid fa-calendar-alt mr-1 text-gray-400"></i>
+                                {{ piece.publishedAt | date('YYYY-MM-DD') }}
+                              </p>
+                            {% endif %}
+                          </div>
+                        </li>
+                        {% set popularRendered = popularRendered + 1 %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %}
+                {% endif %}
+              </ul>
+            </div>
+
+            <div class="bg-blue-50 p-6 rounded-xl shadow-md">
+              <h3 class="text-xl font-bold text-gray-900 mb-4">
+                {{ data.page.subscribeTitle or '订阅我们的行业资讯通讯' }}
+              </h3>
+              {% if data.page.subscribeDescription %}
+                <p class="text-gray-600 mb-6 text-sm">
+                  {{ data.page.subscribeDescription }}
+                </p>
+              {% endif %}
+              <form class="space-y-4" action="{{ data.page.subscribeEndpoint | default('') | escape }}" method="post">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="您的邮箱地址"
+                  class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300"
+                  required
+                />
+                <button
+                  type="submit"
+                  class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap flex items-center justify-center"
+                >
+                  {{ data.page.subscribeButtonLabel or '立即订阅' }}
+                  <i class="fa-solid fa-paper-plane ml-2"></i>
+                </button>
+              </form>
+            </div>
+
+          
+           
+          </aside>
+         
+          <div class="lg:col-span-2">
+            {% if not data.pieces.length %}
+              <div class="bg-white rounded-xl shadow-md border border-dashed border-gray-200 p-12 text-center text-gray-500">
+                <i class="fa-solid fa-magnifying-glass text-3xl mb-4 text-blue-400"></i>
+                <p class="text-lg font-medium mb-2">未找到匹配的资讯内容</p>
+                <p class="text-sm">尝试调整搜索关键词或切换筛选条件。</p>
+              </div>
+            {% endif %}
+            <div class="space-y-6">
+              {% for piece in data.pieces %}
+                <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100" data-category="{{ piece.category }}">
+                  <div class="flex flex-col md:flex-row">
+                    <div class="md:w-1/3 h-48 md:h-auto overflow-hidden">
+                      {% if piece.coverImage %}
+                        <img
+                          src="{{ piece.coverImage | escape }}"
+                          alt="{{ piece.title | escape }}"
+                          class="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
+                          loading="lazy"
+                        />
+                      {% endif %}
+                    </div>
+                    <div class="p-6 md:p-8 md:w-2/3">
+                      <div class="flex flex-wrap items-center gap-3 mb-3">
+                        <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                          {{ categoryLabels[piece.category] or '资讯' }}
+                        </span>
+                        {% if piece.publishedAt %}
+                          <span class="text-gray-500 text-sm flex items-center">
+                            <i class="fa-solid fa-calendar-alt mr-1 text-gray-400"></i>
+                            {{ piece.publishedAt | date('YYYY-MM-DD') }}
+                          </span>
+                        {% endif %}
+                      </div>
+                      <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 hover:text-blue-600 transition-colors duration-300">
+                        <a href="{{ piece.readUrl or piece._url | escape }}" data-discover="true">
+                          {{ piece.title | escape }}
+                        </a>
+                      </h3>
+                      {% if piece.excerpt %}
+                        <p class="text-gray-600 mb-6 leading-relaxed line-clamp-3">
+                          {{ piece.excerpt | escape }}
+                        </p>
+                      {% endif %}
+                      <a
+                        class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors duration-300 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg"
+                        href="{{ piece.readUrl or piece._url | escape }}"
+                        data-discover="true"
+                      >
+                        阅读全文
+                        <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+
+            {% if data.totalPages and data.totalPages > 1 %}
+              {% set totalPages = data.totalPages %}
+              {% set currentPage = data.currentPage or 1 %}
+              {% set window = 2 %}
+              {% set startPage = currentPage - window %}
+              {% if startPage < 2 %}
+                {% set startPage = 2 %}
+              {% endif %}
+              {% set endPage = currentPage + window %}
+              {% if endPage > (totalPages - 1) %}
+                {% set endPage = totalPages - 1 %}
+              {% endif %}
+              {% if totalPages <= 5 %}
+                {% set startPage = 2 %}
+                {% set endPage = totalPages - 1 %}
+              {% endif %}
+
+              <div class="mt-12 flex justify-center">
+                <nav class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 shadow-md ring-1 ring-gray-200" aria-label="分页导航">
+                  {% set prevDisabled = currentPage <= 1 %}
+                  {% set prevUrl = '#' %}
+                  {% if not prevDisabled and data.pager %}
+                    {% set prevUrl = data.pager.url(currentPage - 1) %}
+                  {% endif %}
+                  <a
+                    class="w-10 h-10 inline-flex items-center justify-center rounded-full border border-gray-200 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 {% if prevDisabled %}opacity-50 cursor-not-allowed pointer-events-none{% endif %}"
+                    href="{{ prevUrl }}"
+                    aria-label="上一页"
+                    {% if prevDisabled %}aria-disabled="true"{% endif %}
+                  >
+                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                  </a>
+
+                  {% if data.pager %}
+                    {% set firstUrl = data.pager.url(1) %}
+                  {% else %}
+                    {% set firstUrl = '#' %}
+                  {% endif %}
+                  <a
+                    class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == 1 %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white text-gray-700 border border-transparent hover:bg-blue-50 hover:text-blue-600{% endif %}"
+                    href="{{ firstUrl }}"
+                    {% if currentPage == 1 %}aria-current="page"{% endif %}
+                  >1</a>
+
+                  {% if startPage > 2 %}
+                    <span class="px-2 text-gray-400 select-none">…</span>
+                  {% endif %}
+
+                  {% if endPage >= startPage %}
+                    {% for page in range(startPage, endPage + 1) %}
+                      {% if data.pager %}
+                        {% set pageUrl = data.pager.url(page) %}
+                      {% else %}
+                        {% set pageUrl = '#' %}
+                      {% endif %}
+                      <a
+                        class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == page %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white text-gray-700 border border-transparent hover:bg-blue-50 hover:text-blue-600{% endif %}"
+                        href="{{ pageUrl }}"
+                        {% if currentPage == page %}aria-current="page"{% endif %}
+                      >{{ page }}</a>
+                    {% endfor %}
+                  {% endif %}
+
+                  {% if endPage < totalPages - 1 %}
+                    <span class="px-2 text-gray-400 select-none">…</span>
+                  {% endif %}
+
+                  {% if totalPages > 1 %}
+                    {% if data.pager %}
+                      {% set lastUrl = data.pager.url(totalPages) %}
+                    {% else %}
+                      {% set lastUrl = '#' %}
+                    {% endif %}
+                    <a
+                      class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == totalPages %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white text-gray-700 border border-transparent hover:bg-blue-50 hover:text-blue-600{% endif %}"
+                      href="{{ lastUrl }}"
+                      {% if currentPage == totalPages %}aria-current="page"{% endif %}
+                    >{{ totalPages }}</a>
+                  {% endif %}
+
+                  {% set nextDisabled = currentPage >= totalPages %}
+                  {% set nextUrl = '#' %}
+                  {% if not nextDisabled and data.pager %}
+                    {% set nextUrl = data.pager.url(currentPage + 1) %}
+                  {% endif %}
+                  <a
+                    class="w-10 h-10 inline-flex items-center justify-center rounded-full border border-gray-200 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 {% if nextDisabled %}opacity-50 cursor-not-allowed pointer-events-none{% endif %}"
+                    href="{{ nextUrl }}"
+                    aria-label="下一页"
+                    {% if nextDisabled %}aria-disabled="true"{% endif %}
+                  >
+                    <i class="fa-solid fa-chevron-right text-sm"></i>
+                  </a>
+                </nav>
+              </div>
+            {% endif %}
+          </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+{% endblock %}

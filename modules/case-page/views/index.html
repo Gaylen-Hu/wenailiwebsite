@@ -1,0 +1,313 @@
+{% extends "layout.html" %}
+{% import '@apostrophecms/pager:macros.html' as pager with context %}
+
+{% block main %}
+  {% set categoryLabels = {
+    'market': '市场代运营',
+    'tech': '技术服务',
+    'brand': '品牌服务',
+    'consulting': '管理咨询',
+    'digital': '数字化转型'
+  } %}
+
+  {% set filters = data.page.filters or [] %}
+  {% if not filters.length %}
+    {% set filters = [
+      { label: '全部', value: '', primary: true },
+      { label: '市场代运营', value: 'market' },
+      { label: '技术服务', value: 'tech' },
+      { label: '品牌服务', value: 'brand' },
+      { label: '管理咨询', value: 'consulting' },
+      { label: '数字化转型', value: 'digital' }
+    ] %}
+  {% endif %}
+
+{% set activeCategory = data.query.category or '' %}
+{% set featuredOnly = data.query.featured == 'true' %}
+
+  {% set testimonialCards = data.page.testimonialCards or [] %}
+  {% if not testimonialCards.length %}
+    {% set testimonialCards = [
+      {
+        name: '张总',
+        title: '环球国际货运代理有限公司 CEO',
+        avatar: 'https://space.coze.cn/api/coze_space/gen_image?image_size=square&prompt=business%20man%2C%20confident%2C%20professional&sign=c2d7a90e18cce679db9f57f057281f4d',
+        quote: '“奈李为我们货代公司提供的市场部代运营服务非常专业，他们帮助我们制定了精准的市场策略，短短3个月就实现了业务量50%的增长，品牌知名度也显著提升。”'
+      },
+      {
+        name: '李总',
+        title: '速达国际物流有限公司 运营总监',
+        avatar: 'https://space.coze.cn/api/coze_space/gen_image?image_size=square&prompt=business%20woman%2C%20smiling%2C%20professional&sign=3725d92ecd163602006ae064ecc86a82',
+        quote: '“作为一家中型货代企业，我们一直面临技术能力不足的问题。奈李的技术部代运营服务为我们开发了定制化的业务管理系统，极大地提升了我们的运营效率和客户满意度。”'
+      },
+      {
+        name: '王总',
+        title: '全球运通国际货运代理 总经理',
+        avatar: 'https://space.coze.cn/api/coze_space/gen_image?image_size=square&prompt=business%20man%2C%20leadership%2C%20professional&sign=1d703916791753ca9f2ab52279d528b7',
+        quote: '“选择奈李作为我们的代运营合作伙伴是非常正确的决定。他们不仅帮助我们优化了业务流程，降低了运营成本，还为我们培养了专业的运营团队，真正实现了合作共赢。”'
+      }
+    ] %}
+  {% endif %}
+
+  {% set partners = data.page.partners or [] %}
+  {% if not partners.length %}
+    {% set partners = [
+      { name: '汇利达' },
+      { name: '优时派' },
+      { name: '云进通' },
+      { name: '达睿贸易' },
+      { name: '裕骏达' },
+      { name: '上海粗栗' }
+    ] %}
+  {% endif %}
+
+  <main class="flex-grow">
+    <section class="bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-16">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl md:text-5xl font-bold mb-4">
+          {{ data.page.heroTitle or '成功案例' }}
+        </h1>
+        {% if data.page.heroSubtitle %}
+          <p class="text-xl text-blue-100">
+            {{ data.page.heroSubtitle }}
+          </p>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="py-12 bg-gray-50 sticky top-16 z-30 shadow-sm">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap justify-center gap-3">
+          {% for filter in filters %}
+            {% set filterValue = filter.value or '' %}
+            {% set isActive = activeCategory == filterValue %}
+            {% set filterParams = {
+              category: filterValue or null,
+              featured: featuredOnly and 'true' or null,
+              page: null
+            } %}
+            <a
+              class="px-5 py-2 rounded-full text-sm md:text-base font-medium transition-all duration-300 whitespace-nowrap {{ 'bg-blue-600 text-white shadow-lg' if isActive else 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200' }}"
+              href="{{ data.page._url | build(filterParams) }}"
+              data-filter="{{ filterValue | escape }}"
+              aria-pressed="{{ 'true' if isActive else 'false' }}"
+            >
+              {{ filter.label | escape }}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section id="case-list" class="py-16 bg-white">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-8">
+          <h2 class="text-xl font-semibold text-gray-900">所有案例</h2>
+          <span class="text-gray-600 text-sm">共 {{ data.totalPieces or data.pieces.length }} 个案例</span>
+        </div>
+
+        {% if not data.pieces.length %}
+          <div class="bg-white rounded-xl shadow-md border border-dashed border-gray-200 p-12 text-center text-gray-500">
+            <i class="fa-solid fa-magnifying-glass text-3xl mb-4 text-blue-400"></i>
+            <p class="text-lg font-medium mb-2">暂未找到符合条件的案例</p>
+            <p class="text-sm">尝试切换分类或稍后再试。</p>
+          </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {% for piece in data.pieces %}
+            <article
+              class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300"
+              data-category="{{ piece.category }}"
+            >
+              <div class="h-48 overflow-hidden">
+                {% if piece.coverImage %}
+                  <img
+                    src="{{ piece.coverImage | escape }}"
+                    alt="{{ piece.title | escape }}"
+                    class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                    loading="lazy"
+                  />
+                {% endif %}
+              </div>
+              <div class="p-6">
+                <div class="flex justify-between items-start mb-4">
+                  <span class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-medium flex items-center">
+                    {{ categoryLabels[piece.category] or '案例' }}
+                  </span>
+                  {% if piece.company %}
+                    <span class="text-gray-500 text-sm">
+                      <i class="fa-solid fa-building mr-1"></i>{{ piece.company | escape }}
+                    </span>
+                  {% endif %}
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-3">
+                  {{ piece.title | escape }}
+                </h3>
+                <p class="text-gray-600 mb-5">
+                  {{ piece.summary | truncate(120, true, '…') }}
+                </p>
+
+                {% if piece.results and piece.results.length %}
+                  <div class="mb-4">
+                    <h4 class="text-sm font-semibold text-gray-700 mb-2">项目成果:</h4>
+                    <ul class="space-y-1">
+                      {% for result in piece.results %}
+                        <li class="flex items-center text-gray-600 text-sm">
+                          <i class="fa-solid {{ result.icon | default('fa-check-circle') | escape }} text-green-500 mr-2"></i>
+                          {{ result.value | escape }}
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+
+                {% set linkUrl = piece.ctaUrl or piece._url %}
+                {% set linkLabel = piece.ctaLabel or '咨询类似方案' %}
+                {% if linkUrl %}
+                  <a
+                    class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors duration-300"
+                    href="{{ linkUrl | escape }}"
+                    data-discover="true"
+                  >
+                    {{ linkLabel | escape }}
+                    <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
+                  </a>
+                {% endif %}
+              </div>
+            </article>
+          {% endfor %}
+        </div>
+
+        {% if data.totalPages and data.totalPages > 1 %}
+          {% set totalPages = data.totalPages %}
+          {% set currentPage = data.currentPage or 1 %}
+          {% set window = 2 %}
+          {% set startPage = currentPage - window %}
+          {% if startPage < 2 %}
+            {% set startPage = 2 %}
+          {% endif %}
+          {% set endPage = currentPage + window %}
+          {% if endPage > (totalPages - 1) %}
+            {% set endPage = totalPages - 1 %}
+          {% endif %}
+          {% if totalPages <= 5 %}
+            {% set startPage = 2 %}
+            {% set endPage = totalPages - 1 %}
+          {% endif %}
+
+          <div class="mt-12 flex justify-center">
+            <nav class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 shadow-md ring-1 ring-gray-200" aria-label="分页导航">
+              <a href="{{ data.slug }}?page={{data.currentPage - 1}}" 
+              class="px-5 py-2 bg-blue-600 text-white border border-blue-600">newer posts</a>
+              {% endif %}
+              {% if data.totalPages > data.currentPage %}
+              <a href="{{ data.slug }}?page={{data.currentPage + 1}}" 
+              class="px-5 py-2 bg-white text-gray-700 hover:bg-gray-50 border border-gray-200">older posts</a>
+           
+            </nav>
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="py-20 bg-gray-50">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            {{ data.page.testimonialTitle or '客户评价' }}
+          </h2>
+          {% if data.page.testimonialDescription %}
+            <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+            <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+              {{ data.page.testimonialDescription }}
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {% for testimonial in testimonialCards %}
+            <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+              <div class="text-yellow-400 mb-6">
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i>
+              </div>
+              <p class="text-gray-700 italic mb-6">
+                {{ testimonial.quote | safe }}
+              </p>
+              <div class="flex items-end">
+                {% if testimonial.avatar %}
+                  <img
+                    src="{{ testimonial.avatar | escape }}"
+                    alt="{{ testimonial.name | escape }}"
+                    class="w-12 h-12 rounded-full object-cover mr-4 flex-shrink-0"
+                    loading="lazy"
+                  />
+                {% endif %}
+                <div class="flex flex-col justify-end h-full">
+                  <h4 class="font-bold text-gray-900">{{ testimonial.name | escape }}</h4>
+                  <p class="text-gray-600 text-sm">{{ testimonial.title | escape }}</p>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section class="py-16 bg-gray-50">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-900">
+            {{ data.page.partnerTitle or '合作货代企业' }}
+          </h2>
+          {% if data.page.partnerDescription %}
+            <p class="text-gray-600 mt-4 max-w-2xl mx-auto text-xl">
+              {{ data.page.partnerDescription }}
+            </p>
+          {% endif %}
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
+          {% for partner in partners %}
+            <div class="grayscale hover:grayscale-0 transition-all duration-300 opacity-70 hover:opacity-100">
+              <div class="w-32 h-16 bg-blue-50 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-shadow duration-300">
+                <span class="text-blue-700 font-semibold">
+                  {{ partner.name | escape }}
+                </span>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20 bg-blue-600 text-white">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">
+          {{ data.page.ctaTitle or '准备好提升您的货代企业运营效率了吗？' }}
+        </h2>
+        {% if data.page.ctaDescription %}
+          <p class="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            {{ data.page.ctaDescription }}
+          </p>
+        {% endif %}
+        {% if data.page.ctaUrl %}
+          <a
+            class="px-8 py-4 bg-white hover:bg-blue-50 text-blue-600 font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center text-lg"
+            href="{{ data.page.ctaUrl | escape }}"
+            data-discover="true"
+          >
+            {{ data.page.ctaLabel or '立即咨询' }}
+            <i class="fa-solid fa-arrow-right ml-2"></i>
+          </a>
+        {% endif %}
+      </div>
+    </section>
+  </main>
+{% endblock %}
+
+

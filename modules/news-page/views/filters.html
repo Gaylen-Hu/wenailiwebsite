@@ -1,0 +1,10 @@
+{%- macro here(url, changes) -%}
+  {{ url | build({
+    year: data.query.year,
+  }, changes) }}
+{%- endmacro -%}
+
+{% fragment render(data) %}
+  <!-- <h3>{{ __t('aposBlog:filterYear') }}</h3> -->
+ 
+{% endfragment %}

@@ -1,0 +1,59 @@
+/*
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-11-11 18:59:09
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-11-11 22:43:41
+ * @FilePath: \wenaili\app.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+import apostrophe from 'apostrophe';
+
+apostrophe({
+  root: import.meta,
+  shortName: 'wenaili',
+  modules: {
+    // Apostrophe module configuration
+    // *******************************
+    //
+    // NOTE: most configuration occurs in the respective modules' directories.
+    // See modules/@apostrophecms/page/index.js for an example.
+    //
+    // Any modules that are not present by default in Apostrophe must at least
+    // have a minimal configuration here to turn them on: `moduleName: {}`
+    // ***********************************************************************
+    // `className` options set custom CSS classes for Apostrophe core widgets.
+    '@apostrophecms/rich-text-widget': {
+      options: {
+        className: 'bp-rich-text'
+      }
+    },
+    '@apostrophecms/image-widget': {
+      options: {
+        className: 'bp-image-widget'
+      }
+    },
+    '@apostrophecms/video-widget': {
+      options: {
+        className: 'bp-video-widget'
+      }
+    },
+    'basiclayout-widget': {},
+    'about-section-widget': {},
+    'contact-wrap-widget': {},
+
+
+
+
+    // `asset` supports the project's build for client-side assets.
+    asset: {},
+    news: {},
+    "news-page":{},
+   'fixed-page':{},
+    case:{},
+    "case-page":{},
+    // use vite for asset bundling and hot module reloading
+    '@apostrophecms/vite': {},
+    // The project's first custom page type.
+    'default-page': {}
+  }
+});

@@ -1,0 +1,55 @@
+{
+  "name": "wenaili",
+  "version": "1.0.0",
+  "description": "ApostropheCMS Essential Starter Kit Site",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app",
+    "dev": "nodemon",
+    "build": "NODE_ENV=production node app @apostrophecms/asset:build",
+    "serve": "NODE_ENV=production node app",
+    "release": "npm install && npm run build && node app @apostrophecms/migration:migrate"
+  },
+  "nodemonConfig": {
+    "delay": 1000,
+    "verbose": true,
+    "watch": [
+      "./app.js",
+      "./modules/**/*",
+      "./lib/**/*.js",
+      "./views/**/*.html"
+    ],
+    "ignoreRoot": [
+      ".git"
+    ],
+    "ignore": [
+      "**/ui/",
+      "locales/*.json",
+      "public/uploads/",
+      "public/apos-frontend/*.js",
+      "data/"
+    ],
+    "ext": "json, js, cjs, html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/apostrophecms/starter-kit-essentials"
+  },
+  "author": "Apostrophe Technologies, Inc.",
+  "license": "MIT",
+  "dependencies": {
+    "@apostrophecms/vite": "^1.0.0",
+    "@tailwindcss/postcss": "^4.1.17",
+    "apostrophe": "^4.9.0",
+    "framer-motion": "^12.23.24",
+    "normalize.css": "^8.0.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.17"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "eslint-config-apostrophe": "^6.0.1",
+    "nodemon": "^3.0.1"
+  }
+}

@@ -1,0 +1,113 @@
+
+{% fragment footer(data) %}
+{% set global = data.global or {} %}
+<footer class="bg-gray-900 text-white py-12">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div>
+        {% if global.title %}
+          <h3 class="text-lg font-semibold mb-4 text-blue-400">
+            {{ global.title }}
+          </h3>
+        {% endif %}
+        {% if global.detail %}
+          <p class="text-gray-400 mb-4">{{ global.detail }}</p>
+        {% endif %}
+        {% if global.social and global.social | length %}
+          <div class="flex space-x-3 mt-4">
+            {% for social in global.social %}
+              <a
+                href="{{ social.link }}"
+                class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:text-white hover:bg-blue-600 transition-colors duration-300"
+                target="_blank"
+                rel="noopener"
+              >
+                <i class="fa-brands fa-{{ social.icon }}"></i>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+      <div>
+        {% if global.footerNavtitle %}
+          <h3 class="text-lg font-semibold mb-4">{{ global.footerNavtitle }}</h3>
+        {% endif %}
+        {% if global.footerNav and global.footerNav | length %}
+          <ul class="space-y-2">
+            {% for link in global.footerNav %}
+              {% set href = apos.modules['@apostrophecms/global'].linkPath(link) %}
+              <li>
+                <a
+                  class="text-gray-400 hover:text-white transition-colors duration-300"
+                  href="{{ href }}"
+                  data-discover="true"
+                >
+                  {{ link.linkText }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold mb-4">产品分类</h3>
+        {% if global.productCategories and global.productCategories | length %}
+          <ul class="space-y-2">
+            {% for category in global.productCategories %}
+              {% set href = apos.modules['@apostrophecms/global'].linkPath(category) %}
+              <li>
+                <a
+                  class="text-gray-400 hover:text-white transition-colors duration-300"
+                  href="{{ href }}"
+                  data-discover="true"
+                >
+                  {{ category.linkText }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="text-gray-400">暂无产品分类信息</p>
+        {% endif %}
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold mb-4">联系我们</h3>
+        <ul class="space-y-2 text-gray-400">
+          {% if global.address %}
+            <li class="flex items-start">
+              <i class="fa-solid fa-map-marker-alt mt-1 mr-3 text-blue-400"></i>
+              <span>{{ global.address }}</span>
+            </li>
+          {% endif %}
+          {% if global.phone %}
+            <li class="flex items-center">
+              <i class="fa-solid fa-phone mr-3 text-blue-400"></i>
+              <a class="hover:text-white transition-colors duration-300" href="tel:{{ global.phone }}">
+                {{ global.phone }}
+              </a>
+            </li>
+          {% endif %}
+          {% if global.email %}
+            <li class="flex items-center">
+              <i class="fa-solid fa-envelope mr-3 text-blue-400"></i>
+              <a class="hover:text-white transition-colors duration-300" href="mailto:{{ global.email }}">
+                {{ global.email }}
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    <div
+      class="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500 text-sm"
+    >
+      {% if global.copyright %}
+        <p>{{ global.copyright }}</p>
+      {% endif %}
+      {% if global.filingNumber %}
+        <p class="mt-2">{{ global.filingNumber }}</p>
+      {% endif %}
+    </div>
+  </div>
+</footer>
+{% endfragment %}

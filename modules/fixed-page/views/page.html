@@ -1,0 +1,55 @@
+<!--
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-11-11 22:49:17
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-11-11 23:10:53
+ * @FilePath: \wenaili\modules\fixed-page\views\page.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+{#
+  This is an example home page template. It inherits and extends a layout template
+  that lives in the top-level views/ folder for convenience
+#}
+{% import 'aboutIntro.html' as aboutIntro %}
+{% import 'services.html' as services %}
+{% import 'marketing.html' as marketing %}
+{% import 'tech.html' as tech %}
+{% import 'data.html' as dataPage %}
+{% import 'website.html' as website %}
+{% import 'brand.html' as brand %}
+{% import 'team.html' as team %}
+{% import 'aboutIntro.html' as aboutIntro %}
+
+{% extends "layout.html" %}
+
+{% block main %}
+  {% set mainChoice = data.doc.main or 'services' %}
+
+  {% if mainChoice == 'services' %}
+    {% render services.services(data) %}
+  {% elseif mainChoice == 'marketing' %}
+    {% render marketing.marketing(data) %}
+  {% elseif mainChoice == 'aboutIntro' %}
+    {% render aboutIntro.aboutIntro(data) %}
+  {% elseif mainChoice == 'tech' %}
+    {% render tech.tech(data) %}
+  {% elseif mainChoice == 'data' %}
+    {% render dataPage.data(data) %}
+  {% elseif mainChoice == 'website' %}
+    {% render website.website(data) %}
+  {% elseif mainChoice == 'brand' %}
+    {% render brand.brand(data) %}
+  {% elseif mainChoice == 'team' %}
+    {% render team.team(data) %}
+  {% elseif mainChoice == 'aboutIntro' %}
+    {% render aboutIntro.aboutIntro(data) %}
+  {% else %}
+
+    <section class="py-20">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-900">页面即将上线</h1>
+        <p class="text-gray-600">请选择一个已配置的固定页面或联系管理员完善内容。</p>
+      </div>
+    </section>
+  {% endif %}
+{% endblock %}

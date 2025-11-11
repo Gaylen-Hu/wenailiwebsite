@@ -1,0 +1,242 @@
+// Basiclayout Widget Styles
+.basiclayout-widget {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+
+  // 容器样式
+  &__container {
+    position: relative;
+    z-index: 2;
+  }
+
+  // 头部区域
+  &__header {
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 100px;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+  }
+
+  // 标题样式
+  &__title {
+    position: relative;
+    z-index: 3;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    
+    // 渐变文字效果（可选）
+    &.gradient-text {
+      background: linear-gradient(135deg, currentColor 0%, rgba(1.1.1 0.7) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    // 动画效果
+    &.animate-on-scroll {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.6s ease;
+      
+      &.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+
+  // 分割线样式
+  &__divider {
+    position: relative;
+    transition: all 0.3s ease;
+    
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 20px;
+      height: 1px;
+      background: currentColor;
+      opacity: 0.3;
+    }
+    
+    &::before {
+      left: -30px;
+    }
+    
+    &::after {
+      right: -30px;
+    }
+  }
+
+  // 描述文字样式
+  &__description {
+    position: relative;
+    z-index: 3;
+    font-weight: 400;
+    line-height: 1.7;
+    
+    // 动画效果
+    &.animate-on-scroll {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease 0.2s;
+      
+      &.visible {
+        opacity: 0.8;
+        transform: translateY(0);
+      }
+    }
+  }
+
+  // 内容区域
+  &__content {
+    position: relative;
+    z-index: 2;
+    
+    // 为子元素添加间距
+    > * + * {
+      margin-top: 2rem;
+      
+      @media (min-width: 768px) {
+        margin-top: 3rem;
+      }
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 767px) {
+    &__header {
+      margin-bottom: 2rem;
+    }
+    
+    &__title {
+      font-size: 1.75rem;
+      line-height: 1.3;
+    }
+    
+    &__description {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    
+    &__divider {
+      &::before,
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    &__title {
+      font-size: 2.5rem;
+    }
+    
+    &__description {
+      font-size: 1.125rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    &__title {
+      font-size: 3rem;
+    }
+    
+    &__description {
+      font-size: 1.25rem;
+    }
+  }
+
+  // 主题变体
+  &--dark {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+    color: #ffffff;
+    
+    .basiclayout-widget__divider {
+      background: #ffffff;
+    }
+  }
+
+  &--light {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    color: #1a1a1a;
+    
+    .basiclayout-widget__divider {
+      background: #1a1a1a;
+    }
+  }
+
+  &--accent {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    
+    .basiclayout-widget__divider {
+      background: #ffffff;
+    }
+  }
+
+  // 特殊效果
+  &--parallax {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  &--glass {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+// 动画关键帧
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 工具类
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+.animate-fade-in-down {
+  animation: fadeInDown 0.6s ease forwards;
+}

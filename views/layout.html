@@ -1,0 +1,44 @@
+<!--
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-11-11 17:49:31
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-11-11 18:06:21
+ * @FilePath: \wenaili\views\layout.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+{# Automatically extends the right outer layout and also handles AJAX siutations #}
+{% extends data.outerLayout %}
+{% import 'fragments/footer.html' as footer %} {# 引入底部 #}
+{% import 'fragments/header.html' as header %} {# 引入头部 #}
+{% set title = data.piece.title or data.page.title %}
+{% block title %}
+  {{ title }}
+  {% if not title %}
+    {{ apos.log('Looks like you forgot to override the title block in a template that does not have access to an Apostrophe page or piece.') }}
+  {% endif %}
+{% endblock %}
+
+{% block beforeMain %}
+<link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+      crossorigin="anonymous"
+    />
+<div class="bp-wrapper">
+  {% render header.header(data) %}
+  <main class="">
+{% endblock %}
+
+{% block main %}
+  {#
+    Usually, your page templates in the @apostrophecms/pages module will override
+    this block. It is safe to assume this is where your page-specific content
+    should go.
+  #}
+{% endblock %}
+{% block afterMain %}
+  </main>
+  {% render footer.footer(data) %}
+
+</div>{# Close .bp-wrapper #}
+{% endblock %}

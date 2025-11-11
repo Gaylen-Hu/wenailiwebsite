@@ -1,0 +1,284 @@
+<!--
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-11-11 21:32:56
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-11-11 22:28:24
+ * @FilePath: \wenaili\modules\contact-wrap-widget\views\widget.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+{% set formId = 'contact-wrap-form-' + data.widget._id %}
+{% set statusId = 'contact-wrap-status-' + data.widget._id %}
+{% set submitAction = (apos.prefix or '') + '/api/v1/contact-wrap-widget/submit' %}
+{% set notificationEmail = data.widget.notificationEmail or '' %}
+{% set notificationSubject = data.widget.notificationSubject or '' %}
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-10">
+  <div
+    class="lg:col-span-2 bg-gray-50 p-8 rounded-xl"
+    style="opacity: 1; transform: none"
+  >
+    <h3 class="text-2xl font-bold text-gray-900 mb-6">联系方式</h3>
+    <div class="space-y-6">
+      <div class="flex items-start">
+        <div
+          class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mr-4 mt-1"
+        >
+          <i class="fa-solid fa-location-dot"></i>
+        </div>
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-1">公司地址</h4>
+          <p class="text-gray-600">{{ data.global.address }}</p>
+        </div>
+      </div>
+      <div class="flex items-start">
+        <div
+          class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mr-4 mt-1"
+        >
+          <i class="fa-solid fa-phone"></i>
+        </div>
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-1">联系电话</h4>
+          <p class="text-gray-600">{{ data.global.phone }}</p>
+        </div>
+      </div>
+      <div class="flex items-start">
+        <div
+          class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mr-4 mt-1"
+        >
+          <i class="fa-solid fa-envelope"></i>
+        </div>
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-1">电子邮箱</h4>
+          <p class="text-gray-600">{{ data.global.email }}</p>
+        </div>
+      </div>
+      <div class="flex items-start">
+        <div
+          class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mr-4 mt-1"
+        >
+          <i class="fa-regular fa-clock"></i>
+        </div>
+        <div>
+          <h4 class="font-semibold text-gray-900 mb-1">工作时间</h4>
+          <p class="text-gray-600">{{ data.global.workTime }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="lg:col-span-3" style="opacity: 1; transform: none">
+    <form
+      id="{{ formId }}"
+      class="space-y-6"
+      action="{{ submitAction }}"
+      method="post"
+      data-notification-email="{{ notificationEmail }}"
+      data-notification-subject="{{ notificationSubject }}"
+      novalidate
+    >
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-1"
+            >姓名</label
+          ><input
+            type="text"
+            id="name"
+            name="name"
+            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300"
+            placeholder="姓名"
+            value=""
+          />
+        </div>
+        <div>
+          <label
+            for="email"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >电子邮箱</label
+          ><input
+            type="email"
+            id="email"
+            name="email"
+            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300"
+            placeholder="电子邮箱"
+            value=""
+          />
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label
+            for="phone"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >联系电话 <span class="text-red-500">*</span></label
+          ><input
+            type="tel"
+            id="phone"
+            name="phone"
+            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300"
+            placeholder="联系电话"
+            value=""
+          />
+        </div>
+        <div>
+          <label
+            for="subject"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >咨询主题</label
+          ><input
+            type="text"
+            id="subject"
+            name="subject"
+            class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300"
+            placeholder="咨询主题"
+            value=""
+          />
+        </div>
+      </div>
+      <div>
+        <label
+          for="message"
+          class="block text-sm font-medium text-gray-700 mb-1"
+          >咨询内容</label
+        ><textarea
+          id="message"
+          name="message"
+          rows="5"
+          class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300"
+          placeholder="咨询内容"
+        ></textarea>
+      </div>
+      <div class="flex items-center">
+        <input
+          type="checkbox"
+          id="privacy"
+          name="privacy"
+          class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          required=""
+        /><label for="privacy" class="ml-2 block text-sm text-gray-600"
+          >我已阅读并同意隐私政策和服务条款</label
+        >
+      </div>
+      <button
+        type="submit"
+        class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
+      >
+        提交咨询<i class="fa-solid fa-paper-plane ml-2"></i>
+      </button>
+      <div
+        id="{{ statusId }}"
+        class="hidden mt-6 border rounded-lg px-4 py-3 text-sm"
+        role="status"
+        aria-live="polite"
+      ></div>
+    </form>
+    <script>
+      (function () {
+        const form = document.getElementById('{{ formId }}');
+        if (!form) {
+          return;
+        }
+        const statusEl = document.getElementById('{{ statusId }}');
+        const submitBtn = form.querySelector('[type="submit"]');
+        const csrfEndpoint = '{{ (apos.prefix or "") }}/modules/@apostrophecms/csrf/token';
+        const defaultNotificationEmail = form.dataset.notificationEmail || '';
+        const defaultNotificationSubject = form.dataset.notificationSubject || '';
+        let cachedCsrfToken = null;
+        const statusStates = {
+          loading: ['border-blue-200', 'bg-blue-50', 'text-blue-700'],
+          success: ['border-green-200', 'bg-green-50', 'text-green-700'],
+          error: ['border-red-200', 'bg-red-50', 'text-red-700']
+        };
+
+        function resetStates() {
+          Object.values(statusStates).forEach((classes) => {
+            classes.forEach((cls) => statusEl.classList.remove(cls));
+          });
+        }
+        function setStatus(type, message) {
+          if (!statusEl) {
+            return;
+          }
+          statusEl.classList.remove('hidden');
+          statusEl.classList.add('block');
+          resetStates();
+          statusStates[type].forEach((cls) => statusEl.classList.add(cls));
+          statusEl.textContent = message;
+        }
+        async function ensureCsrfToken() {
+          if (cachedCsrfToken) {
+            return cachedCsrfToken;
+          }
+          const response = await fetch(csrfEndpoint, {
+            headers: { Accept: 'application/json' },
+            credentials: 'same-origin'
+          });
+          if (!response.ok) {
+            throw new Error('无法获取 CSRF token');
+          }
+          const data = await response.json();
+          cachedCsrfToken = data.csrfToken;
+          return cachedCsrfToken;
+        }
+
+        form.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+
+          const formData = new FormData(form);
+          const action = form.getAttribute('action') || window.location.href;
+          const method = (form.getAttribute('method') || 'post').toUpperCase();
+
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+          }
+          setStatus('loading', '提交中，请稍候...');
+
+          try {
+            const payload = Object.fromEntries(formData.entries());
+            // const csrfToken = await ensureCsrfToken();
+
+            if (payload.privacy === 'on' || payload.privacy === 'true') {
+              payload.privacy = true;
+            } else if (payload.privacy === 'off' || payload.privacy === 'false') {
+              payload.privacy = false;
+            }
+            // payload._csrf = csrfToken;
+            payload.notificationEmail = payload.notificationEmail || defaultNotificationEmail || '';
+            payload.notificationSubject = payload.notificationSubject || defaultNotificationSubject || '';
+
+            const response = await fetch(action, {
+              method,
+              body: JSON.stringify(payload),
+              headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                // 'X-XSRF-TOKEN': csrfToken
+              },
+              credentials: 'same-origin'
+            });
+            const result = await response.json().catch(() => null);
+
+            if (response.ok && result && result.success) {
+              setStatus('success', result.message || '提交成功，我们将在24小时内与您联系。');
+              form.reset();
+              cachedCsrfToken = null;
+            } else {
+              const errorMessage = (result && result.message) || '提交失败，请稍后再试或直接联系我们。';
+              setStatus('error', errorMessage);
+            }
+          } catch (error) {
+            setStatus('error', error.message || '网络异常，请检查您的网络后重试。');
+          } finally {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+            }
+          }
+        });
+      })();
+    </script>
+  </div>
+</div>
