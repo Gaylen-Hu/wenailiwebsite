@@ -1,0 +1,194 @@
+---
+alwaysApply: true
+---
+# ApostropheCMS 官网开发项目规则
+
+## 1. 项目概述与环境准备
+
+### 1.1 技术栈选择
+- **核心框架**: ApostropheCMS 3.x (基于 Node.js) 
+- **数据库**: MongoDB (版本 3.6 或更高) 
+- **前端集成**: 可根据需求选择是否与 Astro 等前端框架集成 
+- **开发工具**: Cursor + Node.js + npm
+
+### 1.2 环境配置要求
+确保开发环境满足以下最低要求：
+- Node.js 版本 12.x 或更高 (推荐 >= 14.x) 
+- npm 6.x 或更高 
+- MongoDB 3.6 或更高 
+- 可选：Imagemagick (用于图像处理，支持GIF) 
+
+## 2. 项目初始化与配置
+
+### 2.1 创建新项目
+```bash
+# 使用 Apostrophe CLI 工具创建项目 (推荐)
+npm install -g yo generator-apostrophe
+mkdir my-website
+cd my-website
+yo apostrophe
+```
+
+或者通过克隆现有仓库：
+```bash
+git clone https://github.com/apostrophecms/apostrophe.git
+cd apostrophe
+npm install
+```
+
+### 2.2 项目结构规范
+```
+my-website/
+├── lib/              # 核心业务逻辑 
+├── modules/          # 自定义模块 
+├── views/            # 视图模板 
+├── public/           # 静态资源 (CSS, JS, 图片) 
+├── server.js         # 应用入口文件 
+├── .apos.json        # 配置文件 
+└── package.json
+```
+
+### 2.3 启动开发服务器
+```bash
+npm run dev
+```
+服务器将在 http://localhost:7007 运行 
+
+## 3. 核心功能开发规范
+
+### 3.1 页面类型创建
+为官网创建专门的页面类型，如首页、关于我们、产品服务、联系我们等：
+
+```javascript
+// 在 lib/modules/ 下创建页面类型模块
+module.exports = {
+  extend: 'apostrophe-pieces-pages',
+  name: 'product-page',
+  label: 'Product Page',
+  // 添加自定义字段
+  addFields: [
+    {
+      name: 'heroTitle',
+      type: 'string',
+      label: 'Hero Title',
+      required: true
+    },
+    {
+      name: 'productDescription',
+      type: 'area',
+      label: 'Product Description',
+      options: {
+        widgets: {
+          'apostrophe-rich-text': {},
+          'apostrophe-images': {}
+        }
+      }
+    }
+  ]
+};
+```
+
+### 3.2 内容区域 (Areas) 和小部件 (Widgets) 使用
+- 使用 Apostrophe 的区域和小部件系统构建灵活的内容布局
+- 为不同类型的内容创建专用小部件：
+  - 富文本小部件
+  - 图像画廊小部件
+  - 产品展示小部件
+  - 客户评价小部件
+
+### 3.3 自定义内容类型
+根据官网需求创建自定义内容类型：
+```javascript
+// 例如：团队成员、客户案例、产品目录等
+module.exports = {
+  extend: 'apostrophe-pieces',
+  name: 'team-member',
+  label: 'Team Member',
+  addFields: [
+    {
+      name: 'position',
+      type: 'string',
+      label: 'Position',
+      required: true
+    },
+    {
+      name: 'bio',
+      type: 'string',
+      label: 'Biography',
+      textarea: true
+    },
+    {
+      name: 'photo',
+      type: 'attachment',
+      label: 'Photo',
+      options: {
+        limit: 1
+      }
+    }
+  ]
+};
+```
+
+## 4. 开发工作流程
+
+### 4.1 Cursor 开发规范
+1. **功能开发**：使用 Cursor 的 AI 功能快速生成模块代码框架
+2. **代码审查**：定期审查 AI 生成的代码，确保符合项目标准
+3. **调试优化**：利用 Cursor 的问题诊断功能解决开发中的问题
+
+### 4.2 版本控制策略
+- 主分支：`main` (稳定版本)
+- 开发分支：`develop` (功能集成)
+- 功能分支：`feature/功能名称` (单个功能开发)
+
+### 4.3 内容管理流程
+1. **内容建模**：先设计内容结构，再开发相应模块
+2. **模板开发**：创建对应的页面模板和组件
+3. **内容填充**：通过 Apostrophe 后台添加实际内容
+4. **预览测试**：确保内容在不同设备上正常显示
+
+## 5. 集成与部署
+
+### 5.1 与前端框架集成 (可选)
+如需与 Astro 等前端框架集成：
+1. 安装 Apostrophe Astro 集成包 
+2. 配置环境变量 `APOS_EXTERNAL_FRONT_KEY` 
+3. 创建组件映射文件 
+
+### 5.2 生产环境部署
+- 配置生产环境变量
+- 构建静态资源
+- 设置进程管理 (如 PM2)
+- 配置反向代理 (如 Nginx)
+
+## 6. 最佳实践与优化
+
+### 6.1 性能优化
+- 优化图像资源 (利用 Apostrophe 的图像处理功能)
+- 启用缓存机制
+- 精简 CSS 和 JavaScript
+
+### 6.2 SEO 优化
+- 合理使用 Apostrophe 的元数据字段 
+- 创建清晰的 URL 结构
+- 添加结构化数据
+- 配置 XML 网站地图
+
+### 6.3 多语言支持 (如需要)
+- 配置 Apostrophe 的多语言模块 
+- 创建翻译文件
+- 设置语言切换器
+
+## 7. 维护与更新
+
+### 7.1 定期维护任务
+- 更新 ApostropheCMS 和依赖包
+- 备份数据库和上传的文件
+- 检查并修复安全漏洞
+
+### 7.2 内容更新流程
+- 培训内容编辑人员使用 Apostrophe 后台
+- 建立内容审核流程
+- 定期审查和更新网站内容
+
+通过遵循以上项目开发规则，你可以高效地使用 Cursor 和 ApostropheCMS 开发出功能完善、易于维护的企业官网。记得在开发过程中经常参考 [ApostropheCMS 官方文档](https://docs.apostrophecms.org/) 以获取最新信息和详细技术细节。

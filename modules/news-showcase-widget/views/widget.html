@@ -1,0 +1,12 @@
+{% set config = {
+  limit: data.widget.limit,
+  mode: data.widget.mode,
+  category: data.widget.category or null,
+  title: data.widget.title,
+  description: data.widget.description,
+  showMoreUrl: (data.widget.buttonUrl if data.widget.showMore != false else null),
+  buttonLabel: data.widget.buttonLabel
+} %}
+
+{% component 'news:homeShowcase' with config %}
+

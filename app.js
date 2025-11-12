@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-11 18:59:09
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-11 22:43:41
+ * @LastEditTime: 2025-11-12 22:50:16
  * @FilePath: \wenaili\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -42,9 +42,6 @@ apostrophe({
     'banner-widget': {},
     'contact-wrap-widget': {},
 
-
-
-
     // `asset` supports the project's build for client-side assets.
     asset: {},
     news: {},
@@ -55,6 +52,11 @@ apostrophe({
     // use vite for asset bundling and hot module reloading
     '@apostrophecms/vite': {},
     // The project's first custom page type.
-    'default-page': {}
+    'default-page': {},
+    'news-showcase-widget': {},
+    'services-grid-widget': {},
+    'advantages-grid-widget': {},
+    "services-base-widget":{},
+    "services-process-widget":{},
   }
 });

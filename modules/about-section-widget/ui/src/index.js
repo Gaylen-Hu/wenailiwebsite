@@ -1,114 +1,103 @@
-const easeOutQuad = (t) => t * (2 - t);
+const COUNTER_SELECTOR = '[data-counter-target]';
+const WIDGET_SELECTOR = '[data-about-section-widget]';
+const FRAME_DURATION = 16;
 
-const startAnimation = (el) => {
-  const target = parseFloat(el.dataset.target || '0');
-  const duration = parseInt(el.dataset.duration || '2000', 10);
-  const decimals = Math.max(parseInt(el.dataset.decimals || '0', 10), 0);
-  const prefix = el.dataset.prefix || '';
-  const suffix = el.dataset.suffix || '';
+const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
 
-  let startTime = null;
-  let frame = null;
+const parseValue = (rawValue = '') => {
+  const value = rawValue.trim();
+  const regex = /-?\d+(?:[.,]\d+)?/;
+  const match = regex.exec(value);
 
-  const step = (timestamp) => {
-    if (!startTime) {
-      startTime = timestamp;
-    }
-    const progress = Math.min((timestamp - startTime) / duration, 1);
-    const easedProgress = easeOutQuad(progress);
-    const currentValue = target * easedProgress;
+  if (!match) {
+    return {
+      number: 0,
+      decimals: 0,
+      prefix: '',
+      suffix: value
+    };
+  }
+
+  const numericString = match[0].replace(',', '.');
+  const decimals = numericString.includes('.') ? numericString.split('.')[1].length : 0;
+
+  return {
+    number: parseFloat(numericString),
+    decimals,
+    prefix: value.slice(0, match.index),
+    suffix: value.slice(match.index + match[0].length)
+  };
+};
+
+const animateCounter = (element) => {
+  if (!element || element.dataset.counterInitialized) {
+    return;
+  }
+
+  const duration = Math.max(parseInt(element.dataset.counterDuration, 10) || 2000, FRAME_DURATION);
+  const { number: targetNumber, decimals, prefix, suffix } = parseValue(element.dataset.counterTarget);
+
+  if (targetNumber === 0) {
+    element.textContent = `${prefix}${targetNumber.toFixed(decimals)}${suffix}`;
+    element.dataset.counterInitialized = 'true';
+    return;
+  }
+
+  const startTime = performance.now();
+
+  const update = (currentTime) => {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easedProgress = easeOutCubic(progress);
+    const currentValue = targetNumber * easedProgress;
     const formattedValue = currentValue.toFixed(decimals);
 
-    el.textContent = `${prefix}${formattedValue}${suffix}`;
+    element.textContent = `${prefix}${formattedValue}${suffix}`;
 
     if (progress < 1) {
-      frame = window.requestAnimationFrame(step);
+      requestAnimationFrame(update);
     } else {
-      el.dataset.counting = 'false';
-      el.textContent = `${prefix}${target.toFixed(decimals)}${suffix}`;
+      element.textContent = `${prefix}${targetNumber.toFixed(decimals)}${suffix}`;
     }
   };
 
-  if (el.dataset.counting === 'true') {
+  element.dataset.counterInitialized = 'true';
+  element.textContent = `${prefix}${(0).toFixed(decimals)}${suffix}`;
+  requestAnimationFrame(update);
+};
+
+const observeCounters = (widget) => {
+  const counters = widget.querySelectorAll(COUNTER_SELECTOR);
+
+  if (!counters.length) {
     return;
   }
 
-  el.dataset.counting = 'true';
-  el.textContent = `${prefix}${Number(0).toFixed(decimals)}${suffix}`;
-  frame = window.requestAnimationFrame(step);
-
-  el._counterFrame = frame;
-};
-
-const setupCounter = (el) => {
-  if (el.dataset.counterBound === 'true') {
-    return;
-  }
-  el.dataset.counterBound = 'true';
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          startAnimation(el);
-        } else if (el.dataset.counting === 'true' && el._counterFrame) {
-          window.cancelAnimationFrame(el._counterFrame);
-          el.dataset.counting = 'false';
-        }
-      });
-    },
-    {
-      threshold: 0.2
-    }
-  );
-
-  observer.observe(el);
-  el._counterObserver = observer;
-};
-
-const initCounters = (root = document) => {
-  root.querySelectorAll('[data-counter]').forEach((counter) => {
-    if (counter instanceof HTMLElement) {
-      setupCounter(counter);
-    }
-  });
-};
-
-const observeDynamicContent = () => {
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
-      mutation.addedNodes.forEach((node) => {
-        if (!(node instanceof HTMLElement)) {
-          return;
-        }
-        if (node.matches('[data-stats-section]') || node.querySelector('[data-counter]')) {
-          initCounters(node);
-        }
-      });
+  const observer = new IntersectionObserver((entries, observerInstance) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observerInstance.unobserve(entry.target);
+      }
     });
+  }, {
+    threshold: 0.4,
+    rootMargin: '0px 0px -20% 0px'
   });
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+  counters.forEach((counter) => observer.observe(counter));
 };
 
 export default () => {
-  if (window.__aboutStatsWidgetInitialized) {
-    return;
-  }
-  window.__aboutStatsWidgetInitialized = true;
+  const init = () => {
+    const widgets = document.querySelectorAll(WIDGET_SELECTOR);
 
-  const ready = () => {
-    initCounters(document);
-    observeDynamicContent();
+    widgets.forEach(observeCounters);
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', ready, { once: true });
+  if (window.apos?.util?.onReady) {
+    window.apos.util.onReady(init);
   } else {
-    ready();
+    document.addEventListener('DOMContentLoaded', init, { once: true });
   }
 };
-

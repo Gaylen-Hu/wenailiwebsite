@@ -1,0 +1,123 @@
+{% set spacingMap = {
+  'compact': 'py-12',
+  'relaxed': 'py-20',
+  'extended': 'py-24'
+} %}
+{% set spacingClass = spacingMap[data.widget.verticalSpacing or 'relaxed'] or spacingMap.relaxed %}
+{% set sectionBgColor = data.widget.backgroundColor or '#ffffff' %}
+
+<section
+  class="services-base-widget {{ spacingClass }} bg-white"
+  {% if data.widget.sectionId %}
+    id="{{ data.widget.sectionId }}"
+  {% endif %}
+ 
+>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  
+
+    {% if data.widget.services and data.widget.services.length %}
+      <div class="space-y-20 md:space-y-24">
+        {% for service in data.widget.services %}
+          {% set isReversed = service.layout == 'image-right' %}
+          {% switch service.colorTheme %}
+            {% case 'green' %}
+              {% set themeBg = 'bg-green-100' %}
+              {% set themeText = 'text-green-600' %}
+              {% set themeButton = 'bg-green-600 hover:bg-green-700' %}
+            {% case 'red' %}
+              {% set themeBg = 'bg-red-100' %}
+              {% set themeText = 'text-red-600' %}
+              {% set themeButton = 'bg-red-600 hover:bg-red-700' %}
+            {% case 'purple' %}
+              {% set themeBg = 'bg-purple-100' %}
+              {% set themeText = 'text-purple-600' %}
+              {% set themeButton = 'bg-purple-600 hover:bg-purple-700' %}
+            {% case 'amber' %}
+              {% set themeBg = 'bg-amber-100' %}
+              {% set themeText = 'text-amber-600' %}
+              {% set themeButton = 'bg-amber-500 hover:bg-amber-600' %}
+            {% case 'gray' %}
+              {% set themeBg = 'bg-gray-200' %}
+              {% set themeText = 'text-gray-700' %}
+              {% set themeButton = 'bg-gray-800 hover:bg-gray-900' %}
+            {% default %}
+              {% set themeBg = 'bg-blue-100' %}
+              {% set themeText = 'text-blue-600' %}
+              {% set themeButton = 'bg-blue-600 hover:bg-blue-700' %}
+          {% endswitch %}
+
+          <div class="services-base-widget__item grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div class="services-base-widget__media relative rounded-xl overflow-hidden shadow-xl {% if isReversed %}lg:order-2{% endif %}">
+              {% set image = apos.image.first(service.image) %}
+              {% if image %}
+                <img
+                  src="{{ apos.attachment.url(image, { size: 'full' }) }}"
+                  alt="{{ service.imageAlt or image.title or service.title }}"
+                  class="w-full h-auto object-cover"
+                  loading="lazy"
+                >
+              {% else %}
+                <div class="w-full h-64 bg-gray-100 flex items-center justify-center text-gray-400">
+                  <i class="fa-regular fa-image text-4xl"></i>
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="services-base-widget__content {% if isReversed %}lg:order-1{% endif %}">
+              {% if service.icon %}
+                <div class="w-12 h-12 {{ themeBg }} rounded-lg flex items-center justify-center {{ themeText }} mb-6">
+                  <i class="{{ service.icon }} text-xl"></i>
+                </div>
+              {% endif %}
+
+              <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                {{ service.title }}
+              </h3>
+
+              {% if service.description %}
+                <div class="text-gray-700 mb-8 leading-relaxed">
+                  <p class="text-gray-700 mb-8 leading-relaxed">
+                    {{ service.description }}
+                  </p>
+                </div>
+              {% endif %}
+
+              {% if service.highlights and service.highlights.length %}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                  {% for highlight in service.highlights %}
+                    <div class="flex items-center">
+                      <div class="w-6 h-6 {{ themeBg }} rounded-full flex items-center justify-center {{ themeText }} mr-3">
+                        <i class="fa-solid fa-check text-xs"></i>
+                      </div>
+                      <span class="text-gray-700">{{ highlight.point }}</span>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+              {% if service.cta and service.cta.linkText %}
+                {% set linkPath = apos.modules['@apostrophecms/global'].linkPath(service.cta) %}
+                {% if linkPath %}
+                  <a
+                    href="{{ linkPath }}"
+                    class="inline-flex items-center px-6 py-3 {{ themeButton }} text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                    {% if service.cta.linkTarget and service.cta.linkTarget.includes('_blank') %}
+                      target="_blank"
+                      rel="noopener"
+                    {% endif %}
+                    aria-label="{{ service.cta.ariaLabel or service.cta.linkText }}"
+                  >
+                    {{ service.cta.linkText }}
+                    <i class="fa-solid fa-arrow-right ml-2"></i>
+                  </a>
+                {% endif %}
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+

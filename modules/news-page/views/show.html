@@ -1,351 +1,71 @@
 <!--
  * @Author: xinyuHu hxyrkcy@outlook.com
- * @Date: 2025-09-18 17:42:22
+ * @Date: 2025-11-12 19:28:29
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-11 23:19:36
- * @FilePath: \my-app\modules\news-page\views\show.html
+ * @LastEditTime: 2025-11-12 19:31:55
+ * @FilePath: \wenaili\modules\news-page\views\show.html
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
-{% extends data.outerLayout %}
+{% extends "layout.html" %}
 
 {% block main %}
-  {% set piece = data.piece %}
-  {% if not piece %}
-    <main class="flex-grow">
-      <section class="py-24 bg-gray-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div class="bg-white shadow-xl rounded-2xl border border-dashed border-gray-200 p-12 inline-block">
-            <i class="fa-solid fa-triangle-exclamation text-4xl text-red-500 mb-4"></i>
-            <h1 class="text-2xl font-bold text-gray-900 mb-3">未找到资讯内容</h1>
-            <p class="text-gray-600 mb-6">您访问的资讯可能已被删除或暂未发布。</p>
-            <a
-              href="{{ data.page._url or '/' }}"
-              class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-              data-discover="true"
-            >
-              返回资讯列表
-              <i class="fa-solid fa-arrow-left ml-2 text-sm"></i>
-            </a>
-          </div>
-        </div>
-      </section>
-    </main>
-    {% return %}
-  {% endif %}
-
   {% set categoryLabels = {
     'industry': '物流资讯',
     'exhibition': '展会资讯',
     'company': '公司新闻'
   } %}
 
-  {% set coverImageUrl = null %}
-  {% if piece.coverImage %}
-    {% if piece.coverImage._urls %}
-      {% set coverImageUrl = piece.coverImage._urls.max or piece.coverImage._urls['full'] or piece.coverImage._urls.original %}
-    {% elseif piece.coverImage.url %}
-      {% set coverImageUrl = piece.coverImage.url %}
-    {% else %}
-      {% set coverImageUrl = piece.coverImage %}
-    {% endif %}
-  {% endif %}
-
-  {% set tags = piece.tags or [] %}
-
-  <main class="flex-grow bg-gray-50">
-    <section class="relative overflow-hidden">
-      {% if coverImageUrl %}
-        <div
-          class="absolute inset-0 bg-cover bg-center"
-          style="background-image: url('{{ coverImageUrl | escape }}');"
-        ></div>
-        <div class="absolute inset-0 bg-slate-900/80"></div>
-      {% else %}
-        <div class="absolute inset-0 bg-gradient-to-r from-blue-800 to-indigo-900"></div>
-      {% endif %}
-
-      <div class="relative z-10">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-24 text-white">
-          <nav class="flex items-center text-sm text-blue-100 mb-8 space-x-2">
-            <a href="{{ data.page._url or '/' }}" class="hover:text-white transition-colors duration-300" data-discover="true">
-              资讯中心
-            </a>
-            <span>/</span>
-            <span>{{ categoryLabels[piece.category] or '资讯详情' }}</span>
-          </nav>
-          <span class="inline-flex items-center px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-sm font-medium mb-4">
-            <i class="fa-solid fa-newspaper mr-2 text-white/70"></i>
-            {{ categoryLabels[piece.category] or '资讯' }}
+  <article class="py-16 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-10">
+          <span class="inline-flex items-center px-4 py-1 rounded-full bg-blue-100 text-blue-700 text-sm font-medium mb-4">
+            {{ categoryLabels[data.piece.category] or '资讯' }}
           </span>
-          <h1 class="text-3xl md:text-5xl font-bold leading-tight mb-6 max-w-4xl">
-            {{ piece.title | escape }}
+          <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            {{ data.piece.title | escape }}
           </h1>
-          <div class="flex flex-wrap items-center gap-6 text-sm text-blue-100/80">
-            {% if piece.publishedAt %}
-              <span class="flex items-center gap-2">
-                <i class="fa-solid fa-calendar-alt"></i>
-                {{ piece.publishedAt | date('YYYY 年 MM 月 DD 日') }}
+          <div class="flex flex-wrap justify-center gap-4 text-gray-500 text-sm">
+            {% if data.piece.publishedAt %}
+              <span>
+                <i class="fa-solid fa-calendar-alt mr-2"></i>{{ data.piece.publishedAt | date('YYYY-MM-DD') }}
               </span>
             {% endif %}
-            {% if piece.author %}
-              <span class="flex items-center gap-2">
-                <i class="fa-solid fa-user-pen"></i>
-                {{ piece.author | escape }}
-              </span>
-            {% endif %}
-            {% if piece.highlight %}
-              <span class="flex items-center gap-2">
-                <i class="fa-solid fa-fire text-amber-300"></i>
-                热门资讯
+            {% if data.piece.author %}
+              <span>
+                <i class="fa-solid fa-user-pen mr-2"></i>{{ data.piece.author | escape }}
               </span>
             {% endif %}
           </div>
-        </div>
+        </header>
+       
+
+        {% if data.piece.excerpt %}
+          <section class="mb-10 bg-blue-50 border border-blue-100 rounded-2xl p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-3">导读</h2>
+            <p class="text-gray-700 leading-relaxed">{{ data.piece.excerpt }}</p>
+          </section>
+        {% endif %}
+
+        <section class="prose prose-blue max-w-none">
+          {% area data.piece, 'body' %}
+        </section>
+
+        {% if data.piece.tags and data.piece.tags.length %}
+          <footer class="mt-12">
+            <h3 class="text-sm uppercase tracking-wide text-gray-500 mb-3">标签</h3>
+            <ul class="flex flex-wrap gap-2">
+              {% for tag in data.piece.tags %}
+                <li class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
+                  {{ tag.tag | escape }}
+                </li>
+              {% endfor %}
+            </ul>
+          </footer>
+        {% endif %}
       </div>
-    </section>
-
-    <section class="relative z-10 -mt-16 pb-24">
-      <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-          <article class="lg:col-span-8 bg-white rounded-3xl shadow-2xl overflow-hidden border border-gray-100">
-            {% if coverImageUrl %}
-              <div class="relative">
-                <img
-                  src="{{ coverImageUrl | escape }}"
-                  alt="{{ piece.title | escape }}"
-                  class="w-full h-72 object-cover"
-                />
-                <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent"></div>
-              </div>
-            {% endif %}
-            <div class="p-6 md:p-10">
-              {% if piece.excerpt %}
-                <div class="bg-blue-50 border border-blue-100 text-blue-800 rounded-2xl p-6 mb-8">
-                  <p class="text-lg leading-relaxed">
-                    {{ piece.excerpt | escape }}
-                  </p>
-                </div>
-              {% endif %}
-
-              <div class="prose prose-lg prose-blue max-w-none leading-relaxed text-gray-800">
-                {{ apos.area(piece, 'body') }}
-              </div>
-
-              {% if tags.length %}
-                <div class="mt-12 border-t border-gray-200 pt-6">
-                  <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-3">标签</h3>
-                  <div class="flex flex-wrap gap-3">
-                    {% for tag in tags %}
-                      {% if tag.tag %}
-                        {% set tagParams = {
-                          tag: tag.tag,
-                          category: null,
-                          q: null,
-                          page: null
-                        } %}
-                        <a
-                          href="{{ (data.page._url or '/') | build(tagParams) }}"
-                          class="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 hover:bg-blue-600 hover:text-white text-gray-700 text-sm font-medium transition-all duration-300 shadow-sm"
-                          data-discover="true"
-                        >
-                          <i class="fa-solid fa-hashtag mr-2"></i>{{ tag.tag | escape }}
-                        </a>
-                      {% endif %}
-                    {% endfor %}
-                  </div>
-                </div>
-              {% endif %}
-
-              <div class="mt-12 border-t border-gray-200 pt-6 flex flex-wrap gap-4 justify-between items-center">
-                <div class="text-gray-500 text-sm flex items-center gap-2">
-                  <i class="fa-solid fa-share-nodes text-blue-500"></i>
-                  分享到：
-                </div>
-                <div class="flex items-center gap-3">
-                  <button
-                    type="button"
-                    class="share-button w-11 h-11 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-all duration-300 shadow-sm"
-                    data-platform="wechat"
-                    aria-label="复制链接"
-                  >
-                    <i class="fa-solid fa-link"></i>
-                  </button>
-                  <a
-                    class="w-11 h-11 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-all duration-300 shadow-sm"
-                    href="https://www.linkedin.com/sharing/share-offsite/?url={{ data.request.url | urlencode }}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="分享到 LinkedIn"
-                  >
-                    <i class="fa-brands fa-linkedin-in"></i>
-                  </a>
-                  <a
-                    class="w-11 h-11 rounded-full bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-all duration-300 shadow-sm"
-                    href="https://twitter.com/intent/tweet?url={{ data.request.url | urlencode }}&text={{ piece.title | urlencode }}"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="分享到 X"
-                  >
-                    <i class="fa-brands fa-x-twitter"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <aside class="lg:col-span-4 space-y-8">
-            <div class="bg-white shadow-xl rounded-3xl border border-gray-100 p-8">
-              <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                <i class="fa-solid fa-chart-line text-red-500 mr-2"></i>
-                {{ data.page.popularTitle or '热门资讯' }}
-              </h2>
-              {% set popularItems = data.page.popularItems or [] %}
-              {% if popularItems.length %}
-                <ul class="space-y-6">
-                  {% for item in popularItems %}
-                    <li class="group">
-                      <a href="{{ item.url or '#' }}" class="flex gap-4 rounded-2xl overflow-hidden border border-gray-100 hover:border-blue-200 hover:shadow-lg transition-all duration-300" {% if item.url %}data-discover="true"{% endif %}>
-                        {% if item.image %}
-                          <div class="w-24 h-24 flex-shrink-0 overflow-hidden">
-                            <img src="{{ item.image | escape }}" alt="{{ item.title | escape }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" loading="lazy">
-                          </div>
-                        {% endif %}
-                        <div class="p-4">
-                          <h3 class="text-sm font-semibold text-gray-900 line-clamp-2 group-hover:text-blue-600 transition-colors duration-300">
-                            {{ item.title | escape }}
-                          </h3>
-                          {% if item.publishedAt %}
-                            <p class="text-xs text-gray-500 mt-2">
-                              <i class="fa-solid fa-calendar-alt mr-1"></i>{{ item.publishedAt | date('YYYY-MM-DD') }}
-                            </p>
-                          {% endif %}
-                        </div>
-                      </a>
-                    </li>
-                  {% endfor %}
-                </ul>
-              {% else %}
-                <p class="text-gray-500 text-sm leading-relaxed">
-                  暂无配置的热门资讯，可在页面设置中补充内容。
-                </p>
-              {% endif %}
-            </div>
-
-            <div class="bg-blue-600 text-white rounded-3xl shadow-2xl p-8">
-              <h2 class="text-2xl font-bold mb-4">{{ data.page.subscribeTitle or '订阅我们的行业资讯通讯' }}</h2>
-              {% if data.page.subscribeDescription %}
-                <p class="text-blue-100 mb-6 text-sm leading-relaxed">
-                  {{ data.page.subscribeDescription }}
-                </p>
-              {% endif %}
-              <form class="space-y-4" action="{{ data.page.subscribeEndpoint | default('') | escape }}" method="post">
-                <div>
-                  <label class="text-xs uppercase tracking-widest text-blue-200 mb-2 block">邮箱地址</label>
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="请输入您的工作邮箱"
-                    class="w-full px-4 py-3 rounded-xl text-gray-900 focus:outline-none focus:ring-4 focus:ring-white/40"
-                    required
-                  />
-                </div>
-                <button
-                  type="submit"
-                  class="w-full px-6 py-3 bg-white text-blue-700 font-medium rounded-xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center"
-                >
-                  {{ data.page.subscribeButtonLabel or '立即订阅' }}
-                  <i class="fa-solid fa-paper-plane ml-2"></i>
-                </button>
-              </form>
-            </div>
-
-            {% if tags.length %}
-              <div class="bg-white shadow-xl rounded-3xl border border-gray-100 p-8">
-                <h2 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                  <i class="fa-solid fa-tags text-amber-500 mr-2"></i>
-                  相关标签
-                </h2>
-                <div class="flex flex-wrap gap-3">
-                  {% for tag in tags %}
-                    {% if tag.tag %}
-                      {% set tagParams = {
-                        tag: tag.tag,
-                        category: null,
-                        q: null,
-                        page: null
-                      } %}
-                      <a
-                        href="{{ (data.page._url or '/') | build(tagParams) }}"
-                        class="inline-flex items-center px-4 py-2 rounded-full bg-gray-100 hover:bg-blue-600 hover:text-white text-gray-700 text-sm font-medium transition-all duration-300 shadow-sm"
-                        data-discover="true"
-                      >
-                        <i class="fa-solid fa-hashtag mr-2"></i>{{ tag.tag | escape }}
-                      </a>
-                    {% endif %}
-                  {% endfor %}
-                </div>
-              </div>
-            {% endif %}
-          </aside>
-        </div>
-
-        <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {% if data.previous %}
-            <a
-              href="{{ data.previous._url | escape }}"
-              class="group relative bg-white rounded-2xl border border-gray-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300"
-              data-discover="true"
-            >
-              <div class="flex items-center gap-3 text-sm text-gray-500 mb-2">
-                <i class="fa-solid fa-arrow-left text-blue-500"></i>
-                上一篇
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
-                {{ data.previous.title | escape }}
-              </h3>
-            </a>
-          {% endif %}
-
-          {% if data.next %}
-            <a
-              href="{{ data.next._url | escape }}"
-              class="group relative bg-white rounded-2xl border border-gray-200 p-6 shadow-lg hover:shadow-xl transition-all duration-300 text-right md:text-left"
-              data-discover="true"
-            >
-              <div class="flex items-center gap-3 text-sm text-gray-500 justify-end md:justify-start mb-2">
-                下一篇
-                <i class="fa-solid fa-arrow-right text-blue-500"></i>
-              </div>
-              <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
-                {{ data.next.title | escape }}
-              </h3>
-            </a>
-          {% endif %}
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const buttons = document.querySelectorAll('.share-button');
-      buttons.forEach((button) => {
-        button.addEventListener('click', async () => {
-          try {
-            await navigator.clipboard.writeText(window.location.href);
-            button.classList.add('bg-green-500', 'text-white');
-            button.innerHTML = '<i class="fa-solid fa-check"></i>';
-            setTimeout(() => {
-              button.classList.remove('bg-green-500', 'text-white');
-              button.innerHTML = '<i class="fa-solid fa-link"></i>';
-            }, 2200);
-          } catch (err) {
-            console.error(err);
-            alert('复制链接失败，请手动复制地址栏链接。');
-          }
-        });
-      });
-    });
-  </script>
-
+    </div>
+  </article>
 {% endblock %}
+
+

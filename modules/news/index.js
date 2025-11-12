@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-10 09:29:27
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-11 19:05:57
+ * @LastEditTime: 2025-11-12 19:22:56
  * @FilePath: \myapp\apos-app\modules\news\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,7 +11,6 @@ export default {
   options: {
     label: '新闻资讯',
     pluralLabel: '新闻列表',
-    slugPrefix: 'news-'
   },
   fields: {
     add: {
@@ -36,17 +35,11 @@ export default {
         label: '作者',
         def: '奈李资讯团队'
       },  
-      
-      coverImage: {
-        type: 'area',
+      _coverImage: {
         label: '封面图片',
-        max: 1,
-        required: true,
-        options: {
-          widgets: {
-            '@apostrophecms/image': {}
-          }
-        }
+        type: 'relationship',
+        withType: '@apostrophecms/image',
+        max: 1
       },
       excerpt: {
         type: 'string',
@@ -94,7 +87,7 @@ export default {
     group: {
       basics: {
         label: '基础信息',
-        fields: [ 'title', 'category', 'publishedAt', 'author', 'coverImage', 'excerpt', 'highlight' ]
+        fields: [ 'title', 'category', 'publishedAt', 'author', '_coverImage', 'excerpt', 'highlight' ]
       },
       metadata: {
         label: '附加信息',
@@ -106,26 +99,150 @@ export default {
       }
     }
   },
+  components(self) {
+    return {
+      async homeShowcase(req, data = {}) {
+        const resolveCoverImage = (piece) => {
+          const attachment = self.apos.image.first(piece._coverImage);
+          if (!attachment) {
+            return {
+              attachment: null,
+              url: null,
+              alt: null
+            };
+          }
+
+          const url = self.apos.attachment.url(attachment, { size: 'max' });
+          const alt = attachment._alt || piece.title || '';
+
+          return {
+            attachment,
+            url,
+            alt
+          };
+        };
+
+        const numericLimit = Number(data.limit);
+        const allowedLimits = [3, 6];
+        const limit = allowedLimits.includes(numericLimit) ? numericLimit : 3;
+
+        const allowedModes = [ 'latest', 'popular' ];
+        const mode = allowedModes.includes(data.mode) ? data.mode : 'latest';
+
+        const category = (typeof data.category === 'string' && data.category.trim().length)
+          ? data.category.trim()
+          : null;
+
+        const baseSort = { publishedAt: -1, createdAt: -1 };
+        const categoryLabels = {
+          industry: '物流资讯',
+          exhibition: '展会资讯',
+          company: '公司新闻'
+        };
+
+        const criteria = {};
+        if (category) {
+          criteria.category = category;
+        }
+
+        let pieces = [];
+
+        if (mode === 'popular') {
+          const popularCursor = self.find(req)
+            .sort(baseSort)
+            .and({ ...criteria, highlight: true })
+            .limit(limit);
+
+          pieces = await popularCursor.toArray();
+
+          if (pieces.length < limit) {
+            const excludeIds = new Set(pieces.map(piece => piece._id));
+
+            const fallbackCursor = self.find(req)
+              .sort(baseSort)
+              .and(criteria)
+              .limit(limit * 2);
+
+            const fallbackPieces = await fallbackCursor.toArray();
+            for (const item of fallbackPieces) {
+              if (pieces.length >= limit) {
+                break;
+              }
+              if (!excludeIds.has(item._id)) {
+                pieces.push(item);
+                excludeIds.add(item._id);
+              }
+            }
+          }
+        } else {
+          const latestCursor = self.find(req)
+            .sort(baseSort)
+            .and(criteria)
+            .limit(limit);
+
+          pieces = await latestCursor.toArray();
+        }
+
+        const title = (typeof data.title === 'string' && data.title.trim().length)
+          ? data.title.trim()
+          : (mode === 'popular' ? '热门资讯' : '最新资讯');
+
+        const description = (typeof data.description === 'string' && data.description.trim().length)
+          ? data.description.trim()
+          : '';
+
+        const showMoreUrl = (typeof data.showMoreUrl === 'string' && data.showMoreUrl.trim().length)
+          ? data.showMoreUrl.trim()
+          : null;
+
+        const buttonLabel = (typeof data.buttonLabel === 'string' && data.buttonLabel.trim().length)
+          ? data.buttonLabel.trim()
+          : '查看全部资讯';
+
+        pieces = pieces.map(piece => {
+          const cover = resolveCoverImage(piece);
+          return {
+            ...piece,
+            _coverImageAttachment: cover.attachment,
+            _coverImageUrl: cover.url,
+            _coverImageAlt: cover.alt
+          };
+        });
+
+        return {
+          pieces,
+          mode,
+          limit,
+          category,
+          title,
+          description,
+          showMoreUrl,
+          buttonLabel,
+          categoryLabels
+        };
+      }
+    };
+  },
   handlers(self) { 
     return {
-    'afterSave': {
-          async sendEmail(req, piece) {
-        const options = {
-          from: 'wenailisender@163.com',
-          to: 'hxyrkcy@outlook.com',
-          subject: 'New Article added'
-        };
-        try {
-         const res =  await self.email(req, 'email.html', { piece }, options);
-         console.log(res);
-        } catch (err) {
-          console.log(err);
-          self.apos.util.error('email notification error: ', err);
+      afterSave: {
+        async sendEmail(req, piece) {
+          const options = {
+            from: 'wenailisender@163.com',
+            to: 'hxyrkcy@outlook.com',
+            subject: 'New Article added'
+          };
+          try {
+            const res = await self.email(req, 'email.html', { piece }, options);
+            console.log(res);
+          } catch (err) {
+            console.log(err);
+            self.apos.util.error('email notification error: ', err);
+          }
         }
       }
-    }
+    };
   }
-}
 };
 
 

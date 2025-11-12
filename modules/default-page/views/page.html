@@ -1,13 +1,25 @@
-{#
-  This is an example home page template. It inherits and extends a layout template
-  that lives in the top-level views/ folder for convenience
-#}
-
-{% extends "layout.html" %}
-
-{% block main %}
-  <section class="bp-content">
-    <h1>{{ data.page.title }}</h1>
-    {% area data.page, 'main' %}
-  </section>
-{% endblock %}
+<!--
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-11-12 21:46:59
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-11-12 23:22:39
+ * @FilePath: \wenaili\modules\default-page\views\page.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+{# This is an example home page template. It inherits and extends a layout
+template that lives in the top-level views/ folder for convenience #} {% extends
+"layout.html" %} {% block main %}
+<section class="bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-16">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <h1
+      class="text-3xl md:text-5xl font-bold mb-4"
+      style="opacity: 1; transform: none"
+    >
+      {{ data.page.title  }}
+    </h1>
+    <p class="text-xl text-blue-100" style="opacity: 1; transform: none">
+      {{ data.page.description }}
+    </p>
+  </div>
+</section>
+{% area data.page, 'main' %} {% endblock %}

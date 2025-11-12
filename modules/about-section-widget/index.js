@@ -1,150 +1,102 @@
 export default {
   extend: '@apostrophecms/widget-type',
   options: {
-    label: '关于我们统计模块'
+    label: '关于我们区块',
+    icon: 'id-card',
+    preview: true
   },
   fields: {
     add: {
-      layout: {
-        type: 'select',
-        label: '版式布局',
-        choices: [
-          {
-            value: 'image-left',
-            label: '图片在左侧'
-          },
-          {
-            value: 'image-right',
-            label: '图片在右侧'
-          }
-        ],
-        def: 'image-left'
-      },
-      backgroundStyle: {
-        type: 'select',
-        label: '背景样式',
-        choices: [
-          {
-            value: 'light',
-            label: '浅色背景'
-          },
-          {
-            value: 'dark',
-            label: '深色背景'
-          }
-        ],
-        def: 'light'
-      },
-      eyebrow: {
-        type: 'string',
-        label: '章节小标题'
-      },
       heading: {
         type: 'string',
+        label: '标题',
+        def: '关于我们'
+      },
+      subheading: {
+        type: 'string',
+        label: '副标题说明',
+        textarea: true,
+        def: ''
+      },
+      heroTitle: {
+        type: 'string',
         label: '主标题',
-        required: true
+        textarea: true,
+        def: '10年专注货代运营服务<br>值得信赖的货代增长战略伙伴'
       },
-      descriptionOne: {
+      descriptionPrimary: {
         type: 'string',
-        label: '介绍段落一',
-        textarea: true
+        label: '主要描述',
+        textarea: true,
+        def: '上海奈李信息技术有限公司（简称：奈李，英文：Wenaili）是一家专注于为物流货代公司提供市场部及技术部代运营服务的专业机构。凭借10年的货代行业经验和专业团队，服务合作客户50+，我们已经成为众多货代企业信赖的合作伙伴。'
       },
-      descriptionTwo: {
+      descriptionSecondary: {
         type: 'string',
-        label: '介绍段落二',
-        textarea: true
+        label: '次要描述',
+        textarea: true,
+        def: '我们的服务涵盖市场策划、品牌推广、获客转化、网站建设、系统开发等多个领域，为货代企业提供全方位的运营支持，帮助他们提升品牌影响力和业务增长。'
       },
-      image: {
-        type: 'attachment',
-        label: '配图',
-        required: true,
-        group: 'media'
+      imageUrl: {
+        type: 'string',
+        label: '右侧/左侧主图链接',
+        textarea: true,
+        def: 'https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=freight%20forwarding%20business%20team%2C%20office%20environment%2C%20professional%20operation%20team&sign=7603482b21435acc82da94fa7868cfd0'
       },
       imageAlt: {
         type: 'string',
-        label: '配图替代文本',
-        def: '关于我们配图'
-      },
-      imageCaption: {
-        type: 'string',
-        label: '配图说明'
+        label: '主图替代文本',
+        def: '关于我们 - 专业的物流货代运营团队'
       },
       stats: {
         type: 'array',
-        label: '统计数据',
-        required: true,
-        min: 1,
+        label: '统计信息',
         titleField: 'label',
+        min: 1,
+        max: 4,
+        def: [
+          { value: '10+', label: '行业经验', duration: 2000 },
+          { value: '50+', label: '合作客户', duration: 2200 },
+          { value: '30+', label: '覆盖城市', duration: 2000 },
+          { value: '99.8%', label: '客户满意度', duration: 2400 }
+        ],
         fields: {
           add: {
+            value: {
+              type: 'string',
+              label: '数值',
+              required: true
+            },
             label: {
               type: 'string',
-              label: '统计名称',
+              label: '说明',
               required: true
-            },
-            targetValue: {
-              type: 'float',
-              label: '动画目标数值',
-              required: true
-            },
-            prefix: {
-              type: 'string',
-              label: '前缀',
-              help: '例如 ¥、约等'
-            },
-            suffix: {
-              type: 'string',
-              label: '后缀',
-              help: '例如 +、%'
-            },
-            decimals: {
-              type: 'integer',
-              label: '小数位数',
-              min: 0,
-              max: 3,
-              def: 0
             },
             duration: {
               type: 'integer',
               label: '动画时长（毫秒）',
-              def: 2000
+              def: 2000,
+              min: 0
             }
           }
         }
       }
     },
     group: {
-      layout: {
-        label: '布局样式',
-        fields: [
-          'layout',
-          'backgroundStyle'
-        ]
-      },
       content: {
-        label: '文字内容',
+        label: '内容设置',
         fields: [
-          'eyebrow',
           'heading',
-          'descriptionOne',
-          'descriptionTwo'
+          'subheading',
+          'heroTitle',
+          'descriptionPrimary',
+          'descriptionSecondary',
+          'stats'
         ]
       },
       media: {
-        label: '媒体',
-        fields: [
-          'image',
-          'imageAlt',
-          'imageCaption'
-        ]
-      },
-      statsGroup: {
-        label: '统计数据',
-        fields: [
-          'stats'
-        ]
+        label: '媒体配置',
+        fields: [ 'imageUrl', 'imageAlt' ]
       }
     }
   }
 };
-

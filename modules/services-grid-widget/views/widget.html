@@ -1,0 +1,87 @@
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16" style="opacity: 1; transform: none">      {% if data.widget.heading %}
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          {{ data.widget.heading | escape }}
+        </h2>
+        <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>      {% endif %}
+      {% if data.widget.subheading %}
+        <p class="text-gray-600 max-w-2xl mx-auto text-xl leading-relaxed">
+          {{ data.widget.subheading | escape }}
+        </p>
+      {% endif %}
+    </div>
+
+    {% if data.widget.items and data.widget.items.length %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for item in data.widget.items %}
+          <article class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300 group">
+            <div class="h-48 overflow-hidden relative">
+              {% if item.imageUrl %}
+                <img
+                  src="{{ item.imageUrl | escape }}"
+                  alt="{{ item.imageAlt or item.title | escape }}"
+                  class="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                  loading="lazy"
+                />
+              {% else %}
+                <div class="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-blue-500">
+                  <i class="fa-solid fa-image text-3xl"></i>
+                </div>
+              {% endif %}
+              {% if item.badgePrimary or item.badgeSecondary %}
+                <div class="absolute inset-0 bg-gradient-to-t from-blue-900/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end">
+                  <div class="p-4 w-full">
+                    <div class="flex justify-between items-center gap-2 flex-wrap">
+                      {% if item.badgePrimary %}
+                        <span class="bg-white text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                          {{ item.badgePrimary | escape }}
+                        </span>
+                      {% endif %}
+                      {% if item.badgeSecondary %}
+                        <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-medium">
+                          {{ item.badgeSecondary | escape }}
+                        </span>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+            <div class="p-6">
+              {% if item.iconClass %}
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mb-4">
+                  <i class="{{ item.iconClass | escape }} text-xl"></i>
+                </div>
+              {% endif %}
+              <h3 class="text-xl font-bold text-gray-900 mb-3">
+                {{ item.title | escape }}
+              </h3>
+              {% if item.description %}
+                <p class="text-gray-600 mb-5">
+                  {{ item.description | escape }}
+                </p>
+              {% endif %}
+              {% if item.linkUrl %}
+                <a
+                  class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors duration-300"
+                  href="{{ item.linkUrl | escape }}"
+                  data-discover="true"
+                >
+                  {{ item.linkLabel or '了解更多' }}
+                  <i class="fa-solid fa-arrow-right ml-2 text-sm"></i>
+                </a>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="bg-blue-50 border border-dashed border-blue-200 rounded-2xl p-12 text-center text-blue-600">
+        <i class="fa-solid fa-layer-group text-3xl mb-4"></i>
+        <p class="text-lg font-medium mb-2">请添加至少一条服务卡片内容。</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
