@@ -1,0 +1,10 @@
+{% set config = {
+  limit: data.widget.limit,
+  mode: data.widget.mode,
+  category: data.widget.category or null,
+  title: data.widget.title,
+  description: data.widget.description
+} %}
+
+{% component 'case:homeShowcase' with config %}
+

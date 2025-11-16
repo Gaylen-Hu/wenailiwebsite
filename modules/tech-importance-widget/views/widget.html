@@ -1,0 +1,121 @@
+{% set sectionBackground = data.widget.backgroundClasses or 'bg-gradient-to-br from-gray-50 to-blue-50' %}
+
+<section class="{{ sectionBackground }} py-20" data-tech-importance-widget>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-20">
+      {% if data.widget.heading %}
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6 relative inline-block">
+          {{ data.widget.heading | escape }}
+          {% if data.widget.headingAccentClasses %}
+            <span class="{{ data.widget.headingAccentClasses }}" aria-hidden="true"></span>
+          {% endif %}
+        </h2>
+      {% endif %}
+      {% if data.widget.subheading %}
+        <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+          {{ data.widget.subheading | escape }}
+        </p>
+      {% endif %}
+    </div>
+
+    {% if data.widget.challengesItems and data.widget.challengesItems.length %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-24">
+        {% for challenge in data.widget.challengesItems %}
+          <article class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 overflow-hidden relative transition-all duration-300 hover:shadow-xl">
+            {% if challenge.badgeBackgroundClass %}
+              <div class="{{ challenge.badgeBackgroundClass }}" aria-hidden="true"></div>
+            {% endif %}
+            <div class="{{ challenge.accentColorClass or 'text-red-500' }} mb-5">
+              <i class="{{ challenge.iconClass or 'fa-solid fa-exclamation-circle' }} text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">
+              {{ challenge.title | escape }}
+            </h3>
+            {% if challenge.description %}
+              <p class="text-gray-600">
+                {{ challenge.description | escape }}
+              </p>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="mb-24">
+      <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 relative overflow-hidden">
+        {% if data.widget.impactAccentBarClasses %}
+          <div class="{{ data.widget.impactAccentBarClasses }}" aria-hidden="true"></div>
+        {% endif %}
+        {% if data.widget.impactDecorEnd %}
+          <div class="{{ data.widget.impactDecorEnd }}" aria-hidden="true"></div>
+        {% endif %}
+        {% if data.widget.impactDecorStart %}
+          <div class="{{ data.widget.impactDecorStart }}" aria-hidden="true"></div>
+        {% endif %}
+        {% if data.widget.impactHeading %}
+          <h3 class="text-2xl font-bold text-gray-900 mb-10 text-center relative z-10">
+            {{ data.widget.impactHeading | escape }}
+          </h3>
+        {% endif %}
+        {% if data.widget.impactItems and data.widget.impactItems.length %}
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+            {% for impact in data.widget.impactItems %}
+              <article class="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-xl shadow-md border border-blue-100 transition-all duration-300 hover:shadow-lg">
+                <div class="w-16 h-16 bg-blue-600 bg-opacity-10 rounded-full flex items-center justify-center text-blue-600 mb-6 mx-auto">
+                  <i class="{{ impact.iconClass or 'fa-solid fa-circle-check' }} text-2xl"></i>
+                </div>
+                <h4 class="font-bold text-gray-900 text-lg mb-3 text-center">
+                  {{ impact.title | escape }}
+                </h4>
+                {% if impact.description %}
+                  <p class="text-gray-600 text-center">
+                    {{ impact.description | escape }}
+                  </p>
+                {% endif %}
+              </article>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div>
+      {% if data.widget.reasonsHeading %}
+        <h3 class="text-2xl font-bold text-gray-900 mb-10 text-center relative inline-block left-1/2 transform -translate-x-1/2">
+          {{ data.widget.reasonsHeading | escape }}
+          {% if data.widget.reasonsHeadingAccent %}
+            <span class="{{ data.widget.reasonsHeadingAccent }}" aria-hidden="true"></span>
+          {% endif %}
+        </h3>
+      {% endif %}
+      {% if data.widget.reasonsItems and data.widget.reasonsItems.length %}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {% for reason in data.widget.reasonsItems %}
+            <article class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 overflow-hidden relative transition-all duration-300 hover:shadow-xl">
+              {% if reason.badgeBackgroundClass %}
+                <div class="{{ reason.badgeBackgroundClass }}" aria-hidden="true"></div>
+              {% endif %}
+              <div class="{{ reason.accentColorClass or 'text-green-500' }} mb-5">
+                <i class="{{ reason.iconClass or 'fa-solid fa-check-circle' }} text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900 mb-3">
+                {{ reason.title | escape }}
+              </h3>
+              {% if reason.description %}
+                <p class="text-gray-600">
+                  {{ reason.description | escape }}
+                </p>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="bg-blue-50 border border-dashed border-blue-200 rounded-2xl p-12 text-center text-blue-600">
+          <i class="fa-solid fa-layer-group text-3xl mb-4"></i>
+          <p class="text-lg font-medium mb-2">请添加至少一个选择理由。</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+

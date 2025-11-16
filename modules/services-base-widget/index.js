@@ -8,7 +8,7 @@ export default {
     description: '展示多个服务条目，包括图片、图标、描述、要点列表及行动按钮。'
   },
   icons: {
-    'layer-group': 'LayerGroup'
+   
   },
   fields: {
     add: {
@@ -118,7 +118,7 @@ export default {
               help: '用于屏幕阅读器和 SEO。'
             },
             description: {
-              label: '服务描述',
+              label: '服务描述',  
               type: 'string',
               required: true  
             },
