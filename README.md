@@ -35,3 +35,93 @@ This boilerplate is designed so you can install and start running it right away.
 
 Right now, [all the juicy info is in the ApostropheCMS docs](https://docs.apostrophecms.org), so head over there and start reading! This boilerplate project is a fun introduction to the UI, but you'll want to know more to really try it out.
 
+
+## 启动与部署（PM2）
+
+本项目为 Node.js 服务端应用（ApostropheCMS + Express/Koa），前端静态资源会构建到 `apos-build/` 与 `public/`，但线上进程入口始终为仓库根目录的 `./app.js`。  
+已内置 `ecosystem.config.js`，可通过 [PM2](https://pm2.keymetrics.io/) 进行守护与多进程运行。
+
+### 1）安装依赖并构建前端资源
+
+```bash
+npm ci          # 或 npm install
+# 视项目脚本而定（若有）：
+npm run build   # 产出/更新 apos-build 与 public 静态资源
+```
+
+> 说明：`apos-build/` 是 Apostrophe 管理端/前端资源的构建产物目录，不是 Node 进程入口。应用的启动文件始终是根目录下的 `app.js`。
+
+### 2）本地开发启动
+
+开发模式（热更新/自动重载）通常使用：
+
+```bash
+npm run dev
+```
+
+或使用 PM2 的 development 环境：
+
+```bash
+pm2 start ecosystem.config.js --env development
+pm2 logs
+```
+
+### 3）生产部署（PM2）
+
+1. 准备环境变量（建议使用 `.env` / 系统级环境变量，避免把敏感信息写入仓库）  
+   例如创建 `.env` 或 `.env.production`（示例字段，仅供参考）：
+
+```bash
+NODE_ENV=production
+PORT=3000
+APOS_BASE_URL=https://your-domain.com
+APOS_MONGODB_URI=mongodb://user:pass@host:27017/dbname
+APOSTROPHE_SESSION_SECRET=please-change-me
+# 如使用对象存储（S3/OSS），请配置相应密钥（示例占位）：
+APOS_S3_BUCKET=your-bucket
+APOS_S3_KEY=AKIAxxxx
+APOS_S3_SECRET=xxxx
+APOS_S3_REGION=your-region
+APOS_S3_ENDPOINT=https://s3.your-cloud.com
+```
+
+> 不建议将真实密钥直接硬编码到 `ecosystem.config.js`；更推荐在服务器环境中通过 `export` 或使用 PM2 的 `--env production` 配合外部环境文件的方式注入。
+
+2. 启动生产进程：
+
+```bash
+pm2 start ecosystem.config.js --env production
+pm2 status
+pm2 logs
+```
+
+3. 开机自启动（可选）：
+
+```bash
+pm2 save
+pm2 startup
+```
+
+### 4）常用 PM2 命令
+
+```bash
+pm2 start ecosystem.config.js --env production   # 启动
+pm2 restart wenaili-app                          # 重启
+pm2 stop wenaili-app                             # 停止
+pm2 logs                                         # 查看日志
+pm2 monit                                        # 监控
+pm2 list                                         # 查看列表
+pm2 delete wenaili-app                           # 删除进程
+```
+
+### 5）日志位置
+
+`ecosystem.config.js` 中已配置：
+
+- 合并日志：`./logs/combined.log`
+- 标准输出：`./logs/out.log`
+- 错误日志：`./logs/error.log`
+- 时间格式：`YYYY-MM-DD HH:mm Z`
+
+> 注意：生产环境建议配合 logrotate 或外部日志系统（如 ELK、Cloud Logging），避免单文件无限增长。
+
