@@ -1,5 +1,5 @@
 export default {
-  darkMode: 'class',
+  darkMode: ['class', '[data-theme="dark"]'],
   content: [
     './views/**/*.html',
     './modules/**/views/**/*.html',
