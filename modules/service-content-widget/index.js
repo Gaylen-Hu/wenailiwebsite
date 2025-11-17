@@ -3,7 +3,8 @@ export default {
   options: {
     label: '服务内容网格',
     icon: 'grid',
-    preview: true
+    description: '展示多个服务条目，包括图标、标题、描述等。',
+     previewImage: 'jpg'
   },
   fields: {
     add: {

@@ -1,9 +1,9 @@
 export default {
   // When not in production, refresh the page on restart
   options: {
-    // Change to `apos` for admin UI HMR
-    // `public` is the default and provides HMR for project UI code
-    hmr: 'public',
+    // HMR 配置：'public' 用于项目 UI，'apos' 用于管理界面，false 禁用 HMR
+    // 生产环境禁用 HMR，使用静态构建资源
+    hmr: process.env.NODE_ENV === 'production' ? false : 'public',
     refreshOnRestart: true
   }
 };

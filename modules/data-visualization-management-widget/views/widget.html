@@ -1,0 +1,44 @@
+<section class="py-20 bg-white" data-data-visualization-management-widget>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      {% if data.widget.heading %}
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+          {{ data.widget.heading | escape }}
+        </h2>
+        <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+      {% endif %}
+      {% if data.widget.subheading %}
+        <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+          {{ data.widget.subheading | escape }}
+        </p>
+      {% endif %}
+    </div>
+
+    {% if data.widget.items and data.widget.items.length %}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {% for item in data.widget.items %}
+          <article class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+            <div class="w-14 h-14 {{ item.iconBackgroundClass or 'bg-blue-100' }} rounded-lg flex items-center justify-center {{ item.iconColorClass or 'text-blue-600' }} mb-6">
+              <i class="{{ item.iconClass or 'fa-solid fa-circle' }} text-2xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">
+              {{ item.title | escape }}
+            </h3>
+            {% if item.description %}
+              <p class="text-gray-600">
+                {{ item.description | escape }}
+              </p>
+            {% endif %}
+          </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="bg-blue-50 border border-dashed border-blue-200 rounded-2xl p-12 text-center text-blue-600">
+        <i class="fa-solid fa-chart-pie text-3xl mb-4"></i>
+        <p class="text-lg font-medium mb-2">请添加至少一个可视化内容项。</p>
+      </div>
+    {% endif %}
+  </div>
+</section>
+
+

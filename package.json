@@ -42,6 +42,7 @@
     "@apostrophecms/vite": "^1.0.0",
     "@tailwindcss/postcss": "^4.1.17",
     "apostrophe": "^4.9.0",
+    "dotenv": "^17.2.3",
     "echarts": "^6.0.0",
     "framer-motion": "^12.23.24",
     "normalize.css": "^8.0.1",

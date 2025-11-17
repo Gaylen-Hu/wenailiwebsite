@@ -1,0 +1,118 @@
+<section class="py-20 bg-gray-50" data-data-assets-widget>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      {% if data.widget.heading %}
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+          {{ data.widget.heading | escape }}
+        </h2>
+        <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+      {% endif %}
+      {% if data.widget.subheading %}
+        <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+          {{ data.widget.subheading | escape }}
+        </p>
+      {% endif %}
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+      {% if data.widget.websiteSection %}
+        <article class="bg-white p-8 rounded-xl shadow-lg">
+          <div class="w-16 h-16 {{ data.widget.websiteSection.iconBackgroundClass or 'bg-blue-100' }} rounded-full flex items-center justify-center {{ data.widget.websiteSection.iconColorClass or 'text-blue-600' }} mb-6 mx-auto">
+            <i class="{{ data.widget.websiteSection.iconClass or 'fa-solid fa-globe' }} text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">
+            {{ data.widget.websiteSection.title | escape }}
+          </h3>
+          {% if data.widget.websiteSection.description %}
+            <p class="text-gray-600 text-center mb-6">
+              {{ data.widget.websiteSection.description | escape }}
+            </p>
+          {% endif %}
+          {% if data.widget.websiteSection.cards and data.widget.websiteSection.cards.length %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              {% for card in data.widget.websiteSection.cards %}
+                <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                  <div class="p-2 bg-gray-50 border-b border-gray-100">
+                    <h4 class="text-sm font-medium text-gray-700 text-center">
+                      {{ card.title | escape }}
+                    </h4>
+                  </div>
+                  {% if card.image %}
+                    <img
+                      src="{{ card.image | safe }}"
+                      alt="{{ card.alt or card.title }}"
+                      class="w-full h-auto object-cover h-40"
+                      loading="lazy"
+                    />
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </article>
+      {% endif %}
+
+      {% if data.widget.mediaSection %}
+        <article class="bg-white p-8 rounded-xl shadow-lg">
+          <div class="w-16 h-16 {{ data.widget.mediaSection.iconBackgroundClass or 'bg-blue-100' }} rounded-full flex items-center justify-center {{ data.widget.mediaSection.iconColorClass or 'text-blue-600' }} mb-6 mx-auto">
+            <i class="{{ data.widget.mediaSection.iconClass or 'fa-solid fa-share-alt' }} text-2xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">
+            {{ data.widget.mediaSection.title | escape }}
+          </h3>
+          {% if data.widget.mediaSection.description %}
+            <p class="text-gray-600 text-center mb-6">
+              {{ data.widget.mediaSection.description | escape }}
+            </p>
+          {% endif %}
+
+          {% if data.widget.mediaSection.domesticTitle %}
+            <div class="mb-8">
+              <h4 class="text-lg font-semibold text-gray-900 mb-4 text-center">
+                {{ data.widget.mediaSection.domesticTitle | escape }}
+              </h4>
+              {% if data.widget.mediaSection.domesticPlatforms and data.widget.mediaSection.domesticPlatforms.length %}
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
+                  {% for platform in data.widget.mediaSection.domesticPlatforms %}
+                    <div class="bg-blue-50 p-4 rounded-lg text-center">
+                      <div class="text-blue-600 text-xl mb-2">
+                        <i class="{{ platform.iconClass or 'fa-solid fa-circle' }}"></i>
+                      </div>
+                      <p class="text-gray-700 text-sm">
+                        {{ platform.name | escape }}
+                      </p>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+
+          {% if data.widget.mediaSection.overseasTitle %}
+            <div>
+              <h4 class="text-lg font-semibold text-gray-900 mb-4 text-center">
+                {{ data.widget.mediaSection.overseasTitle | escape }}
+              </h4>
+              {% if data.widget.mediaSection.overseasPlatforms and data.widget.mediaSection.overseasPlatforms.length %}
+                <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-4">
+                  {% for platform in data.widget.mediaSection.overseasPlatforms %}
+                    <div class="bg-indigo-50 p-4 rounded-lg flex flex-col items-center justify-center min-h-[100px]">
+                      <div class="text-indigo-600 text-xl mb-2 flex items-center justify-center">
+                        <i class="{{ platform.iconClass or 'fa-solid fa-circle' }}"></i>
+                      </div>
+                      <p class="text-gray-700 text-sm flex items-center justify-center min-h-[20px]">
+                        {{ platform.name | escape }}
+                      </p>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+          {% endif %}
+        </article>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+

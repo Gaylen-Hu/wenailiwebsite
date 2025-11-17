@@ -1,5 +1,6 @@
 <section class="py-20 bg-gray-50" data-about-section-widget>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    {% if data.widget.heading %}
     <div class="text-center mb-16">
       <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
         {{ data.widget.heading }}
@@ -11,6 +12,7 @@
         </p>
       {% endif %}
     </div>
+    {% endif %}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       <div class="relative">
         <div class="rounded-xl overflow-hidden shadow-2xl">

@@ -2,12 +2,18 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-11 18:59:09
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-16 23:43:01
+ * @LastEditTime: 2025-11-17 16:37:52
  * @FilePath: \wenaili\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import apostrophe from 'apostrophe';
+import dotenv from 'dotenv';
 
+dotenv.config();
+console.log('process.env.NODE_ENV',process.env.NODE_ENV)
+console.log('process.env.APOS_BASE_URL',process.env.APOS_BASE_URL)
+console.log('process.env.APOS_SECRET',process.env.APOS_SECRET)
+console.log('process.env.APOS_BASE_URL',process.env.APOS_BASE_URL)
 apostrophe({
   root: import.meta,
   shortName: 'wenaili',
@@ -53,13 +59,9 @@ apostrophe({
    'fixed-page':{},
     case:{},
     "case-page":{},
+    "about-psge":{},
     // use vite for asset bundling and hot module reloading
-    '@apostrophecms/vite': {
-      options: {
-        // 生产环境禁用 HMR，使用静态构建资源
-        hmr: process.env.NODE_ENV === 'production' ? false : 'public'
-      }
-    },
+    '@apostrophecms/vite': {},
     // The project's first custom page type.
     'default-page': {},
     'news-showcase-widget': {},
@@ -73,5 +75,10 @@ apostrophe({
     "case-showcase-widget":{},
     "brand-importance-widget":{},
     "data-visualization-widget":{},
+    "data-assets-widget":{},
+    "data-visualization-management-widget":{},
+    "growth-partner-widget":{},
+    "differentiation-widget":{},
+    "why-choose-widget":{},
   }
 });

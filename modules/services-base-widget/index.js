@@ -17,16 +17,16 @@ export default {
         type: 'string',
         help: '可选，用于页面内锚点链接，例如“services”。'
       },
-      sectionTitle: {
-        label: '区块标题',
-        type: 'string',
-        required: true
-      },
-      sectionDescription: {
-        label: '区块标题',
-        type: 'string',
-        required: true
-      },
+      // sectionTitle: {
+      //   label: '区块标题',
+      //   type: 'string',
+      //   required: true
+      // },
+      // sectionDescription: {
+      //   label: '区块标题',
+      //   type: 'string',
+      //   required: true
+      // },
       backgroundColor: {
         label: '背景颜色',
         type: 'color',
@@ -168,8 +168,8 @@ export default {
       basics: {
         label: '基础设置',
         fields: [
-          'sectionTitle',
-          'sectionDescription',
+          // 'sectionTitle',
+          // 'sectionDescription',
           'services'
         ]
       },

@@ -164,5 +164,43 @@ ls -la public/apos-frontend/default/
 **问题：静态资源路径不正确**
 
 - **原因**：`APOS_BASE_URL` 环境变量未设置或设置错误
-- **解决**：在 `ecosystem.config.js` 的 `env_production` 中设置正确的 `APOS_BASE_URL`
+- **解决**：在 `ecosystem.config.cjs` 的 `env_production` 中设置正确的 `APOS_BASE_URL`
+
+**问题：无法读取环境变量（如 OSS 配置）**
+
+- **原因**：环境变量未在系统或 PM2 配置中设置
+- **解决**：
+  1. **方式一（推荐）**：在服务器系统环境变量中设置
+     ```bash
+     # 编辑 ~/.bashrc 或 ~/.profile
+     export APOS_S3_KEY="your-key"
+     export APOS_S3_SECRET="your-secret"
+     export APOS_S3_BUCKET="your-bucket"
+     # ... 其他变量
+     
+     # 重新加载配置
+     source ~/.bashrc
+     
+     # 然后启动 PM2（会继承系统环境变量）
+     pm2 start ecosystem.config.cjs --env production
+     ```
+  
+  2. **方式二**：直接在 `ecosystem.config.cjs` 的 `env_production` 中硬编码（仅用于测试）
+     ```javascript
+     env_production: {
+       APOS_S3_KEY: 'your-actual-key',
+       APOS_S3_SECRET: 'your-actual-secret',
+       // ...
+     }
+     ```
+  
+  3. **验证环境变量**：
+     ```bash
+     # 运行检查脚本
+     chmod +x check-env.sh
+     ./check-env.sh
+     
+     # 或在 PM2 中查看
+     pm2 env wenaili-app
+     ```
 

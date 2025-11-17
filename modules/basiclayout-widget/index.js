@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-09-21 13:26:22
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-11 19:22:19
+ * @LastEditTime: 2025-11-17 17:10:27
  * @FilePath: \my-app\modules\content-widget-modules\basiclayout-widget\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,7 +11,7 @@ import areaConfig from '../../lib/area.js';
 export default {
   extend: '@apostrophecms/widget-type',
   options: {
-    label: 'Basiclayout Widget',
+    label: '基础布局组件',
     icon: 'layout-icon',
     previewImage: 'jpg'
   },
@@ -20,13 +20,11 @@ export default {
       title: {
         type: 'string',
         label: '标题',
-        required: true
       },
       description: {
         type: 'string',
         label: '描述',
         textarea: true,
-        required: true
       },
       main: {
         type: 'area',
