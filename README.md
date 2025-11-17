@@ -114,7 +114,33 @@ pm2 list                                         # 查看列表
 pm2 delete wenaili-app                           # 删除进程
 ```
 
-### 5）日志位置
+### 5）生产环境部署步骤
+
+**重要：在生产环境启动前，必须先构建前端资源！**
+
+```bash
+# 1. 构建前端静态资源（生成到 apos-build/ 和 public/apos-frontend/）
+npm run build
+
+# 2. 启动应用（使用生产环境配置）
+pm2 start ecosystem.config.js --env production
+```
+
+**为什么需要构建？**
+
+- 开发环境：Vite 提供热模块替换（HMR），资源通过开发服务器提供
+- 生产环境：必须构建静态资源，否则会尝试访问 `__vite/@vite/client` 等开发服务器路径
+- 构建后：所有前端资源会打包到 `public/apos-frontend/`，通过静态文件服务提供
+
+**验证构建是否成功：**
+
+```bash
+# 检查构建产物
+ls -la public/apos-frontend/default/
+# 应该看到 apos-bundle.css 和 apos-module-bundle.js 等文件
+```
+
+### 6）日志位置
 
 `ecosystem.config.js` 中已配置：
 
@@ -124,4 +150,19 @@ pm2 delete wenaili-app                           # 删除进程
 - 时间格式：`YYYY-MM-DD HH:mm Z`
 
 > 注意：生产环境建议配合 logrotate 或外部日志系统（如 ELK、Cloud Logging），避免单文件无限增长。
+
+### 7）故障排查
+
+**问题：访问时出现 `__vite/@vite/client` 404 错误**
+
+- **原因**：生产环境未构建或 Vite HMR 未禁用
+- **解决**：
+  1. 运行 `npm run build` 构建前端资源
+  2. 确认 `app.js` 中 Vite 配置：`hmr: process.env.NODE_ENV === 'production' ? false : 'public'`
+  3. 重启应用：`pm2 restart wenaili-app --env production`
+
+**问题：静态资源路径不正确**
+
+- **原因**：`APOS_BASE_URL` 环境变量未设置或设置错误
+- **解决**：在 `ecosystem.config.js` 的 `env_production` 中设置正确的 `APOS_BASE_URL`
 

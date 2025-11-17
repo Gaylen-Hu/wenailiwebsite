@@ -24,7 +24,8 @@ module.exports = {
       env_production: {
         NODE_ENV: 'production',
         PORT: 3000,
-        },
+        APOS_BASE_URL: process.env.APOS_BASE_URL || 'https://www.wenaili.com'
+      },
 
       // 日志配置
       log_file: './logs/combined.log',
