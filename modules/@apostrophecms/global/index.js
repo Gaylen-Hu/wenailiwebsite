@@ -72,6 +72,34 @@ export default {
         required: true,
         def:'周一至周五 9:00-18:00'
       },
+      contactItems: {
+        type: 'array',
+        label: '联系信息项',
+        titleField: 'title',
+        fields: {
+          add: {
+            title: {
+              type: 'string',
+              label: '标题',
+              required: true
+            },
+            description: {
+              type: 'string',
+              label: '描述',
+              textarea: true,
+              required: true
+            },
+            iconClass: {
+              type: 'string',
+              label: '图标类名',
+              def: 'fa-solid fa-location-dot',
+              help: '输入 Font Awesome 或自定义的图标类名'
+            }
+          }
+        }
+      },
+
+
       // 版权
       copyright: {
         type: 'string',
@@ -257,7 +285,7 @@ export default {
       },
       basics: {
         label: '基础',
-        fields: [ 'email', 'phone', 'address', 'copyright', 'filingNumber' ]
+        fields: [ 'contactItems', 'filingNumber' ]
       },
       analytics: {
         label: '统计代码',

@@ -1,0 +1,11 @@
+{% if data.config.type == 'pie' or data.config.type == 'doughnut' %}
+  {# 饼图/圆环图：最大200px×200px，居中 #}
+  <div data-graph-canvas-wrapper data-chart-data="{{ data.config | jsonAttribute }}" style="width: 200px; height: 200px; margin: 0 auto; display: flex; justify-content: center; align-items: center;">
+    <canvas id="{{ data.target }}"></canvas>
+  </div>
+{% else %}
+  {# 其他图表类型：保持原有样式 #}
+  <div data-graph-canvas-wrapper data-chart-data="{{ data.config | jsonAttribute }}" style="width: 800px;">
+    <canvas id="{{ data.target }}"></canvas>
+  </div>
+{% endif %}

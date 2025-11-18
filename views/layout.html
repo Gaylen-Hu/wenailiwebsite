@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-11 17:49:31
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-11 18:06:21
+ * @LastEditTime: 2025-11-18 17:45:51
  * @FilePath: \wenaili\views\layout.html
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -10,15 +10,27 @@
 {% extends data.outerLayout %}
 {% import 'fragments/footer.html' as footer %} {# 引入底部 #}
 {% import 'fragments/header.html' as header %} {# 引入头部 #}
-{% set title = data.piece.title or data.page.title %}
+{% set defaultTitle = '物流货代企业运营专家 - 奈李信息技术' %}
+{% set defaultDescription = '专业的物流货代公司市场部及技术部代运营服务提供商，助力货代企业提升品牌影响力与业务增长。提供货代网站建设、SEO优化、数据分析、数字化AI工具等服务，让您的货代企业在竞争中脱颖而出。' %}
+{% set defaultKeywords = '物流货代,货代运营,市场部代运营,技术部代运营,物流营销,货代网站建设,货代SEO优化,货代数据分析,数字化AI工具,物流货代品牌建设' %}
+{% set inferredTitle = data.piece.title or data.page.title %}
+{% set seoTitle = data.piece.seoTitle or data.page.seoTitle or inferredTitle or defaultTitle %}
+{% set seoDescription = data.piece.seoDescription or data.page.seoDescription or defaultDescription %}
+{% set seoKeywords = data.piece.seoKeywords or data.page.seoKeywords or defaultKeywords %}
 {% block title %}
-  {{ title }}
-  {% if not title %}
+  {{ seoTitle }}
+  {% if not seoTitle %}
     {{ apos.log('Looks like you forgot to override the title block in a template that does not have access to an Apostrophe page or piece.') }}
   {% endif %}
 {% endblock %}
 
-{% block beforeMain %}
+{% block extraHead %}
+  {{ super() }}
+  <meta name="description" content="{{ seoDescription }}">
+  <meta name="keywords" content="{{ seoKeywords }}">
+{% endblock %}
+
+{% block beforeMain %}  
 <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"

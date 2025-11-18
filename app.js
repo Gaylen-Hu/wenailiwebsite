@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-11 18:59:09
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-17 16:37:52
+ * @LastEditTime: 2025-11-18 17:34:10
  * @FilePath: \wenaili\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -20,7 +20,6 @@ apostrophe({
   secret: process.env.APOS_SECRET||'my-app',
   baseUrl: process.env.APOS_BASE_URL || 'http://localhost:3000',
   nestedModuleSubdirs: true,
-
   modules: {
     // Apostrophe module configuration
     // *******************************
@@ -32,6 +31,9 @@ apostrophe({
     // have a minimal configuration here to turn them on: `moduleName: {}`
     // ***********************************************************************
     // `className` options set custom CSS classes for Apostrophe core widgets.
+    '@apostrophecms/favicon': {},
+    '@apostrophecms/sitemap': {},
+    '@apostrophecms/seo': {},
     '@apostrophecms/rich-text-widget': {
       options: {
         className: 'bp-rich-text'
@@ -47,6 +49,8 @@ apostrophe({
         className: 'bp-video-widget'
       }
     },
+    'chart-data': {},
+    'chart-widget': {},
     'basiclayout-widget': {},
     'about-section-widget': {},
     'banner-widget': {},
@@ -59,7 +63,7 @@ apostrophe({
    'fixed-page':{},
     case:{},
     "case-page":{},
-    "about-psge":{},
+    "about-page":{},
     // use vite for asset bundling and hot module reloading
     '@apostrophecms/vite': {},
     // The project's first custom page type.

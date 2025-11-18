@@ -1,3 +1,11 @@
+/*
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-11-18 17:22:41
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-11-18 17:51:00
+ * @FilePath: \wenaili\modules\data-visualization-widget\index.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 export default {
   extend: '@apostrophecms/widget-type',
   options: {
@@ -23,77 +31,39 @@ export default {
         label: '背景类名',
         def: 'py-20 bg-gray-50'
       },
-      lineChartTitle: {
-        type: 'string',
-        label: '折线图标题',
-        def: '业务增长趋势'
-      },
-      lineChartData: {
+      charts: {
         type: 'array',
-        label: '折线图数据',
-        titleField: 'month',
-        def: [
-          { month: '1月', business: 400, customers: 450 },
-          { month: '2月', business: 500, customers: 480 },
-          { month: '3月', business: 600, customers: 500 },
-          { month: '4月', business: 800, customers: 550 },
-          { month: '5月', business: 700, customers: 520 },
-          { month: '6月', business: 900, customers: 480 }
-        ],
+        label: '图表卡片',
+        titleField: 'title',
+        min: 1,
         fields: {
           add: {
-            month: {
+            title: {
               type: 'string',
-              label: '月份',
-              required: true
+              label: '卡片标题'
             },
-            business: {
-              type: 'integer',
-              label: '业务量',
-              def: 0
-            },
-            customers: {
-              type: 'integer',
-              label: '客户数',
-              def: 0
-            }
-          }
-        }
-      },
-      pieChartTitle: {
-        type: 'string',
-        label: '饼图标题',
-        def: '客户来源渠道分布'
-      },
-      pieChartData: {
-        type: 'array',
-        label: '饼图数据',
-        titleField: 'name',
-        def: [
-          { name: '搜索引擎', value: 31, color: '#0088FE' },
-          { name: '社交媒体', value: 23, color: '#00C49F' },
-          { name: '直接访问', value: 23, color: '#FFBB28' },
-          { name: '合作伙伴', value: 15, color: '#FF8042' },
-          { name: '其他渠道', value: 8, color: '#8884d8' }
-        ],
-        fields: {
-          add: {
-            name: {
+            description: {
               type: 'string',
-              label: '渠道名称',
-              required: true
+              label: '卡片描述',
+              textarea: true
             },
-            value: {
-              type: 'integer',
-              label: '百分比',
-              def: 0,
-              min: 0,
-              max: 100
-            },
-            color: {
-              type: 'string',
-              label: '颜色（十六进制）',
-              def: '#0088FE'
+            chartArea: {
+              type: 'area',
+              label: '图表内容',
+              help: '使用 chart-widget 配置任意类型的 Chart.js 图表数据集',
+              options: {
+                  widgets: {
+                    'chart': {},
+                  '@apostrophecms/rich-text': {
+                    toolbar: ['bold', 'italic', 'link'],
+                    styles: [
+                      { tag: 'p', label: '正文' },
+                      { tag: 'h4', label: '小标题' }
+                    ]
+                  }
+                },
+                max: 1
+              }
             }
           }
         }
@@ -104,13 +74,9 @@ export default {
         label: '基础设置',
         fields: [ 'heading', 'subheading', 'backgroundClass' ]
       },
-      lineChart: {
-        label: '折线图配置',
-        fields: [ 'lineChartTitle', 'lineChartData' ]
-      },
-      pieChart: {
-        label: '饼图配置',
-        fields: [ 'pieChartTitle', 'pieChartData' ]
+      charts: {
+        label: '图表内容',
+        fields: [ 'charts' ]
       }
     }
   }

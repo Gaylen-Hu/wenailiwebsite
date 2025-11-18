@@ -1,0 +1,5 @@
+<section data-chart-widget>
+  {% set dataSet = data.widget._chartdataSet[0] %}
+  {% set file = apos.attachment.url(data.widget._chartdataSet[0].dataFile) %}
+  {% component 'chart-widget:returnChartData' with { data: data.widget, dataFile: file } %}
+</section>

@@ -1,311 +1,65 @@
 {% set sectionClass = data.widget.backgroundClass or 'py-20 bg-gray-50' %}
 
-<section class="{{ sectionClass }}" data-data-visualization-widget>
+<section class="{{ sectionClass }} data-viz-widget" data-data-visualization-widget>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-16">
       {% if data.widget.heading %}
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
           {{ data.widget.heading | escape }}
         </h2>
-        <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+        <div class="w-20 h-1 bg-blue-600 dark:bg-blue-500 mx-auto mb-6"></div>
       {% endif %}
       {% if data.widget.subheading %}
-        <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+        <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-xl">
           {{ data.widget.subheading | escape }}
         </p>
       {% endif %}
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-      {# 折线图卡片 #}
-      <article class="bg-white p-6 rounded-xl shadow-lg">
-        {% if data.widget.lineChartTitle %}
-          <h3 class="text-xl font-bold text-gray-900 mb-6">
-            {{ data.widget.lineChartTitle | escape }}
+    {% set chartCards = data.widget.charts or [] %}
+    {% if chartCards.length %}
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {% for card in chartCards %}
+          <article class="bg-white dark:bg-gray-900/80 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xl p-6 flex flex-col gap-6 transition-all duration-300">
+            {% if card.title %}
+              <div>
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+                  {{ card.title }}
           </h3>
+                {% if card.description %}
+                  <p class="mt-2 text-gray-600 dark:text-gray-300 text-base leading-relaxed">
+                    {{ card.description | safe }}
+                  </p>
         {% endif %}
-        <div class="h-80">
-          <div id="lineChart-{{ data.widget._id }}" class="w-full h-full" style="width: 100%; height: 100%;"></div>
-          <script type="application/json" id="lineChartData-{{ data.widget._id }}">
-            {{ (data.widget.lineChartData or []) | dump | safe }}
-          </script>
         </div>
-      </article>
+            {% endif %}
 
-      {# 饼图卡片 #}
-      <article class="bg-white p-6 rounded-xl shadow-lg">
-        {% if data.widget.pieChartTitle %}
-          <h3 class="text-xl font-bold text-gray-900 mb-6">
-            {{ data.widget.pieChartTitle | escape }}
-          </h3>
-        {% endif %}
-        <div class="h-80 flex items-center justify-center">
-          <div id="pieChart-{{ data.widget._id }}" class="w-full h-full max-w-md" style="width: 100%; height: 100%; max-width: 640px;"></div>
-          <script type="application/json" id="pieChartData-{{ data.widget._id }}">
-            {{ (data.widget.pieChartData or []) | dump | safe }}
-          </script>
+            <div class="chart-card-area space-y-4">
+              {% area card, 'chartArea' %}
         </div>
       </article>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="bg-white dark:bg-gray-900 border border-dashed border-gray-200 dark:border-gray-700 rounded-2xl p-10 text-center">
+        <p class="text-gray-600 dark:text-gray-300">
+          请在“小部件设置 → 图表卡片”中添加至少一个 Chart Widget。
+        </p>
     </div>
+    {% endif %}
   </div>
 </section>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/6.0.0/echarts.min.js"></script>
-{# Chart.js 初始化脚本 #}
-<script>
-(function() {
-  'use strict';
-  function initCharts() {
-    // 检查 Chart.js 是否已加载
-    if (typeof echarts === 'undefined' && typeof Chart === 'undefined') {
-      console.warn('未找到图表库，请确保已引入 echarts 或 Chart.js');
-      const widgetId = '{{ data.widget._id }}';
-      const lineChartEl = document.getElementById('lineChart-' + widgetId);
-      const pieChartEl = document.getElementById('pieChart-' + widgetId);
-      if (lineChartEl && lineChartEl.parentElement) {
-        lineChartEl.parentElement.innerHTML = '<div class="flex items-center justify-center h-full text-gray-500"><p class="text-sm">请加载 ECharts 或 Chart.js 库以显示图表</p></div>';
-      }
-      if (pieChartEl && pieChartEl.parentElement) {
-        pieChartEl.parentElement.innerHTML = '<div class="flex items-center justify-center h-full text-gray-500"><p class="text-sm">请加载 ECharts 或 Chart.js 库以显示图表</p></div>';
-      }
-      return;
-    }
-    
-    const widgetId = '{{ data.widget._id }}';
-    
-    let lineChartData = [];
-    const lineChartDataScript = document.getElementById('lineChartData-' + widgetId);
-    if (lineChartDataScript) {
-      try {
-        lineChartData = JSON.parse(lineChartDataScript.textContent || '[]');
-        const lineChartEl = document.getElementById('lineChart-' + widgetId);
-        
-        if (lineChartEl && lineChartData.length > 0) {
-      const months = lineChartData.map(item => item.month);
-      const businessData = lineChartData.map(item => item.business || 0);
-      const customerData = lineChartData.map(item => item.customers || 0);
-      
-      if (window.echarts) {
-        const chart = echarts.init(lineChartEl);
-        chart.setOption({
-          tooltip: { trigger: 'axis' },
-          legend: { data: ['业务量', '客户数'], bottom: 0 },
-          grid: { left: 40, right: 20, top: 30, bottom: 50 },
-          xAxis: { type: 'category', data: months, axisLabel: { color: '#666' }, axisLine: { lineStyle: { color: '#666' } } },
-          yAxis: { type: 'value', axisLabel: { color: '#666' }, axisLine: { lineStyle: { color: '#666' } }, splitLine: { lineStyle: { color: '#ccc', type: 'dashed' } } },
-          series: [
-            { name: '业务量', type: 'line', smooth: true, data: businessData, symbolSize: 6, lineStyle: { width: 2, color: '#0088FE' } },
-            { name: '客户数', type: 'line', smooth: true, data: customerData, symbolSize: 6, lineStyle: { width: 2, color: '#00C49F' } }
-          ]
-        });
-      } else if (window.Chart && lineChartEl.getContext) {
-        const maxValue = Math.max(...businessData, ...customerData);
-        const yAxisMax = Math.ceil(maxValue / 250) * 250;
-        new Chart(lineChartEl.getContext('2d'), {
-        type: 'line',
-        data: {
-          labels: months,
-          datasets: [
-            {
-              label: '业务量',
-              data: businessData,
-              borderColor: '#0088FE',
-              backgroundColor: 'rgba(0, 136, 254, 0.1)',
-              tension: 0.4,
-              pointRadius: 3,
-              pointHoverRadius: 5,
-              pointBackgroundColor: '#fff',
-              pointBorderColor: '#0088FE',
-              pointBorderWidth: 1,
-              pointHoverBorderWidth: 2,
-              fill: false
-            },
-            {
-              label: '客户数',
-              data: customerData,
-              borderColor: '#00C49F',
-              backgroundColor: 'rgba(0, 196, 159, 0.1)',
-              tension: 0.4,
-              pointRadius: 3,
-              pointHoverRadius: 5,
-              pointBackgroundColor: '#fff',
-              pointBorderColor: '#00C49F',
-              pointBorderWidth: 1,
-              pointHoverBorderWidth: 2,
-              fill: false
-            }
-          ]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          interaction: {
-            mode: 'index',
-            intersect: false
-          },
-          plugins: {
-            legend: {
-              display: true,
-              position: 'bottom',
-              labels: {
-                usePointStyle: true,
-                padding: 15,
-                font: {
-                  size: 12
-                }
-              }
-            },
-            tooltip: {
-              enabled: true,
-              mode: 'index',
-              intersect: false,
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              titleColor: '#333',
-              bodyColor: '#666',
-              borderColor: '#ccc',
-              borderWidth: 1,
-              padding: 12,
-              displayColors: true,
-              callbacks: {
-                title: function(context) {
-                  return context[0].label || '';
-                },
-                label: function(context) {
-                  return context.dataset.label + ': ' + context.parsed.y;
-                }
-              }
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              max: yAxisMax,
-              ticks: {
-                stepSize: 250,
-                color: '#666',
-                font: {
-                  size: 11
-                }
-              },
-              grid: {
-                color: '#ccc',
-                lineWidth: 1,
-                borderDash: [3, 3],
-                drawBorder: true,
-                borderColor: '#666'
-              },
-              border: {
-                display: true,
-                color: '#666'
-              }
-            },
-            x: {
-              ticks: {
-                color: '#666',
-                font: {
-                  size: 11
-                }
-              },
-              grid: {
-                color: '#ccc',
-                lineWidth: 1,
-                borderDash: [3, 3],
-                drawBorder: true,
-                borderColor: '#666'
-              },
-              border: {
-                display: true,
-                color: '#666'
-              }
-            }
-          },
-          animation: {
-            duration: 1000,
-            easing: 'easeInOutQuart'
-          }
-        }
-      });
-      } else {
-        lineChartEl.innerHTML = '<div class="flex items-center justify-center h-full text-gray-500"><p class="text-sm">未找到图表库，请引入 ECharts 或 Chart.js</p></div>';
-      }
-        } else {
-          console.warn('折线图数据为空或 canvas 元素未找到');
-        }
-      } catch (error) {
-        console.error('折线图初始化错误:', error);
-        const lineChartEl2 = document.getElementById('lineChart-' + widgetId);
-        if (lineChartEl2 && lineChartEl2.parentElement) {
-          lineChartEl2.parentElement.innerHTML = '<div class="flex items-center justify-center h-full text-red-500"><p class="text-sm">图表渲染失败</p></div>';
-        }
-      }
-    }
 
-    let pieChartData = [];
-    const pieChartDataScript = document.getElementById('pieChartData-' + widgetId);
-    if (pieChartDataScript) {
-      try {
-        pieChartData = JSON.parse(pieChartDataScript.textContent || '[]');
-        const pieChartEl = document.getElementById('pieChart-' + widgetId);
-        
-        if (pieChartEl && pieChartData.length > 0) {
-          if (window.echarts) {
-            const pieChart = echarts.init(pieChartEl);
-            pieChart.setOption({
-              tooltip: { trigger: 'item', formatter: '{b}: {c}% ({d}%)' },
-              legend: { show: false },
-              series: [
-                {
-                  name: '来源',
-                  type: 'pie',
-                  radius: ['30%', '70%'],
-                  avoidLabelOverlap: true,
-                  itemStyle: { borderRadius: 6, borderColor: '#fff', borderWidth: 2 },
-                  label: { show: true, formatter: '{b}: {c}%' },
-                  emphasis: { label: { show: true, fontWeight: 'bold' } },
-                  data: pieChartData.map(function(it) { return { value: it.value, name: it.name, itemStyle: { color: it.color || '#0088FE' } }; })
-                }
-              ]
-            });
-          } else if (window.Chart && pieChartEl.getContext) {
-            const values = pieChartData.map(item => item.value);
-            const colors = pieChartData.map(item => item.color || '#0088FE');
-            new Chart(pieChartEl.getContext('2d'), {
-              type: 'pie',
-              data: { labels: pieChartData.map(item => item.name), datasets: [{ data: values, backgroundColor: colors, borderColor: '#fff', borderWidth: 2 }] },
-              options: { responsive: true, maintainAspectRatio: false }
-            });
-          } else {
-            pieChartEl.innerHTML = '<div class="flex items-center justify-center h-full text-gray-500"><p class="text-sm">未找到图表库，请引入 ECharts 或 Chart.js</p></div>';
-          }
-        } else {
-          console.warn('饼图数据为空或 canvas 元素未找到');
-        }
-      } catch (error) {
-        console.error('饼图初始化错误:', error);
-        const pieChartEl2 = document.getElementById('pieChart-' + widgetId);
-        if (pieChartEl2 && pieChartEl2.parentElement) {
-          pieChartEl2.parentElement.innerHTML = '<div class="flex items-center justify-center h-full text-red-500"><p class="text-sm">图表渲染失败</p></div>';
-        }
-      }
-    }
+<style>
+  .data-viz-widget [data-chart-widget] {
+    width: 100%;
   }
-  
-  // DOM 就绪后执行，或延迟执行以确保 Chart.js 已加载
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function() {
-      // 延迟执行以确保 Chart.js 已加载
-      setTimeout(initCharts, 100);
-    });
-  } else {
-    // DOM 已就绪，延迟执行以确保 Chart.js 已加载
-    setTimeout(initCharts, 100);
+  .data-viz-widget [data-graph-canvas-wrapper] {
+    width: 100% !important;
+    max-width: 100% !important;
   }
-  
-  // 如果 Chart.js 是异步加载的，监听 window 加载事件
-  window.addEventListener('load', function() {
-    if (typeof Chart !== 'undefined') {
-      initCharts();
-    }
-  });
-})();
-</script>
+  .data-viz-widget canvas {
+    max-width: 100%;
+  }
+</style>
 

@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-11 21:32:56
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-11 22:28:24
+ * @LastEditTime: 2025-11-18 15:22:30
  * @FilePath: \wenaili\modules\contact-wrap-widget\views\widget.html
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -12,57 +12,41 @@
 {% set notificationEmail = data.widget.notificationEmail or '' %}
 {% set notificationSubject = data.widget.notificationSubject or '' %}
 {% set fieldClass = "w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-400 dark:focus:ring-blue-400" %}
+{% set formText = data.widget.formText or {} %}
+{% set contactHeading = data.widget.contactHeading or '联系方式' %}
+{% set contactDescription = data.widget.contactDescription %}
+{% set defaultContactItems = [
+  { iconClass: 'fa-solid fa-location-dot', title: '公司地址', description: data.global.address },
+  { iconClass: 'fa-solid fa-phone', title: '联系电话', description: data.global.phone },
+  { iconClass: 'fa-solid fa-envelope', title: '电子邮箱', description: data.global.email },
+  { iconClass: 'fa-regular fa-clock', title: '工作时间', description: data.global.workTime }
+] %}
+{% set contactItems = data.widget.contactItems if data.widget.contactItems and data.widget.contactItems.length else defaultContactItems %}
 <div class="grid grid-cols-1 lg:grid-cols-5 gap-10">
   <div
     class="lg:col-span-2 bg-gray-50 dark:bg-gray-900 p-8 rounded-xl"
     style="opacity: 1; transform: none"
   >
-    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">联系方式</h3>
+    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">{{ contactHeading }}</h3>
+    {% if contactDescription %}
+      <p class="text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">{{ contactDescription }}</p>
+    {% endif %}
     <div class="space-y-6">
-      <div class="flex items-start">
-        <div
-          class="w-10 h-10 bg-blue-100 dark:bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-200 mr-4 mt-1"
-        >
-          <i class="fa-solid fa-location-dot"></i>
-        </div>
-        <div>
-          <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-1">公司地址</h4>
-          <p class="text-gray-600 dark:text-gray-300">{{ data.global.address }}</p>
-        </div>
-      </div>
-      <div class="flex items-start">
-        <div
-          class="w-10 h-10 bg-blue-100 dark:bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-200 mr-4 mt-1"
-        >
-          <i class="fa-solid fa-phone"></i>
-        </div>
-        <div>
-          <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-1">联系电话</h4>
-          <p class="text-gray-600 dark:text-gray-300">{{ data.global.phone }}</p>
-        </div>
-      </div>
-      <div class="flex items-start">
-        <div
-          class="w-10 h-10 bg-blue-100 dark:bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-200 mr-4 mt-1"
-        >
-          <i class="fa-solid fa-envelope"></i>
-        </div>
-        <div>
-          <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-1">电子邮箱</h4>
-          <p class="text-gray-600 dark:text-gray-300">{{ data.global.email }}</p>
-        </div>
-      </div>
-      <div class="flex items-start">
-        <div
-          class="w-10 h-10 bg-blue-100 dark:bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-200 mr-4 mt-1"
-        >
-          <i class="fa-regular fa-clock"></i>
-        </div>
-        <div>
-          <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-1">工作时间</h4>
-          <p class="text-gray-600 dark:text-gray-300">{{ data.global.workTime }}</p>
-        </div>
-      </div>
+      {% for item in contactItems %}
+        {% if item.description %}
+          <div class="flex items-start">
+            <div
+              class="w-10 h-10 bg-blue-100 dark:bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-200 mr-4 mt-1"
+            >
+              <i class="{{ item.iconClass or 'fa-solid fa-location-dot' }}"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-gray-900 dark:text-gray-100 mb-1">{{ item.title }}</h4>
+              <p class="text-gray-600 dark:text-gray-300">{{ item.description }}</p>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
   <div class="lg:col-span-3" style="opacity: 1; transform: none">
@@ -75,16 +59,22 @@
       data-notification-subject="{{ notificationSubject }}"
       novalidate
     >
+      {% if formText.formHeading %}
+        <h3 class="text-2xl font-semibold text-gray-900 dark:text-white">{{ formText.formHeading }}</h3>
+      {% endif %}
+      {% if formText.formDescription %}
+        <p class="text-gray-600 dark:text-gray-300">{{ formText.formDescription }}</p>
+      {% endif %}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >姓名</label
+            >{{ formText.nameLabel or '姓名' }}</label
           ><input
             type="text"
             id="name"
             name="name"
             class="{{ fieldClass }}"
-            placeholder="姓名"
+            placeholder="{{ formText.namePlaceholder or '姓名' }}"
             value=""
           />
         </div>
@@ -92,13 +82,13 @@
           <label
             for="email"
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >电子邮箱</label
+            >{{ formText.emailLabel or '电子邮箱' }}</label
           ><input
             type="email"
             id="email"
             name="email"
             class="{{ fieldClass }}"
-            placeholder="电子邮箱"
+            placeholder="{{ formText.emailPlaceholder or '电子邮箱' }}"
             value=""
           />
         </div>
@@ -108,13 +98,13 @@
           <label
             for="phone"
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >联系电话 <span class="text-red-500">*</span></label
+            >{{ formText.phoneLabel or '联系电话' }} <span class="text-red-500">*</span></label
           ><input
             type="tel"
             id="phone"
             name="phone"
             class="{{ fieldClass }}"
-            placeholder="联系电话"
+            placeholder="{{ formText.phonePlaceholder or '联系电话' }}"
             value=""
           />
         </div>
@@ -122,13 +112,13 @@
           <label
             for="subject"
             class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >咨询主题</label
+            >{{ formText.subjectLabel or '咨询主题' }}</label
           ><input
             type="text"
             id="subject"
             name="subject"
             class="{{ fieldClass }}"
-            placeholder="咨询主题"
+            placeholder="{{ formText.subjectPlaceholder or '咨询主题' }}"
             value=""
           />
         </div>
@@ -137,13 +127,13 @@
         <label
           for="message"
           class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-          >咨询内容</label
+          >{{ formText.messageLabel or '咨询内容' }}</label
         ><textarea
           id="message"
           name="message"
           rows="5"
           class="{{ fieldClass }}"
-          placeholder="咨询内容"
+          placeholder="{{ formText.messagePlaceholder or '咨询内容' }}"
         ></textarea>
       </div>
       <div class="flex items-center">
@@ -154,14 +144,14 @@
           class="h-4 w-4 text-blue-600 dark:text-blue-400 focus:ring-blue-500 dark:focus:ring-blue-400 border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-900"
           required=""
         /><label for="privacy" class="ml-2 block text-sm text-gray-600 dark:text-gray-300"
-          >我已阅读并同意隐私政策和服务条款</label
+          >{{ formText.consentText or '我已阅读并同意隐私政策和服务条款' }}</label
         >
       </div>
       <button
         type="submit"
         class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center"
       >
-        提交咨询<i class="fa-solid fa-paper-plane ml-2"></i>
+        {{ formText.submitText or '提交咨询' }}<i class="fa-solid fa-paper-plane ml-2"></i>
       </button>
       <div
         id="{{ statusId }}"
@@ -182,6 +172,11 @@
         const defaultNotificationEmail = form.dataset.notificationEmail || '';
         const defaultNotificationSubject = form.dataset.notificationSubject || '';
         let cachedCsrfToken = null;
+        const messages = {
+          loading: '{{ (formText.loadingText or "提交中，请稍候...") | e("js") }}',
+          success: '{{ (formText.successText or "提交成功，我们将在24小时内与您联系。") | e("js") }}',
+          error: '{{ (formText.errorText or "提交失败，请稍后再试或直接联系我们。") | e("js") }}'
+        };
         const statusStates = {
           loading: ['border-blue-200', 'bg-blue-50', 'text-blue-700', 'dark:border-blue-500/40', 'dark:bg-blue-500/10', 'dark:text-blue-200'],
           success: ['border-green-200', 'bg-green-50', 'text-green-700', 'dark:border-green-500/40', 'dark:bg-green-500/10', 'dark:text-green-200'],
@@ -234,7 +229,7 @@
             submitBtn.disabled = true;
             submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
           }
-          setStatus('loading', '提交中，请稍候...');
+          setStatus('loading', messages.loading);
 
           try {
             const payload = Object.fromEntries(formData.entries());
@@ -263,15 +258,15 @@
             const result = await response.json().catch(() => null);
 
             if (response.ok && result && result.success) {
-              setStatus('success', result.message || '提交成功，我们将在24小时内与您联系。');
+              setStatus('success', result.message || messages.success);
               form.reset();
               cachedCsrfToken = null;
             } else {
-              const errorMessage = (result && result.message) || '提交失败，请稍后再试或直接联系我们。';
+              const errorMessage = (result && result.message) || messages.error;
               setStatus('error', errorMessage);
             }
           } catch (error) {
-            setStatus('error', error.message || '网络异常，请检查您的网络后重试。');
+            setStatus('error', error.message || messages.error);
           } finally {
             if (submitBtn) {
               submitBtn.disabled = false;
