@@ -1,0 +1,265 @@
+{% set formId = 'contact-page-form-' + data.widget._id %}
+{% set statusId = 'contact-page-status-' + data.widget._id %}
+{% set submitAction = (apos.prefix or '') + '/api/v1/contact-page-widget/submit' %}
+{% set notificationEmail = data.widget.notificationEmail or '' %}
+{% set formText = data.widget.formText or {} %}
+{% set contactHeading = data.widget.contactHeading or '联系方式' %}
+{% set faqHeading = data.widget.faqHeading or '常见问题' %}
+{% set formHeading = data.widget.formHeading or '发送咨询' %}
+{% set formDescription = data.widget.formDescription or '请填写以下表单，我们的专业团队将在24小时内与您联系，为您提供货代企业运营解决方案。' %}
+{% set contactItems = data.widget.contactItems or [] %}
+{% set faqItems = data.widget.faqItems or [] %}
+{% set fieldClass = "w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300" %}
+
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-5 gap-10">
+      <div class="lg:col-span-2 space-y-10" style="opacity: 1; transform: none;">
+        <div class="bg-gray-50 p-8 rounded-xl">
+          <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ contactHeading }}</h3>
+          <div class="space-y-6">
+            {% for item in contactItems %}
+              {% if item.description %}
+                <div class="flex items-start">
+                  <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mr-4 mt-1">
+                    <i class="{{ item.iconClass or 'fa-solid fa-location-dot' }} text-xl"></i>
+                  </div>
+                  <div>
+                    <h4 class="font-semibold text-gray-900 mb-1">{{ item.title }}</h4>
+                    <p class="text-gray-600">{{ item.description }}</p>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+        {% if faqItems and faqItems.length > 0 %}
+          <div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ faqHeading }}</h3>
+            <div class="space-y-4">
+              {% for faq in faqItems %}
+                <div class="bg-gray-50 p-4 rounded-lg">
+                  <h4 class="font-semibold text-gray-900 mb-2">{{ faq.question }}</h4>
+                  <p class="text-gray-600">{{ faq.answer }}</p>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      </div>
+      <div class="lg:col-span-3" style="opacity: 1; transform: none;">
+        <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+          <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ formHeading }}</h3>
+          <p class="text-gray-600 mb-8 text-xl">{{ formDescription }}</p>
+          <form
+            id="{{ formId }}"
+            class="space-y-6"
+            action="{{ submitAction }}"
+            method="post"
+            data-notification-email="{{ notificationEmail }}"
+            novalidate
+          >
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">{{ formText.nameLabel or '姓名' }}</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="{{ fieldClass }}"
+                  placeholder="{{ formText.namePlaceholder or '姓名' }}"
+                  value=""
+                />
+              </div>
+              <div>
+                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">{{ formText.emailLabel or '电子邮箱' }}</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="{{ fieldClass }}"
+                  placeholder="{{ formText.emailPlaceholder or '电子邮箱' }}"
+                  value=""
+                />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">
+                  {{ formText.phoneLabel or '联系电话' }} <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  class="{{ fieldClass }}"
+                  placeholder="{{ formText.phonePlaceholder or '联系电话' }}"
+                  value=""
+                  required
+                />
+              </div>
+              <div>
+                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">{{ formText.subjectLabel or '咨询主题' }}</label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  class="{{ fieldClass }}"
+                  placeholder="{{ formText.subjectPlaceholder or '咨询主题' }}"
+                  value=""
+                />
+              </div>
+            </div>
+            <div>
+              <label for="message" class="block text-sm font-medium text-gray-700 mb-1">{{ formText.messageLabel or '咨询内容' }}</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="6"
+                class="{{ fieldClass }}"
+                placeholder="{{ formText.messagePlaceholder or '咨询内容' }}"
+              ></textarea>
+            </div>
+            <div class="flex items-center">
+              <input
+                type="checkbox"
+                id="privacy"
+                name="privacy"
+                class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                required
+              />
+              <label for="privacy" class="ml-2 block text-sm text-gray-600">
+                {{ formText.consentText or '我已阅读并同意隐私政策和服务条款' }}
+              </label>
+            </div>
+            <button
+              type="submit"
+              class="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center text-lg"
+            >
+              {{ formText.submitText or '提交咨询' }}<i class="fa-solid fa-paper-plane ml-2"></i>
+            </button>
+            <div
+              id="{{ statusId }}"
+              class="hidden mt-6 border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-800"
+              role="status"
+              aria-live="polite"
+            ></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    const form = document.getElementById('{{ formId }}');
+    if (!form) {
+      return;
+    }
+    const statusEl = document.getElementById('{{ statusId }}');
+    const submitBtn = form.querySelector('[type="submit"]');
+    const csrfEndpoint = '{{ (apos.prefix or "") }}/modules/@apostrophecms/csrf/token';
+    const defaultNotificationEmail = form.dataset.notificationEmail || '';
+    let cachedCsrfToken = null;
+    const messages = {
+      loading: '{{ (formText.loadingText or "提交中，请稍候...") | e("js") }}',
+      success: '{{ (formText.successText or "提交成功，我们将在24小时内与您联系。") | e("js") }}',
+      error: '{{ (formText.errorText or "提交失败，请稍后再试或直接联系我们。") | e("js") }}'
+    };
+    const statusStates = {
+      loading: ['border-blue-200', 'bg-blue-50', 'text-blue-700'],
+      success: ['border-green-200', 'bg-green-50', 'text-green-700'],
+      error: ['border-red-200', 'bg-red-50', 'text-red-700']
+    };
+
+    function resetStates() {
+      Object.values(statusStates).forEach((classes) => {
+        classes.forEach((cls) => statusEl.classList.remove(cls));
+      });
+    }
+    function setStatus(type, message) {
+      if (!statusEl) {
+        return;
+      }
+      statusEl.classList.remove('hidden');
+      statusEl.classList.add('block');
+      resetStates();
+      statusStates[type].forEach((cls) => statusEl.classList.add(cls));
+      statusEl.textContent = message;
+    }
+    async function ensureCsrfToken() {
+      if (cachedCsrfToken) {
+        return cachedCsrfToken;
+      }
+      const response = await fetch(csrfEndpoint, {
+        headers: { Accept: 'application/json' },
+        credentials: 'same-origin'
+      });
+      if (!response.ok) {
+        throw new Error('无法获取 CSRF token');
+      }
+      const data = await response.json();
+      cachedCsrfToken = data.csrfToken;
+      return cachedCsrfToken;
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const formData = new FormData(form);
+      const action = form.getAttribute('action') || window.location.href;
+      const method = (form.getAttribute('method') || 'post').toUpperCase();
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add('opacity-75', 'cursor-not-allowed');
+      }
+      setStatus('loading', messages.loading);
+
+      try {
+        const payload = Object.fromEntries(formData.entries());
+
+        if (payload.privacy === 'on' || payload.privacy === 'true') {
+          payload.privacy = true;
+        } else if (payload.privacy === 'off' || payload.privacy === 'false') {
+          payload.privacy = false;
+        }
+        payload.notificationEmail = payload.notificationEmail || defaultNotificationEmail || '';
+
+        const response = await fetch(action, {
+          method,
+          body: JSON.stringify(payload),
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          credentials: 'same-origin'
+        });
+        const result = await response.json().catch(() => null);
+
+        if (response.ok && result && result.success) {
+          setStatus('success', result.message || messages.success);
+          form.reset();
+          cachedCsrfToken = null;
+        } else {
+          const errorMessage = (result && result.message) || messages.error;
+          setStatus('error', errorMessage);
+        }
+      } catch (error) {
+        setStatus('error', error.message || messages.error);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
+      }
+    });
+  })();
+</script>
+

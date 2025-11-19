@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <title>新的咨询提交</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background-color: #f7f7f7;
+        padding: 24px;
+        color: #1f2933;
+      }
+      .card {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 24px;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      }
+      h1 {
+        font-size: 20px;
+        margin-bottom: 16px;
+      }
+      .field {
+        margin-bottom: 12px;
+      }
+      .field span {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 4px;
+        color: #111827;
+      }
+      .meta {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #6b7280;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>您有新的咨询提交</h1>
+      <div class="field">
+        <span>姓名</span>
+        <div>{{ data.form.name | default('未填写') }}</div>
+      </div>
+      <div class="field">
+        <span>电子邮箱</span>
+        <div>{{ data.form.email | default('未填写') }}</div>
+      </div>
+      <div class="field">
+        <span>联系电话</span>
+        <div>{{ data.form.phone | default('未填写') }}</div>
+      </div>
+      <div class="field">
+        <span>咨询主题</span>
+        <div>{{ data.form.subject | default('未填写') }}</div>
+      </div>
+      <div class="field">
+        <span>咨询内容</span>
+        <div style="white-space: pre-line;">{{ data.form.message | default('未填写') }}</div>
+      </div>
+      <div class="field">
+        <span>隐私条款已同意？</span>
+        <div>
+          {% if data.form.consent %}
+            是
+          {% else %}
+            否
+          {% endif %}
+        </div>
+      </div>
+      <div class="meta">
+        提交时间：{{ data.submittedAt }}<br />
+          页面 ID：{{ data.form.pageId | default('未知') }}<br />
+        小部件 ID：{{ data.form.widgetId | default('未知') }}
+      </div>
+    </div>
+  </body>
+</html>
+

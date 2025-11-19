@@ -55,6 +55,7 @@ apostrophe({
     'about-section-widget': {},
     'banner-widget': {},
     'contact-wrap-widget': {},
+    'contact-page-widget': {},
 
     // `asset` supports the project's build for client-side assets.
     asset: {},
