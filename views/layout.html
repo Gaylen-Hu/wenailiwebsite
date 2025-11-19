@@ -52,5 +52,39 @@
   </main>
   {% render footer.footer(data) %}
 
+  <button
+    id="back-to-top-button"
+    type="button"
+    aria-label="返回顶部"
+    class="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 transition-all duration-300 opacity-0 translate-y-4 pointer-events-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+  >
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
 </div>{# Close .bp-wrapper #}
+<script>
+  (function () {
+    const btn = document.getElementById('back-to-top-button');
+    if (!btn) {
+      return;
+    }
+    const threshold = 320;
+    function toggleButton() {
+      const shouldShow = window.scrollY > threshold;
+      if (shouldShow) {
+        btn.classList.remove('opacity-0', 'translate-y-4', 'pointer-events-none');
+      } else {
+        btn.classList.add('opacity-0', 'translate-y-4', 'pointer-events-none');
+      }
+    }
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+    btn.addEventListener('click', scrollToTop);
+    window.addEventListener('scroll', toggleButton, { passive: true });
+    toggleButton();
+  })();
+</script>
 {% endblock %}
