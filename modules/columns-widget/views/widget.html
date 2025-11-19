@@ -1,0 +1,65 @@
+<!--
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-10-28 21:22:43
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-10-28 21:22:45
+ * @FilePath: \my-app\modules\content-widget-modules\columns-widget\views\widget.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+{% set cols = data.widget.cols or 'single' %}
+{% set style = data.widget.style or 'full' %}
+{% set singleAlign = data.widget.singleAlign or 'left' %}
+{% set singleWidth = data.widget.singleWidth or 100 %}
+{% set alignMap = {
+  'left': 'justify-start',
+  'center': 'justify-center',
+  'right': 'justify-end'
+} %}
+{% set singleAlignClass = alignMap[singleAlign] or 'justify-start' %}
+{% set singleWidthAttr = ' style="max-width: ' ~ singleWidth ~ '%"' %}
+{% set containerClass = 'max-w-6xl mx-auto px-4 sm:px-6 lg:px-8' if style == 'contained' else 'w-full px-4 sm:px-6 lg:px-10' %}
+{% set baseSectionClass = 'py-16 sm:py-20' %}
+{% set gridClass = ({
+  'single': 'flex ' ~ singleAlignClass,
+  'double': 'grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12',
+  'triple': 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8',
+  'quadruple': 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8'
+})[cols] or 'grid grid-cols-1 gap-8' %}
+
+<section
+  data-aos="{{ data.widget.animationEffects }}"
+  class="{{ baseSectionClass }}"
+>
+  <div class="{{ containerClass }}">
+    {% if cols == 'single' %}
+      <div class="{{ gridClass }}">
+        <div
+          class="w-full space-y-8"{{ singleWidthAttr | safe }}
+        >
+          {% area data.widget, 'one' with data.contextOptions %}
+        </div>
+      </div>
+    {% else %}
+      <div class="{{ gridClass }}">
+        <div class="space-y-8">
+          {% area data.widget, 'one' with data.contextOptions %}
+        </div>
+        {% if cols == 'double' or cols == 'triple' or cols == 'quadruple' %}
+          <div class="space-y-8">
+            {% area data.widget, 'two' with data.contextOptions %}
+          </div>
+        {% endif %}
+        {% if cols == 'triple' or cols == 'quadruple' %}
+          <div class="space-y-8">
+            {% area data.widget, 'three' with data.contextOptions %}
+          </div>
+        {% endif %}
+        {% if cols == 'quadruple' %}
+          <div class="space-y-8">
+            {% area data.widget, 'four' with data.contextOptions %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</section>

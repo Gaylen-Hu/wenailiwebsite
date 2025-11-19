@@ -86,7 +86,8 @@ export default {
             '@apostrophecms/video': {},
             'react-services-widget': {},
             'react-advantages-widget': {},
-            'react-contact-widget': {}
+            'react-contact-widget': {},
+            'columns': {},
           }
         }
       }
