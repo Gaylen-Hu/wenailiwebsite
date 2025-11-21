@@ -84,7 +84,14 @@ export default {
             },
             avatar: {
               type: 'url',
-              label: '头像地址'
+              label: '职位/公司',
+            },
+            _avatar:
+              {
+                label: '头像',
+                type: 'relationship',
+                withType: '@apostrophecms/image',
+                max: 1
             },
             quote: {
               type: 'string',

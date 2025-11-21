@@ -120,6 +120,7 @@ export default {
             description: {
               label: '服务描述',  
               type: 'string',
+              textarea: true,
               required: true  
             },
             highlights: {

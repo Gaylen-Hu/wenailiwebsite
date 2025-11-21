@@ -239,9 +239,25 @@
                 {{ testimonial.quote | safe }}
               </p>
               <div class="flex items-end">
-                {% if testimonial.avatar %}
+                {% set avatarDoc = testimonial._avatar and testimonial._avatar[0] %}
+                {% set avatarUrl = '' %}
+                {% if avatarDoc %}
+                  {% if avatarDoc.attachment %}
+                    {% set avatarUrl = apos.attachment.url(avatarDoc.attachment, { size: 'one-sixth' }) %}
+                  {% elseif avatarDoc.image and avatarDoc.image.attachment %}
+                    {% set avatarUrl = apos.attachment.url(avatarDoc.image.attachment, { size: 'one-sixth' }) %}
+                  {% elseif avatarDoc._urls %}
+                    {% set avatarUrl = avatarDoc._urls['one-sixth'] or avatarDoc._urls['full'] or avatarDoc._url %}
+                  {% elseif avatarDoc._url %}
+                    {% set avatarUrl = avatarDoc._url %}
+                  {% endif %}
+                {% endif %}
+                {% if not avatarUrl and testimonial._avatar is string %}
+                  {% set avatarUrl = testimonial._avatar %}
+                {% endif %}
+                {% if avatarUrl %}
                   <img
-                    src="{{ testimonial.avatar | escape }}"
+                    src="{{ avatarUrl | escape }}"
                     alt="{{ testimonial.name | escape }}"
                     class="w-12 h-12 rounded-full object-cover mr-4 flex-shrink-0"
                     loading="lazy"
