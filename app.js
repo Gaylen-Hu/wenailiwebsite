@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-11 18:59:09
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-19 15:31:00
+ * @LastEditTime: 2025-11-23 17:06:38
  * @FilePath: \wenaili\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -21,6 +21,7 @@ apostrophe({
   baseUrl: process.env.APOS_BASE_URL || 'http://localhost:3000',
   nestedModuleSubdirs: true,
   modules: {
+   
     // Apostrophe module configuration
     // *******************************
     //
@@ -49,6 +50,14 @@ apostrophe({
         className: 'bp-video-widget'
       }
     },
+
+    'case-widget-modules': { // 案例模块
+      options: {
+        ignoreNoCodeWarning: true
+      }
+    },
+    // 为嵌套模块创建别名以便使用简短名称
+  
     'chart-data': {},
     'chart-widget': {},
     'basiclayout-widget': {},

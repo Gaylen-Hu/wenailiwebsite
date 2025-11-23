@@ -1,0 +1,43 @@
+<section class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    {% if data.widget.title or data.widget.description %}
+      <div class="text-center mb-16">
+        {% if data.widget.title %}
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">
+            {{ data.widget.title }}
+          </h2>
+        {% endif %}
+        <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+        {% if data.widget.description %}
+          <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+            {{ data.widget.description }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if data.widget.results and data.widget.results.length %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {% for result in data.widget.results %}
+          <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 text-center">
+            {% if result.value %}
+              <div class="text-4xl font-bold text-blue-600 mb-3">
+                {{ result.value }}
+              </div>
+            {% endif %}
+            {% if result.title %}
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                {{ result.title }}
+              </h3>
+            {% endif %}
+            {% if result.description %}
+              <p class="text-gray-600">
+                {{ result.description }}
+              </p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+

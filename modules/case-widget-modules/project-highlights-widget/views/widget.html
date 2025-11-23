@@ -1,0 +1,43 @@
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    {% if data.widget.title or data.widget.description %}
+      <div class="text-center mb-16">
+        {% if data.widget.title %}
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">
+            {{ data.widget.title }}
+          </h2>
+        {% endif %}
+        <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+        {% if data.widget.description %}
+          <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+            {{ data.widget.description }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if data.widget.highlights and data.widget.highlights.length %}
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for highlight in data.widget.highlights %}
+          <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+            {% if highlight.icon %}
+              <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mb-6">
+                <i class="{{ highlight.icon }} text-xl"></i>
+              </div>
+            {% endif %}
+            {% if highlight.title %}
+              <h3 class="text-xl font-bold text-gray-900 mb-3">
+                {{ highlight.title }}
+              </h3>
+            {% endif %}
+            {% if highlight.description %}
+              <p class="text-gray-600">
+                {{ highlight.description }}
+              </p>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+

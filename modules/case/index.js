@@ -8,7 +8,7 @@ export default {
   fields: {
     add: {
       category: {
-        type: 'string',
+        type: 'select',
         label: '案例分类',
         required: true,
         choices: [
@@ -24,16 +24,26 @@ export default {
         label: '客户公司',
         required: true
       },
+      projectPeriod: {
+        type: 'string',
+        label: '项目周期',
+        help: '例如：2025年3月-2025年6月'
+      },
+      industry: {
+        type: 'string',
+        label: '行业',
+        help: '例如：国际货运代理'
+      },
       featured: {
         type: 'boolean',
         label: '首页推荐',
         def: false
       },
-      coverImage: {
-        type: 'url',
-        label: '封面图片地址',
-        required: true,
-        help: '推荐 16:9 比例，支持外部链接或对象存储地址'
+      _coverImage: {
+        label: '封面图片',
+        type: 'relationship',
+        withType: '@apostrophecms/image',
+        max: 1
       },
       summary: {
         type: 'string',
@@ -84,10 +94,14 @@ export default {
             '@apostrophecms/rich-text': {},
             '@apostrophecms/image': {},
             '@apostrophecms/video': {},
-            'react-services-widget': {},
-            'react-advantages-widget': {},
-            'react-contact-widget': {},
             'columns': {},
+            'project-background': {},
+            'project-results': {},
+            'brand-upgrade-process': {},
+            'brand-visual-showcase': {},
+            'project-highlights': {},
+            'client-testimonial': {},
+            'case-cta': {},
           }
         }
       }
@@ -95,7 +109,7 @@ export default {
     group: {
       basics: {
         label: '基础信息',
-        fields: [ 'title', 'category', 'company', 'featured', 'coverImage', 'summary' ]
+        fields: [ 'title', 'category', 'company', 'projectPeriod', 'industry', 'featured', '_coverImage', 'summary' ]
       },
       highlights: {
         label: '成果亮点',
@@ -176,6 +190,26 @@ export default {
             ? data.description.trim()
             : '看看我们如何帮助货代企业提升 IT 系统性能和运营效率';
 
+        const resolveCoverImage = (piece) => {
+          const attachment = self.apos.image.first(piece._coverImage);
+          if (!attachment) {
+            return {
+              attachment: null,
+              url: null,
+              alt: null
+            };
+          }
+
+          const url = self.apos.attachment.url(attachment, { size: 'max' });
+          const alt = attachment._alt || piece.title || piece.company || '案例封面';
+
+          return {
+            attachment,
+            url,
+            alt
+          };
+        };
+
         const mappedPieces = pieces.map(piece => {
           const results = Array.isArray(piece.results)
             ? piece.results
@@ -196,6 +230,8 @@ export default {
                 }))
             : [];
 
+          const cover = resolveCoverImage(piece);
+
           return {
             _id: piece._id,
             title: piece.title,
@@ -203,8 +239,9 @@ export default {
             category: piece.category,
             categoryLabel: categoryLabels[piece.category] || piece.category || '',
             summary: piece.summary,
-            coverImageUrl: piece.coverImage,
-            coverImageAlt: piece.company || piece.title || '案例封面',
+            _coverImageAttachment: cover.attachment,
+            coverImageUrl: cover.url,
+            coverImageAlt: cover.alt,
             results,
             ctaLabel: piece.ctaLabel || '咨询类似方案',
             ctaUrl: piece.ctaUrl || '/contact'

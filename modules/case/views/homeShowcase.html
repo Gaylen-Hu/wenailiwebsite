@@ -19,7 +19,7 @@
         {% for piece in data.pieces %}
           <article class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
             <div class="h-64 overflow-hidden">
-              {% if piece.coverImageUrl %}
+              {% if piece._coverImageAttachment %}
                 <img
                   src="{{ piece.coverImageUrl | escape }}"
                   alt="{{ piece.coverImageAlt | escape }}"

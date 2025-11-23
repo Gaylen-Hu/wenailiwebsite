@@ -1,0 +1,49 @@
+<section class="py-20 bg-blue-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+      {% if data.widget.title %}
+        <div class="text-center mb-12">
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">
+            {{ data.widget.title }}
+          </h2>
+          <div class="w-20 h-1 bg-blue-600 mx-auto"></div>
+        </div>
+      {% endif %}
+      <div class="bg-white p-10 rounded-2xl shadow-lg relative">
+        <div class="absolute top-0 left-0 transform -translate-x-6 -translate-y-6 w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-2xl opacity-50">
+          <i class="fa-solid fa-quote-left"></i>
+        </div>
+        {% if data.widget.quote %}
+          <blockquote class="text-xl text-gray-700 italic mb-8 relative z-10">
+            {{ data.widget.quote }}
+          </blockquote>
+        {% endif %}
+        <div class="flex items-center">
+          {% if data.widget.avatarUrl %}
+            <div class="w-16 h-16 rounded-full overflow-hidden mr-4">
+              <img
+                src="{{ data.widget.avatarUrl }}"
+                alt="{{ data.widget.avatarAlt }}"
+                class="w-full h-full object-cover"
+                loading="lazy"
+              >
+            </div>
+          {% endif %}
+          <div>
+            {% if data.widget.clientName %}
+              <h4 class="text-lg font-bold text-gray-900">
+                {{ data.widget.clientName }}
+              </h4>
+            {% endif %}
+            {% if data.widget.clientPosition %}
+              <p class="text-gray-600">
+                {{ data.widget.clientPosition }}
+              </p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+

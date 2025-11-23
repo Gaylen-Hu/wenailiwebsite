@@ -1,0 +1,64 @@
+<section class="py-20 bg-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    {% if data.widget.title or data.widget.description %}
+      <div class="text-center mb-16">
+        {% if data.widget.title %}
+          <h2 class="text-3xl font-bold text-gray-900 mb-4">
+            {{ data.widget.title }}
+          </h2>
+        {% endif %}
+        <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+        {% if data.widget.description %}
+          <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+            {{ data.widget.description }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if data.widget.steps and data.widget.steps.length %}
+      <div class="space-y-16">
+        {% for step in data.widget.steps %}
+          {% set isEven = loop.index % 2 == 0 %}
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center {% if isEven %}lg:flex-row-reverse{% endif %}">
+            <!-- 图片部分 -->
+            <div class="relative {% if isEven %}lg:order-2{% endif %}">
+              <div class="absolute -inset-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl blur opacity-25"></div>
+              <div class="relative rounded-xl overflow-hidden shadow-xl">
+                <img
+                  src="{{ step.imageUrl }}"
+                  alt="{{ step.imageAlt }}"
+                  class="w-full h-auto object-cover"
+                  loading="lazy"
+                >
+              </div>
+            </div>
+            <!-- 内容部分 -->
+            <div class="relative {% if isEven %}lg:order-1{% endif %}">
+              <div class="absolute -top-8 -left-8 w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xl font-bold">
+                {{ step.stepNumber }}
+              </div>
+              <div class="ml-12">
+                {% if step.icon %}
+                  <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mb-6">
+                    <i class="{{ step.icon }} text-2xl"></i>
+                  </div>
+                {% endif %}
+                {% if step.title %}
+                  <h3 class="text-2xl font-bold text-gray-900 mb-4">
+                    {{ step.title }}
+                  </h3>
+                {% endif %}
+                {% if step.description %}
+                  <p class="text-gray-700 leading-relaxed">
+                    {{ step.description }}
+                  </p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+

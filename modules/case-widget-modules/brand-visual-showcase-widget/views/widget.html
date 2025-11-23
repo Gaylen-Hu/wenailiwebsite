@@ -1,0 +1,46 @@
+<section class="py-20 bg-gray-900 text-white">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    {% if data.widget.title or data.widget.description %}
+      <div class="text-center mb-16">
+        {% if data.widget.title %}
+          <h2 class="text-3xl font-bold mb-4">
+            {{ data.widget.title }}
+          </h2>
+        {% endif %}
+        <div class="w-20 h-1 bg-blue-500 mx-auto mb-6"></div>
+        {% if data.widget.description %}
+          <p class="text-gray-300 max-w-2xl mx-auto text-xl">
+            {{ data.widget.description }}
+          </p>
+        {% endif %}
+      </div>
+    {% endif %}
+    {% if data.widget.items and data.widget.items.length %}
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {% for item in data.widget.items %}
+          <div class="bg-gray-800 rounded-xl overflow-hidden shadow-xl">
+            <img
+              src="{{ item.imageUrl }}"
+              alt="{{ item.imageAlt }}"
+              class="w-full h-auto object-cover"
+              loading="lazy"
+            >
+            <div class="p-6">
+              {% if item.title %}
+                <h3 class="text-xl font-bold mb-2">
+                  {{ item.title }}
+                </h3>
+              {% endif %}
+              {% if item.description %}
+                <p class="text-gray-300">
+                  {{ item.description }}
+                </p>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+</section>
+

@@ -121,10 +121,12 @@
               data-category="{{ piece.category }}"
             >
               <div class="h-48 overflow-hidden">
-                {% if piece.coverImage %}
+                {% set imageObject = apos.attachment.first(piece._coverImage) %}
+                {% set coverImageAlt = piece._coverImageAlt or piece.title %}
+                {% if imageObject %}
                   <img
-                    src="{{ piece.coverImage | escape }}"
-                    alt="{{ piece.title | escape }}"
+                    src="{{ apos.attachment.url(imageObject) | escape }}"
+                    alt="{{ coverImageAlt | escape }}"
                     class="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     loading="lazy"
                   />

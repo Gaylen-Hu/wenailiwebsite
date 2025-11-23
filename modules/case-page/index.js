@@ -36,8 +36,17 @@ export default {
               required: true
             },
             value: {
-              type: 'string',
-              label: '对应分类值（与案例分类选项一致，可留空表示全部）'
+              type: 'select',
+              label: '对应分类值（与案例分类选项一致，可留空表示全部）',
+              choices: [
+                { value: '', label: '全部' },
+                { value: 'market', label: '市场代运营' },
+                { value: 'tech', label: '技术服务' },
+                { value: 'brand', label: '品牌服务' },
+                { value: 'consulting', label: '管理咨询' },
+                { value: 'digital', label: '数字化转型' }
+              ],
+              def: ''
             },
             primary: {
               type: 'boolean',
