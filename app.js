@@ -95,5 +95,7 @@ apostrophe({
     "growth-partner-widget":{},
     "differentiation-widget":{},
     "why-choose-widget":{},
+    'freight-forwarding-hero-widget': {},
+    'ai-solutions-widget': {}
   }
 });

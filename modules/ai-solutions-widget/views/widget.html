@@ -1,0 +1,67 @@
+<section class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      {% if data.widget.sectionEyebrow %}
+        <p class="text-sm uppercase tracking-[0.3em] text-blue-600 mb-3">
+          {{ data.widget.sectionEyebrow }}
+        </p>
+      {% endif %}
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        {{ data.widget.sectionTitle }}
+      </h2>
+      <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+      {% if data.widget.sectionSubtitle %}
+        <p class="text-gray-600 max-w-3xl mx-auto text-xl">
+          {{ data.widget.sectionSubtitle }}
+        </p>
+      {% endif %}
+    </div>
+
+    <div class="space-y-24">
+      {% for section in data.widget.sections %}
+        {% set reverse = section.reverseLayout %}
+        <div class="grid grid-cols-1 gap-12 {% if reverse %}lg:flex-row-reverse lg:grid-cols-2{% endif %}">
+          <div class="lg:w-1/3 flex flex-col justify-center {% if reverse %}lg:order-2{% endif %}">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mb-6">
+              <i class="{{ section.icon }} text-2xl" aria-hidden="true"></i>
+            </div>
+            <h3 class="text-2xl md:text-3xl font-bold text-gray-900 mb-6">
+              {{ section.title }}
+            </h3>
+            {% if section.description %}
+              <p class="text-gray-600 mb-6">
+                {{ section.description }}
+              </p>
+            {% endif %}
+          </div>
+          <div class="lg:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-8 {% if reverse %}lg:order-1{% endif %}">
+            {% for card in section.cards %}
+              <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
+                <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600 mb-6">
+                  <i class="{{ card.cardIcon }} text-xl" aria-hidden="true"></i>
+                </div>
+                <h4 class="text-xl font-bold text-gray-900 mb-3">
+                  {{ card.cardTitle }}
+                </h4>
+                {% if card.cardDescription %}
+                  <p class="text-gray-600 mb-4">
+                    {{ card.cardDescription }}
+                  </p>
+                {% endif %}
+                {% if card.benefitText %}
+                  <div class="bg-blue-50 p-3 rounded-lg">
+                    <p class="text-blue-700 font-medium flex items-center">
+                      <i class="{{ card.benefitIcon }} mr-2" aria-hidden="true"></i>
+                      {{ card.benefitText }}
+                    </p>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+

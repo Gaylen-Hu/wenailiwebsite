@@ -12,11 +12,18 @@ export default () => {
       const chartContainers = el.querySelectorAll('[data-graph-canvas-wrapper]');
       
       chartContainers.forEach(container => {
-        const chartData = JSON.parse(container.getAttribute('data-chart-data'));
+        const dataAttr = container.getAttribute('data-chart-data');
+        if (!dataAttr) {
+          return;
+        }
+
+        const chartData = JSON.parse(dataAttr);
         const ctx = container.querySelector('canvas');
-        if (!ctx) return;
+        if (!ctx) {
+          return;
+        }
         
-        const existingChart = Chart.getChart(ctx);
+        let chartInstance = Chart.getChart(ctx);
         
         // 配置响应式选项（类似 Recharts 的 ResponsiveContainer）
         if (!chartData.options) {
@@ -91,48 +98,53 @@ export default () => {
           };
         }
         
-        // 设置响应式尺寸（类似 Recharts 的 ResponsiveContainer）
         const containerElement = container;
-        const updateChartSize = () => {
-          if (ctx && existingChart) {
-            const containerWidth = containerElement.clientWidth;
-            const containerHeight = containerElement.clientHeight;
-            ctx.width = containerWidth;
-            ctx.height = containerHeight;
-            existingChart.resize();
-          }
-        };
-        
-        // 初始设置尺寸
-        if (ctx && !existingChart) {
+        const syncCanvasSize = () => {
           const containerWidth = containerElement.clientWidth;
           const containerHeight = containerElement.clientHeight;
-          ctx.width = containerWidth;
-          ctx.height = containerHeight;
+          const computedHeight = containerHeight || Math.round(containerWidth * 0.6);
+          if (containerWidth) {
+            ctx.width = containerWidth;
+          }
+          if (computedHeight) {
+            ctx.height = computedHeight;
+          }
+        };
+
+        const resizeChart = () => {
+          syncCanvasSize();
+          if (chartInstance) {
+            chartInstance.resize();
+          }
+        };
+
+        // 移除已有的监听，避免重复绑定
+        if (containerElement._chartResizeObserver) {
+          containerElement._chartResizeObserver.disconnect();
         }
-        
-        // 监听窗口大小变化
+        if (containerElement._chartResizeListener) {
+          window.removeEventListener('resize', containerElement._chartResizeListener);
+        }
+
+        syncCanvasSize();
+
+        if (chartInstance) {
+          chartInstance.data = chartData.data;
+          chartInstance.options = chartData.options;
+          chartInstance.update();
+        } else {
+          chartInstance = new Chart(ctx, chartData);
+          chartInstance.resize();
+        }
+
         if (window.ResizeObserver) {
-          const resizeObserver = new ResizeObserver(() => {
-            if (existingChart) {
-              existingChart.resize();
-            }
-          });
+          const resizeObserver = new ResizeObserver(resizeChart);
           resizeObserver.observe(containerElement);
+          containerElement._chartResizeObserver = resizeObserver;
         } else {
-          window.addEventListener('resize', () => {
-            if (existingChart) {
-              existingChart.resize();
-            }
-          });
-        }
-        
-        if (existingChart) {
-          existingChart.data = chartData.data;
-          existingChart.options = chartData.options;
-          existingChart.update();
-        } else {
-          const chart = new Chart(ctx, chartData);
+          const listener = () => resizeChart();
+          window.addEventListener('resize', listener);
+          containerElement._chartResizeListener = listener;
         }
       });
     }

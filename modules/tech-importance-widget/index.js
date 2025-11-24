@@ -42,42 +42,42 @@ export default {
           {
             iconClass: 'fa-solid fa-exclamation-circle',
             accentColorClass: 'text-red-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-1',
             title: '系统老旧，效率低下',
             description: '现有系统功能落后，操作复杂，员工需要花费大量时间处理日常业务，效率低下'
           },
           {
             iconClass: 'fa-solid fa-exclamation-circle',
             accentColorClass: 'text-red-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-1',
             title: '数据孤岛，难以整合',
             description: '不同业务系统之间数据不互通，形成数据孤岛，难以进行全面的数据分析和决策支持'
           },
           {
             iconClass: 'fa-solid fa-exclamation-circle',
             accentColorClass: 'text-red-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-1',
             title: '技术人才短缺',
             description: '专业的 IT 技术人才短缺，难以维护和优化现有系统，更无法开发新的应用'
           },
           {
             iconClass: 'fa-solid fa-exclamation-circle',
             accentColorClass: 'text-red-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-1',
             title: '安全隐患大',
             description: '系统安全防护措施不足，存在数据泄露、系统崩溃等安全隐患'
           },
           {
             iconClass: 'fa-solid fa-exclamation-circle',
             accentColorClass: 'text-red-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-1',
             title: '难以适应业务发展',
             description: '随着业务的发展，现有系统难以满足新的业务需求，制约了企业的发展'
           },
           {
             iconClass: 'fa-solid fa-exclamation-circle',
             accentColorClass: 'text-red-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-1',
             title: '技术投入成本高',
             description: '自主开发和维护系统需要大量的资金投入，对于中小型货代企业来说负担较重'
           }
@@ -97,7 +97,7 @@ export default {
             badgeBackgroundClass: {
               type: 'string',
               label: '右上角强调背景类名',
-              def: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-10'
+              def: 'absolute -right-4 -top-4 w-20 h-20 bg-red-50 rounded-full -z-1'
             },
             title: {
               type: 'string',
@@ -163,12 +163,12 @@ export default {
       impactDecorStart: {
         type: 'string',
         label: '影响区块起始装饰背景类',
-        def: 'absolute -left-20 -top-20 w-64 h-64 bg-indigo-50 rounded-full -z-10'
+        def: 'absolute -left-20 -top-20 w-64 h-64 bg-indigo-50 rounded-full -z-1'
       },
       impactDecorEnd: {
         type: 'string',
         label: '影响区块结束装饰背景类',
-        def: 'absolute -right-20 -bottom-20 w-64 h-64 bg-blue-50 rounded-full -z-10'
+        def: 'absolute -right-20 -bottom-20 w-64 h-64 bg-blue-50 rounded-full -z-1'
       },
       impactAccentBarClasses: {
         type: 'string',
@@ -193,42 +193,42 @@ export default {
           {
             iconClass: 'fa-solid fa-check-circle',
             accentColorClass: 'text-green-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-1',
             title: '专业的技术团队',
             description: '我们拥有一支经验丰富的技术团队，熟悉物流行业的业务流程和系统需求'
           },
           {
             iconClass: 'fa-solid fa-check-circle',
             accentColorClass: 'text-green-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-1',
             title: '定制化的解决方案',
             description: '根据企业的实际需求，提供定制化的技术解决方案，确保系统符合企业特点'
           },
           {
             iconClass: 'fa-solid fa-check-circle',
             accentColorClass: 'text-green-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-1',
             title: '一站式的代运营服务',
             description: '从系统开发、维护到优化，提供一站式的技术代运营服务，让企业专注于核心业务'
           },
           {
             iconClass: 'fa-solid fa-check-circle',
             accentColorClass: 'text-green-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-1',
             title: '提升管理效率',
             description: '通过定制化的技术工具，帮助货代公司提高管理人效，优化业务流程'
           },
           {
             iconClass: 'fa-solid fa-check-circle',
             accentColorClass: 'text-green-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-1',
             title: '降低运营成本',
             description: '相比自主开发和维护系统，技术代运营能够显著降低企业的技术投入成本'
           },
           {
             iconClass: 'fa-solid fa-check-circle',
             accentColorClass: 'text-green-500',
-            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-10',
+            badgeBackgroundClass: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-1',
             title: '持续的技术支持',
             description: '提供 7×24 小时的技术支持，确保系统稳定运行，及时解决各种技术问题'
           }
@@ -248,7 +248,7 @@ export default {
             badgeBackgroundClass: {
               type: 'string',
               label: '右上角强调背景类名',
-              def: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-10'
+              def: 'absolute -right-4 -top-4 w-20 h-20 bg-green-50 rounded-full -z-1'
             },
             title: {
               type: 'string',

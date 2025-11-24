@@ -1,8 +1,8 @@
 <section data-chart-widget class="py-8">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
       {% for dataSet in data.widget._chartdataSet %}
-        <div class="bg-white p-6 rounded-xl shadow-lg">
+        <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col h-full">
           {% if data.widget.titleFields.chartTitle %}
             <h3 class="text-xl font-bold text-gray-900 mb-6 text-center">
               {{ data.widget.titleFields.chartTitle }}
@@ -10,7 +10,9 @@
           {% endif %}
           {% set file = apos.attachment.url(dataSet.dataFile) %}
           {% set uniqueTarget = data.widget.chartTarget + '-' + loop.index0 %}
-          {% component 'chart-widget:returnChartData' with { data: data.widget, dataFile: file, target: uniqueTarget } %}
+          <div class="flex-1 flex items-stretch">
+            {% component 'chart-widget:returnChartData' with { data: data.widget, dataFile: file, target: uniqueTarget } %}
+          </div>
         </div>
       {% endfor %}
     </div>

@@ -1,0 +1,61 @@
+<!--
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-11-24 17:24:06
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-11-24 17:26:56
+ * @FilePath: \wenaili\modules\freight-forwarding-hero-widget\views\widget.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+{% set gradient = data.widget.backgroundGradientClasses or 'bg-gradient-to-r from-blue-800 to-indigo-900' %}
+{% set blobOne = data.widget.blobOneClasses or 'absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply blur-3xl opacity-20' %}
+{% set blobTwo = data.widget.blobTwoClasses or 'absolute bottom-0 left-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply blur-3xl opacity-20' %}
+{% set wavePath = data.widget.wavePath or 'M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.11,130.83,141.14,213.2,142.04Z' %}
+
+<section class="{{ gradient }} text-white py-20 md:py-24 overflow-hidden relative">
+  <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+    <div class="{{ blobOne }}"></div>
+    <div class="{{ blobTwo }}"></div>
+  </div>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-1">
+    <div class="max-w-4xl mx-auto text-center">
+      {% if data.widget.eyebrow %}
+        <p class="text-sm font-semibold uppercase tracking-[0.3em] text-blue-200 mb-4">
+          {{ data.widget.eyebrow }}
+        </p>
+      {% endif %}
+      <h1 class="text-3xl md:text-6xl font-bold mb-6 leading-tight">
+        {{ data.widget.title | safe }}
+      </h1>
+      {% if data.widget.subtitle %}
+        <p class="text-xl md:text-2xl text-blue-100 mb-10 leading-relaxed">
+          {{ data.widget.subtitle | safe }}
+        </p>
+      {% endif %}
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        {% if data.widget.primaryCtaLabel and data.widget.primaryCtaUrl %}
+          <a class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center text-lg"
+            href="{{ data.widget.primaryCtaUrl  }}" data-discover="true">
+            {{ data.widget.primaryCtaLabel }}
+            {% if data.widget.primaryCtaIcon %}
+              <i class="{{ data.widget.primaryCtaIcon }}" aria-hidden="true"></i>
+            {% endif %}
+          </a>
+        {% endif %}
+        {% if data.widget.secondaryCtaLabel and data.widget.secondaryCtaUrl %}
+          <a class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center text-lg border border-white border-opacity-20"
+            href="{{ data.widget.secondaryCtaUrl }}" data-discover="true">
+            {{ data.widget.secondaryCtaLabel }}
+            {% if data.widget.secondaryCtaIcon %}
+              <i class="{{ data.widget.secondaryCtaIcon }}" aria-hidden="true"></i>
+            {% endif %}
+          </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="absolute bottom-0 left-0 w-full overflow-hidden text-white" aria-hidden="true">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" class="h-16 w-full">
+      <path d="{{ wavePath }}" class="fill-white"></path>
+    </svg>
+  </div>
+</section>
