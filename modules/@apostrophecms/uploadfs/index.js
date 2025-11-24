@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-17 09:32:42
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-17 09:34:47
+ * @LastEditTime: 2025-11-24 23:10:55
  * @FilePath: \wenaili\modules\@apostrophecms\uploadfs\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,12 +10,12 @@
  * ApostropheCMS Uploadfs 模块配置
  * 用于配置阿里云OSS存储
  */
-console.log('process.env.APOS_S3_KEY',process.env.APOS_S3_KEY)
-console.log('process.env.APOS_S3_SECRET',process.env.APOS_S3_SECRET)
-console.log('process.env.APOS_S3_BUCKET',process.env.APOS_S3_BUCKET)
-console.log('process.env.APOS_S3_ENDPOINT',process.env.APOS_S3_ENDPOINT)
-console.log('process.env.APOS_S3_REGION',process.env.APOS_S3_REGION)
-console.log('process.env.APOS_CDN_URL',process.env.APOS_CDN_URL)
+console.log('uploadfs process.env.APOS_S3_KEY',process.env.APOS_S3_KEY)
+console.log('uploadfs process.env.APOS_S3_SECRET',process.env.APOS_S3_SECRET)
+console.log('uploadfs process.env.APOS_S3_BUCKET',process.env.APOS_S3_BUCKET)
+console.log('uploadfs process.env.APOS_S3_ENDPOINT',process.env.APOS_S3_ENDPOINT)
+console.log('uploadfs process.env.APOS_S3_REGION',process.env.APOS_S3_REGION)
+console.log('uploadfs process.env.APOS_CDN_URL',process.env.APOS_CDN_URL)
 
 export default {
   options: {
@@ -27,7 +27,7 @@ export default {
       // 注意：优先使用环境变量，这里的配置作为开发环境的默认值
       key: process.env.APOS_S3_KEY || '',
       secret: process.env.APOS_S3_SECRET || '',
-      bucket: process.env.APOS_S3_BUCKET || '',
+      bucket: process.env.APOS_S3_BUCKET || 'wenaili',
       
       // 阿里云OSS的endpoint（替换为您的实际endpoint）
       // 格式：https://oss-{region}.aliyuncs.com
