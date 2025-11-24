@@ -18,7 +18,7 @@
 {% set singleAlignClass = alignMap[singleAlign] or 'justify-start' %}
 {% set singleWidthAttr = ' style="max-width: ' ~ singleWidth ~ '%"' %}
 {% set containerClass = 'max-w-6xl mx-auto px-4 sm:px-6 lg:px-8' if style == 'contained' else 'w-full px-4 sm:px-6 lg:px-10' %}
-{% set baseSectionClass = 'py-16 sm:py-20' %}
+{% set baseSectionClass = 'py-16 sm:py-20 bg-white dark:bg-slate-950 transition-colors' %}
 {% set gridClass = ({
   'single': 'flex ' ~ singleAlignClass,
   'double': 'grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12',

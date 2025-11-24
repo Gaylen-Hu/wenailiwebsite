@@ -1,25 +1,25 @@
-{% set sectionClass = data.widget.backgroundClass or 'py-20 bg-gray-50' %}
+{% set sectionClass = data.widget.backgroundClass or 'py-20 bg-gray-50 dark:bg-slate-950 transition-colors' %}
 
 <section class="{{ sectionClass }}" data-brand-importance-widget>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-16">
       {% if data.widget.heading %}
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">
           {{ data.widget.heading | escape }}
         </h2>
-        <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+        <div class="w-20 h-1 bg-blue-600 dark:bg-blue-400 mx-auto mb-6 transition-colors"></div>
       {% endif %}
       {% if data.widget.subheading %}
-        <p class="text-gray-600 max-w-3xl mx-auto text-xl">
+        <p class="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto text-xl transition-colors">
           {{ data.widget.subheading | escape }}
         </p>
       {% endif %}
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-      <article class="bg-white p-8 rounded-xl shadow-lg">
+      <article class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-slate-800 transition-colors">
         {% if data.widget.importanceTitle %}
-          <h3 class="text-2xl font-bold text-gray-900 mb-6">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">
             {{ data.widget.importanceTitle | escape }}
           </h3>
         {% endif %}
@@ -27,15 +27,15 @@
           <div class="space-y-6">
             {% for item in data.widget.importanceItems %}
               <div class="flex">
-                <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-4">
+                <div class="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 mr-4 transition-colors">
                   <i class="{{ item.iconClass or 'fa-solid fa-circle' }} text-xl"></i>
                 </div>
                 <div>
-                  <h4 class="font-bold text-gray-900 mb-2">
+                  <h4 class="font-bold text-gray-900 dark:text-white mb-2 transition-colors">
                     {{ item.title | escape }}
                   </h4>
                   {% if item.description %}
-                    <p class="text-gray-600">
+                    <p class="text-gray-600 dark:text-gray-300 transition-colors">
                       {{ item.description | escape }}
                     </p>
                   {% endif %}
@@ -44,13 +44,13 @@
             {% endfor %}
           </div>
         {% else %}
-          <p class="text-gray-500">请添加至少一条品牌重要性要点。</p>
+          <p class="text-gray-500 dark:text-gray-400 transition-colors">请添加至少一条品牌重要性要点。</p>
         {% endif %}
       </article>
 
-      <article class="bg-white p-8 rounded-xl shadow-lg">
+      <article class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-slate-800 transition-colors">
         {% if data.widget.elementsTitle %}
-          <h3 class="text-2xl font-bold text-gray-900 mb-6">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">
             {{ data.widget.elementsTitle | escape }}
           </h3>
         {% endif %}
@@ -58,15 +58,15 @@
           <div class="space-y-6">
             {% for item in data.widget.elementItems %}
               <div class="flex">
-                <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-4">
+                <div class="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 mr-4 transition-colors">
                   <i class="{{ item.iconClass or 'fa-solid fa-circle' }} text-xl"></i>
                 </div>
                 <div>
-                  <h4 class="font-bold text-gray-900 mb-2">
+                  <h4 class="font-bold text-gray-900 dark:text-white mb-2 transition-colors">
                     {{ item.title | escape }}
                   </h4>
                   {% if item.description %}
-                    <p class="text-gray-600">
+                    <p class="text-gray-600 dark:text-gray-300 transition-colors">
                       {{ item.description | escape }}
                     </p>
                   {% endif %}
@@ -75,7 +75,7 @@
             {% endfor %}
           </div>
         {% else %}
-          <p class="text-gray-500">请添加至少一个品牌建设要素。</p>
+          <p class="text-gray-500 dark:text-gray-400 transition-colors">请添加至少一个品牌建设要素。</p>
         {% endif %}
       </article>
     </div>

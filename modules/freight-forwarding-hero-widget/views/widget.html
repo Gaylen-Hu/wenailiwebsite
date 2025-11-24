@@ -6,12 +6,12 @@
  * @FilePath: \wenaili\modules\freight-forwarding-hero-widget\views\widget.html
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
-{% set gradient = data.widget.backgroundGradientClasses or 'bg-gradient-to-r from-blue-800 to-indigo-900' %}
+{% set gradient = data.widget.backgroundGradientClasses or 'bg-gradient-to-r from-blue-800 to-indigo-900 dark:from-slate-950 dark:to-slate-900' %}
 {% set blobOne = data.widget.blobOneClasses or 'absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full mix-blend-multiply blur-3xl opacity-20' %}
 {% set blobTwo = data.widget.blobTwoClasses or 'absolute bottom-0 left-0 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply blur-3xl opacity-20' %}
 {% set wavePath = data.widget.wavePath or 'M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C59.71,118.11,130.83,141.14,213.2,142.04Z' %}
 
-<section class="{{ gradient }} text-white py-20 md:py-24 overflow-hidden relative">
+<section class="{{ gradient }} text-white py-20 md:py-24 overflow-hidden relative transition-colors">
   <div class="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
     <div class="{{ blobOne }}"></div>
     <div class="{{ blobTwo }}"></div>
@@ -19,7 +19,7 @@
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative z-1">
     <div class="max-w-4xl mx-auto text-center">
       {% if data.widget.eyebrow %}
-        <p class="text-sm font-semibold uppercase tracking-[0.3em] text-blue-200 mb-4">
+        <p class="text-sm font-semibold uppercase tracking-[0.3em] text-blue-200 dark:text-blue-300 mb-4 transition-colors">
           {{ data.widget.eyebrow }}
         </p>
       {% endif %}
@@ -27,13 +27,13 @@
         {{ data.widget.title | safe }}
       </h1>
       {% if data.widget.subtitle %}
-        <p class="text-xl md:text-2xl text-blue-100 mb-10 leading-relaxed">
+        <p class="text-xl md:text-2xl text-blue-100 dark:text-blue-200 mb-10 leading-relaxed transition-colors">
           {{ data.widget.subtitle | safe }}
         </p>
       {% endif %}
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         {% if data.widget.primaryCtaLabel and data.widget.primaryCtaUrl %}
-          <a class="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center text-lg"
+          <a class="px-8 py-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white dark:text-slate-900 font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center text-lg"
             href="{{ data.widget.primaryCtaUrl  }}" data-discover="true">
             {{ data.widget.primaryCtaLabel }}
             {% if data.widget.primaryCtaIcon %}
@@ -42,7 +42,7 @@
           </a>
         {% endif %}
         {% if data.widget.secondaryCtaLabel and data.widget.secondaryCtaUrl %}
-          <a class="px-8 py-4 bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center text-lg border border-white border-opacity-20"
+          <a class="px-8 py-4 bg-white/10 hover:bg-white/20 dark:bg-slate-900/40 dark:hover:bg-slate-900/60 backdrop-blur-sm text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center justify-center text-lg border border-white border-opacity-20 dark:border-white/30"
             href="{{ data.widget.secondaryCtaUrl }}" data-discover="true">
             {{ data.widget.secondaryCtaLabel }}
             {% if data.widget.secondaryCtaIcon %}

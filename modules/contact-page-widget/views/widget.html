@@ -9,24 +9,24 @@
 {% set formDescription = data.widget.formDescription or '请填写以下表单，我们的专业团队将在24小时内与您联系，为您提供货代企业运营解决方案。' %}
 {% set contactItems = data.widget.contactItems or [] %}
 {% set faqItems = data.widget.faqItems or [] %}
-{% set fieldClass = "w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300" %}
+{% set fieldClass = "w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300" %}
 
-<section class="py-20 bg-white">
+<section class="py-20 bg-white dark:bg-slate-950 transition-colors">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-10">
       <div class="lg:col-span-2 space-y-10" style="opacity: 1; transform: none;">
-        <div class="bg-gray-50 p-8 rounded-xl">
-          <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ contactHeading }}</h3>
+        <div class="bg-gray-50 dark:bg-slate-900 p-8 rounded-xl transition-colors">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">{{ contactHeading }}</h3>
           <div class="space-y-6">
             {% for item in contactItems %}
               {% if item.description %}
                 <div class="flex items-start">
-                  <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mr-4 mt-1">
+                  <div class="w-12 h-12 bg-blue-100 dark:bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-300 mr-4 mt-1 transition-colors">
                     <i class="{{ item.iconClass or 'fa-solid fa-location-dot' }} text-xl"></i>
                   </div>
                   <div>
-                    <h4 class="font-semibold text-gray-900 mb-1">{{ item.title }}</h4>
-                    <p class="text-gray-600">{{ item.description }}</p>
+                    <h4 class="font-semibold text-gray-900 dark:text-white mb-1">{{ item.title }}</h4>
+                    <p class="text-gray-600 dark:text-gray-300">{{ item.description }}</p>
                   </div>
                 </div>
               {% endif %}
@@ -35,12 +35,12 @@
         </div>
         {% if faqItems and faqItems.length > 0 %}
           <div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ faqHeading }}</h3>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">{{ faqHeading }}</h3>
             <div class="space-y-4">
               {% for faq in faqItems %}
-                <div class="bg-gray-50 p-4 rounded-lg">
-                  <h4 class="font-semibold text-gray-900 mb-2">{{ faq.question }}</h4>
-                  <p class="text-gray-600">{{ faq.answer }}</p>
+                <div class="bg-gray-50 dark:bg-slate-900 p-4 rounded-lg transition-colors">
+                  <h4 class="font-semibold text-gray-900 dark:text-white mb-2">{{ faq.question }}</h4>
+                  <p class="text-gray-600 dark:text-gray-300">{{ faq.answer }}</p>
                 </div>
               {% endfor %}
             </div>
@@ -48,9 +48,9 @@
         {% endif %}
       </div>
       <div class="lg:col-span-3" style="opacity: 1; transform: none;">
-        <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-          <h3 class="text-2xl font-bold text-gray-900 mb-6">{{ formHeading }}</h3>
-          <p class="text-gray-600 mb-8 text-xl">{{ formDescription }}</p>
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-slate-800 transition-colors">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6">{{ formHeading }}</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-8 text-xl">{{ formDescription }}</p>
           <form
             id="{{ formId }}"
             class="space-y-6"
@@ -61,7 +61,7 @@
           >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label for="name" class="block text-sm font-medium text-gray-700 mb-1">{{ formText.nameLabel or '姓名' }}</label>
+                <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ formText.nameLabel or '姓名' }}</label>
                 <input
                   type="text"
                   id="name"
@@ -72,7 +72,7 @@
                 />
               </div>
               <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">{{ formText.emailLabel or '电子邮箱' }}</label>
+                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ formText.emailLabel or '电子邮箱' }}</label>
                 <input
                   type="email"
                   id="email"
@@ -85,7 +85,7 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">
+                <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   {{ formText.phoneLabel or '联系电话' }} <span class="text-red-500">*</span>
                 </label>
                 <input
@@ -99,7 +99,7 @@
                 />
               </div>
               <div>
-                <label for="subject" class="block text-sm font-medium text-gray-700 mb-1">{{ formText.subjectLabel or '咨询主题' }}</label>
+                <label for="subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ formText.subjectLabel or '咨询主题' }}</label>
                 <input
                   type="text"
                   id="subject"
@@ -111,7 +111,7 @@
               </div>
             </div>
             <div>
-              <label for="message" class="block text-sm font-medium text-gray-700 mb-1">{{ formText.messageLabel or '咨询内容' }}</label>
+              <label for="message" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ formText.messageLabel or '咨询内容' }}</label>
               <textarea
                 id="message"
                 name="message"
@@ -128,19 +128,19 @@
                 class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 required
               />
-              <label for="privacy" class="ml-2 block text-sm text-gray-600">
+              <label for="privacy" class="ml-2 block text-sm text-gray-600 dark:text-gray-300">
                 {{ formText.consentText or '我已阅读并同意隐私政策和服务条款' }}
               </label>
             </div>
             <button
               type="submit"
-              class="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center text-lg"
+              class="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white dark:text-slate-900 font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center text-lg"
             >
               {{ formText.submitText or '提交咨询' }}<i class="fa-solid fa-paper-plane ml-2"></i>
             </button>
             <div
               id="{{ statusId }}"
-              class="hidden mt-6 border border-gray-200 rounded-lg px-4 py-3 text-sm text-gray-800"
+              class="hidden mt-6 border border-gray-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm text-gray-800 dark:text-gray-200 transition-colors"
               role="status"
               aria-live="polite"
             ></div>
@@ -168,9 +168,9 @@
       error: '{{ (formText.errorText or "提交失败，请稍后再试或直接联系我们。") | e("js") }}'
     };
     const statusStates = {
-      loading: ['border-blue-200', 'bg-blue-50', 'text-blue-700'],
-      success: ['border-green-200', 'bg-green-50', 'text-green-700'],
-      error: ['border-red-200', 'bg-red-50', 'text-red-700']
+      loading: ['border-blue-200', 'bg-blue-50', 'text-blue-700', 'dark:border-blue-500/40', 'dark:bg-slate-900', 'dark:text-blue-200'],
+      success: ['border-green-200', 'bg-green-50', 'text-green-700', 'dark:border-green-500/40', 'dark:bg-slate-900', 'dark:text-green-200'],
+      error: ['border-red-200', 'bg-red-50', 'text-red-700', 'dark:border-red-500/40', 'dark:bg-slate-900', 'dark:text-red-200']
     };
 
     function resetStates() {

@@ -8,6 +8,7 @@
 @import './scss/_widgets';
 
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 // .bg-blue-600{
 //     background-color: #3b82f6;

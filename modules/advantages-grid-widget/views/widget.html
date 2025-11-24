@@ -1,14 +1,14 @@
-<section class="py-20 bg-gray-50" data-advantages-grid-widget>
+<section class="py-20 bg-gray-50 dark:bg-slate-950 transition-colors" data-advantages-grid-widget>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-16">
       {% if data.widget.heading %}
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">
           {{ data.widget.heading | escape }}
         </h2>
-        <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+        <div class="w-20 h-1 bg-blue-600 dark:bg-blue-400 mx-auto mb-6 transition-colors"></div>
       {% endif %}
       {% if data.widget.subheading %}
-        <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+        <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-xl transition-colors">
           {{ data.widget.subheading | escape }}
         </p>
       {% endif %}
@@ -19,19 +19,19 @@
         {% for item in data.widget.items %}
           {% set highlightClasses = '' %}
           {% if item.highlight %}
-            {% set highlightClasses = 'border-blue-200 shadow-2xl shadow-blue-100' %}
+            {% set highlightClasses = 'border-blue-200 dark:border-blue-500/40 shadow-2xl shadow-blue-100 dark:shadow-blue-500/10' %}
           {% endif %}
           <article
-            class="bg-white p-8 rounded-xl shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300 {{ highlightClasses }}"
+            class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-lg border border-gray-100 dark:border-slate-800 hover:shadow-xl transition-all duration-300 {{ highlightClasses }}"
           >
-            <div class="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mb-6">
+            <div class="w-14 h-14 bg-blue-100 dark:bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-300 mb-6 transition-colors">
               <i class="{{ item.iconClass or 'fa-solid fa-star' }} text-2xl"></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-3">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 transition-colors">
               {{ item.title | escape }}
             </h3>
             {% if item.description %}
-              <p class="text-gray-600">
+              <p class="text-gray-600 dark:text-gray-300 transition-colors">
                 {{ item.description | escape }}
               </p>
             {% endif %}
@@ -39,7 +39,7 @@
         {% endfor %}
       </div>
     {% else %}
-      <div class="bg-blue-50 border border-dashed border-blue-200 rounded-2xl p-12 text-center text-blue-600">
+      <div class="bg-blue-50 dark:bg-slate-900 border border-dashed border-blue-200 dark:border-blue-500/40 rounded-2xl p-12 text-center text-blue-600 dark:text-blue-200 transition-colors">
         <i class="fa-solid fa-layer-group text-3xl mb-4"></i>
         <p class="text-lg font-medium mb-2">请添加至少一条优势内容。</p>
       </div>

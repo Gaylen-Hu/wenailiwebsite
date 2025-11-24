@@ -1,18 +1,18 @@
-<section class="py-20 bg-white overflow-hidden relative" data-growth-partner-widget>
+<section class="py-20 bg-white dark:bg-slate-950 overflow-hidden relative transition-colors" data-growth-partner-widget>
   {% if data.widget.showDecorations %}
-    <div class="absolute -right-40 -bottom-40 w-96 h-96 bg-blue-50 rounded-full -z-1"></div>
-    <div class="absolute -top-10 -left-16 w-32 h-32 bg-indigo-50 rounded-full -z-1"></div>
+    <div class="absolute -right-40 -bottom-40 w-96 h-96 bg-blue-50 dark:bg-blue-500/10 rounded-full -z-1 transition-colors"></div>
+    <div class="absolute -top-10 -left-16 w-32 h-32 bg-indigo-50 dark:bg-indigo-500/10 rounded-full -z-1 transition-colors"></div>
   {% endif %}
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 relative">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-16">
         {% if data.widget.heading %}
-          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6 transition-colors">
             {{ data.widget.heading | escape }}
           </h2>
         {% endif %}
         {% if data.widget.subheading %}
-          <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+          <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-xl transition-colors">
             {{ data.widget.subheading | escape }}
           </p>
         {% endif %}
@@ -23,15 +23,15 @@
           {% if data.widget.features and data.widget.features.length %}
             {% for feature in data.widget.features %}
               <div class="flex" data-feature>
-                <div class="flex-shrink-0 w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-4">
+                <div class="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 mr-4 transition-colors">
                   <i class="{{ feature.iconClass or 'fa-solid fa-circle' }} text-xl"></i>
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold text-gray-900 mb-2">
+                  <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2 transition-colors">
                     {{ feature.title | escape }}
                   </h3>
                   {% if feature.description %}
-                    <p class="text-gray-600">
+                    <p class="text-gray-600 dark:text-gray-300 transition-colors">
                       {{ feature.description | escape }}
                     </p>
                   {% endif %}
@@ -39,12 +39,12 @@
               </div>
             {% endfor %}
           {% else %}
-            <p class="text-gray-500">请添加至少一个优势条目。</p>
+            <p class="text-gray-500 dark:text-gray-400">请添加至少一个优势条目。</p>
           {% endif %}
         </div>
 
         <div class="relative">
-          <div class="rounded-xl overflow-hidden shadow-2xl">
+          <div class="rounded-xl overflow-hidden shadow-2xl border border-transparent dark:border-slate-800 transition-colors">
             {% if data.widget.image and data.widget.image.url %}
               <img
                 src="{{ data.widget.image.url | safe }}"
@@ -53,14 +53,14 @@
                 loading="lazy"
               />
             {% else %}
-              <div class="bg-gray-100 h-64 flex items-center justify-center text-gray-400">
+              <div class="bg-gray-100 dark:bg-slate-800 h-64 flex items-center justify-center text-gray-400 dark:text-gray-500 transition-colors">
                 <i class="fa-solid fa-image text-3xl"></i>
               </div>
             {% endif %}
           </div>
           {% if data.widget.showDecorations %}
-            <div class="absolute -bottom-6 -right-6 w-40 h-40 bg-blue-100 rounded-full -z-1"></div>
-            <div class="absolute -top-6 -left-6 w-24 h-24 bg-indigo-100 rounded-full -z-1"></div>
+            <div class="absolute -bottom-6 -right-6 w-40 h-40 bg-blue-100 dark:bg-blue-500/10 rounded-full -z-1 transition-colors"></div>
+            <div class="absolute -top-6 -left-6 w-24 h-24 bg-indigo-100 dark:bg-indigo-500/10 rounded-full -z-1 transition-colors"></div>
           {% endif %}
         </div>
       </div>

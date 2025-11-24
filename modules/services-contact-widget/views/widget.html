@@ -3,7 +3,7 @@
 {% set descriptionColor = data.widget.descriptionColor or '#bfdbfe' %}
 
 <section
-  class="py-20 text-white"
+  class="py-20 text-white transition-colors"
   style="{{ 'background-color: ' ~ backgroundColor ~ ';' }}"
   data-services-contact-widget
 >
@@ -29,7 +29,7 @@
     {% if data.widget.buttonText and data.widget.buttonLink %}
       <div>
         <a
-          class="px-8 py-4 bg-white hover:bg-blue-50 text-blue-600 font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center text-lg"
+          class="px-8 py-4 bg-white hover:bg-blue-50 dark:bg-slate-900 dark:hover:bg-slate-800 text-blue-600 dark:text-blue-300 font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 inline-flex items-center text-lg"
           href="{{ data.widget.buttonLink }}"
           data-discover="true"
         >

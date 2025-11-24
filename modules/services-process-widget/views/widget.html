@@ -1,14 +1,14 @@
-<section class="py-20 bg-white" data-services-process-widget>
+<section class="py-20 bg-white dark:bg-slate-950 transition-colors" data-services-process-widget>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-16">
       {% if data.widget.heading %}
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">
           {{ data.widget.heading | escape }}
         </h2>
-        <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+        <div class="w-20 h-1 bg-blue-600 dark:bg-blue-400 mx-auto mb-6 transition-colors"></div>
       {% endif %}
       {% if data.widget.subheading %}
-        <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+        <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-xl transition-colors">
           {{ data.widget.subheading | escape }}
         </p>
       {% endif %}
@@ -16,18 +16,18 @@
 
     {% if data.widget.steps and data.widget.steps.length %}
       <div class="relative">
-        <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gray-200 -translate-y-1/2 z-0" aria-hidden="true"></div>
+        <div class="hidden md:block absolute top-1/2 left-0 w-full h-1 bg-gray-200 dark:bg-slate-700 -translate-y-1/2 z-0" aria-hidden="true"></div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8 relative z-1">
           {% for step in data.widget.steps %}
-            <article class="bg-white p-6 rounded-xl shadow-lg border border-gray-100 text-center hover:shadow-xl transition-all duration-300">
-              <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mx-auto mb-6">
+            <article class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-lg border border-gray-100 dark:border-slate-800 text-center hover:shadow-xl transition-all duration-300">
+              <div class="w-16 h-16 bg-blue-100 dark:bg-blue-500/20 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-300 mx-auto mb-6 transition-colors">
                 <i class="{{ step.iconClass or 'fa-solid fa-circle-check' }} text-2xl"></i>
               </div>
-              <h3 class="text-xl font-bold text-gray-900 mb-3">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 transition-colors">
                 {{ step.title | escape }}
               </h3>
               {% if step.description %}
-                <p class="text-gray-600">
+                <p class="text-gray-600 dark:text-gray-300 transition-colors">
                   {{ step.description | escape }}
                 </p>
               {% endif %}
@@ -36,7 +36,7 @@
         </div>
       </div>
     {% else %}
-      <div class="bg-blue-50 border border-dashed border-blue-200 rounded-2xl p-12 text-center text-blue-600">
+      <div class="bg-blue-50 dark:bg-slate-900 border border-dashed border-blue-200 dark:border-blue-500/40 rounded-2xl p-12 text-center text-blue-600 dark:text-blue-200 transition-colors">
         <i class="fa-solid fa-sitemap text-3xl mb-4"></i>
         <p class="text-lg font-medium mb-2">请添加至少一个服务流程步骤。</p>
       </div>

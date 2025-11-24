@@ -1,14 +1,14 @@
-<section class="py-20 bg-white" data-case-home-showcase>
+<section class="py-20 bg-white dark:bg-slate-950 transition-colors" data-case-home-showcase>
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center mb-16">
       {% if data.title %}
-        <h2 class="text-3xl font-bold text-gray-900 mb-4">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4 transition-colors">
           {{ data.title | escape }}
         </h2>
         <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
       {% endif %}
       {% if data.description %}
-        <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+        <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-xl transition-colors">
           {{ data.description | escape }}
         </p>
       {% endif %}
@@ -17,7 +17,7 @@
     {% if data.pieces and data.pieces.length %}
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         {% for piece in data.pieces %}
-          <article class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
+          <article class="bg-white dark:bg-slate-900 rounded-xl shadow-lg overflow-hidden border border-gray-100 dark:border-slate-800 hover:shadow-xl transition-all duration-300">
             <div class="h-64 overflow-hidden">
               {% if piece._coverImageAttachment %}
                 <img
@@ -27,31 +27,31 @@
                   loading="lazy"
                 >
               {% else %}
-                <div class="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-blue-500">
+                <div class="w-full h-full bg-gradient-to-br from-blue-100 to-blue-200 dark:from-slate-800 dark:to-slate-700 flex items-center justify-center text-blue-500 dark:text-blue-300 transition-colors">
                   <i class="fa-solid fa-image text-3xl"></i>
                 </div>
               {% endif %}
             </div>
             <div class="p-6">
               {% if piece.categoryLabel %}
-                <span class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-medium mb-4">
+                <span class="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-200 text-xs font-medium mb-4 transition-colors">
                   {{ piece.categoryLabel | escape }}
                 </span>
               {% endif %}
-              <h3 class="text-xl font-bold text-gray-900 mb-3">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 transition-colors">
                 {{ piece.title | escape }}
               </h3>
               {% if piece.summary %}
-                <p class="text-gray-600 mb-4 leading-relaxed">
+                <p class="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed transition-colors">
                   {{ piece.summary | escape }}
                 </p>
               {% endif %}
               {% if piece.results and piece.results.length %}
                 <div class="mb-4">
-                  <h4 class="text-sm font-semibold text-gray-700 mb-2">项目成果：</h4>
+                  <h4 class="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2 transition-colors">项目成果：</h4>
                   <ul class="space-y-1">
                     {% for result in piece.results %}
-                      <li class="flex items-center text-gray-600 text-sm">
+                      <li class="flex items-center text-gray-600 dark:text-gray-300 text-sm transition-colors">
                         <i class="{{ result.icon | escape }} text-green-500 mr-2"></i>
                         <span>
                           {% if result.label %}
@@ -66,7 +66,7 @@
               {% endif %}
               {% if piece.ctaUrl %}
                 <a
-                  class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors duration-300"
+                  class="inline-flex items-center text-blue-600 dark:text-blue-300 font-medium hover:text-blue-800 dark:hover:text-blue-200 transition-colors duration-300"
                   href="{{ piece.ctaUrl | escape }}"
                   data-discover="true"
                 >
@@ -79,7 +79,7 @@
         {% endfor %}
       </div>
     {% else %}
-      <div class="bg-white border border-dashed border-gray-200 rounded-2xl p-12 text-center text-gray-500">
+      <div class="bg-white dark:bg-slate-900 border border-dashed border-gray-200 dark:border-blue-500/40 rounded-2xl p-12 text-center text-gray-500 dark:text-gray-300 transition-colors">
         <i class="fa-solid fa-circle-info text-3xl text-blue-400 mb-4"></i>
         <p class="text-lg font-medium mb-2">暂时没有可展示的案例</p>
         <p class="text-sm">请在“案例”模块中添加内容或调整筛选条件。</p>

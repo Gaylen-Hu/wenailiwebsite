@@ -10,7 +10,7 @@
   } %}
 
   <!-- 案例头部 - 渐变背景 -->
-  <section class="bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-16">
+  <section class="bg-gradient-to-r from-blue-800 to-indigo-900 dark:from-gray-800 dark:to-gray-900 text-white py-16 transition-colors">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
         <div>
@@ -20,13 +20,13 @@
             </h1>
           {% endif %}
           {% if data.piece.title %}
-            <p class="text-xl text-blue-100">
+            <p class="text-xl text-blue-100 dark:text-blue-200">
               {{ data.piece.title | escape }}
             </p>
           {% endif %}
         </div>
         <div class="mt-4 md:mt-0">
-          <span class="px-4 py-2 bg-blue-700 rounded-full text-sm font-medium">
+          <span class="px-4 py-2 bg-blue-700 dark:bg-blue-800 rounded-full text-sm font-medium">
             {{ categoryLabels[data.piece.category] or '案例' }}
           </span>
         </div>
@@ -34,19 +34,19 @@
       <div class="flex flex-wrap gap-4 text-sm">
         {% if data.piece.projectPeriod %}
           <div class="flex items-center">
-            <i class="fa-solid fa-calendar-days text-blue-300 mr-2"></i>
+            <i class="fa-solid fa-calendar-days text-blue-300 dark:text-blue-200 mr-2"></i>
             <span>项目周期: {{ data.piece.projectPeriod | escape }}</span>
           </div>
         {% endif %}
         {% if data.piece.company %}
           <div class="flex items-center">
-            <i class="fa-solid fa-user-tie text-blue-300 mr-2"></i>
+            <i class="fa-solid fa-user-tie text-blue-300 dark:text-blue-200 mr-2"></i>
             <span>客户: {{ data.piece.company | escape }}</span>
           </div>
         {% endif %}
         {% if data.piece.industry %}
           <div class="flex items-center">
-            <i class="fa-solid fa-location-dot text-blue-300 mr-2"></i>
+            <i class="fa-solid fa-location-dot text-blue-300 dark:text-blue-200 mr-2"></i>
             <span>行业: {{ data.piece.industry | escape }}</span>
           </div>
         {% endif %}
