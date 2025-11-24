@@ -19,11 +19,12 @@
           </blockquote>
         {% endif %}
         <div class="flex items-center">
-          {% if data.widget.avatarUrl %}
+          {% set avatarObject = apos.attachment.first(data.widget._avatar) %}
+          {% if avatarObject %}
             <div class="w-16 h-16 rounded-full overflow-hidden mr-4">
               <img
-                src="{{ data.widget.avatarUrl }}"
-                alt="{{ data.widget.avatarAlt }}"
+                src="{{ apos.attachment.url(avatarObject) | escape }}"
+                alt="{{ avatarObject._alt or data.widget.clientName or '客户头像' | escape }}"
                 class="w-full h-full object-cover"
                 loading="lazy"
               >

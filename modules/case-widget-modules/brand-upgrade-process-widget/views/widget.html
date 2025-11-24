@@ -1,5 +1,13 @@
+<!--
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-11-23 21:06:33
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-11-23 21:06:35
+ * @FilePath: \wenaili\modules\case-widget-modules\brand-upgrade-process-widget\views\widget.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <section class="py-20 bg-white">
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">  
     {% if data.widget.title or data.widget.description %}
       <div class="text-center mb-16">
         {% if data.widget.title %}
@@ -24,19 +32,22 @@
             <div class="relative {% if isEven %}lg:order-2{% endif %}">
               <div class="absolute -inset-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl blur opacity-25"></div>
               <div class="relative rounded-xl overflow-hidden shadow-xl">
-                <img
-                  src="{{ step.imageUrl }}"
-                  alt="{{ step.imageAlt }}"
-                  class="w-full h-auto object-cover"
-                  loading="lazy"
-                >
+                {% set imageObject = apos.attachment.first(step._image) %}
+                {% if imageObject %}
+                  <img
+                    src="{{ apos.attachment.url(imageObject) | escape }}"
+                    alt="{{ imageObject._alt or step.title or '流程步骤图片' | escape }}"
+                    class="w-full h-auto object-cover"
+                    loading="lazy"
+                  >
+                {% endif %}
               </div>
             </div>
             <!-- 内容部分 -->
             <div class="relative {% if isEven %}lg:order-1{% endif %}">
-              <div class="absolute -top-8 -left-8 w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xl font-bold">
+              <!-- <div class="absolute -top-8 -left-8 w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-xl font-bold">
                 {{ step.stepNumber }}
-              </div>
+              </div> -->
               <div class="ml-12">
                 {% if step.icon %}
                   <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 mb-6">

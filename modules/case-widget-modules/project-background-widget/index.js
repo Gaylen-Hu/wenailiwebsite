@@ -12,16 +12,11 @@ export default {
         label: '标题',
         def: '项目背景'
       },
-      imageUrl: {
-        type: 'url',
-        label: '背景图片地址',
-        required: true,
-        help: '推荐 16:9 比例，支持外部链接或对象存储地址'
-      },
-      imageAlt: {
-        type: 'string',
-        label: '图片替代文本',
-        def: '项目背景图片'
+      _image: {
+        label: '背景图片',
+        type: 'relationship',
+        withType: '@apostrophecms/image',
+        max: 1
       },
       paragraph1: {
         type: 'string',
@@ -53,7 +48,7 @@ export default {
       },
       media: {
         label: '媒体配置',
-        fields: [ 'imageUrl', 'imageAlt' ]
+        fields: [ '_image' ]
       }
     }
   }

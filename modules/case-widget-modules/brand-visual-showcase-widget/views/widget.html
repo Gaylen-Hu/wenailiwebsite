@@ -19,12 +19,15 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         {% for item in data.widget.items %}
           <div class="bg-gray-800 rounded-xl overflow-hidden shadow-xl">
-            <img
-              src="{{ item.imageUrl }}"
-              alt="{{ item.imageAlt }}"
-              class="w-full h-auto object-cover"
-              loading="lazy"
-            >
+            {% set imageObject = apos.attachment.first(item._image) %}
+            {% if imageObject %}
+              <img
+                src="{{ apos.attachment.url(imageObject) | escape }}"
+                alt="{{ imageObject._alt or item.title or '品牌视觉展示' | escape }}"
+                class="w-full h-auto object-cover"
+                loading="lazy"
+              >
+            {% endif %}
             <div class="p-6">
               {% if item.title %}
                 <h3 class="text-xl font-bold mb-2">

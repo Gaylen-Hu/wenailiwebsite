@@ -3,13 +3,16 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
       <div class="relative">
         <div class="rounded-xl overflow-hidden shadow-2xl">
-          <img
-            src="{{ data.widget.imageUrl }}"
-            alt="{{ data.widget.imageAlt }}"
-            class="w-full h-auto object-cover"
-            loading="lazy"
-          >
-        </div>
+          {% set imageObject = apos.attachment.first(data.widget._image) %}
+          {% if imageObject %}
+            <img
+              src="{{ apos.attachment.url(imageObject) | escape }}"
+              alt="{{ imageObject._alt or data.widget.title or '项目背景图片' | escape }}"
+              class="w-full h-auto object-cover"
+              loading="lazy"
+            >
+          {% endif %}
+        </div>  
         <div class="absolute -bottom-6 -right-6 w-40 h-40 bg-blue-100 rounded-full -z-10" aria-hidden="true"></div>
         <div class="absolute -top-6 -left-6 w-24 h-24 bg-indigo-100 rounded-full -z-10" aria-hidden="true"></div>
       </div>

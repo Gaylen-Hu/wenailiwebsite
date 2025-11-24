@@ -19,16 +19,11 @@ export default {
         required: true,
         help: '客户的评价文字'
       },
-      avatarUrl: {
-        type: 'url',
-        label: '客户头像地址',
-        required: true,
-        help: '推荐正方形图片，支持外部链接或对象存储地址'
-      },
-      avatarAlt: {
-        type: 'string',
-        label: '头像替代文本',
-        def: '客户头像'
+      _avatar: {
+        label: '客户头像',
+        type: 'relationship',
+        withType: '@apostrophecms/image',
+        max: 1
       },
       clientName: {
         type: 'string',
@@ -45,7 +40,7 @@ export default {
     group: {
       content: {
         label: '内容设置',
-        fields: [ 'title', 'quote', 'avatarUrl', 'avatarAlt', 'clientName', 'clientPosition' ]
+        fields: [ 'title', 'quote', '_avatar', 'clientName', 'clientPosition' ]
       }
     }
   }

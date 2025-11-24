@@ -638,7 +638,7 @@ export default {
           legendTitleFontSize,
           legendFontSize,
           chartType,
-          chartTarget,
+          chartTarget: chartTargetFromData,
           axisOneLabel,
           axisOneUnits,
           axisOneLabelFontSize,
@@ -664,6 +664,8 @@ export default {
         const titlePosition = titlePositionRaw === 'top-left' ? 'top' : titlePositionRaw;
         const titleAlign = titlePositionRaw === 'top-left' ? 'start' : undefined;
         const dataFile = data.dataFile;
+        // 使用传入的 target 或默认的 chartTarget
+        const chartTarget = data.target || chartTargetFromData;
         const fileString = await self.apos.http.get(dataFile);
         const chartDataSet = [];
         try {
