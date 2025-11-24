@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-08 13:56:54
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-25 00:16:38
+ * @LastEditTime: 2025-11-25 01:10:22
  * @FilePath: \myapp\apos-app\views\fragments\header.html
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -120,13 +120,15 @@
         {%endif%}
         <button
           class="hidden md:inline-flex p-2 rounded-full bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors duration-300 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
-          aria-label="切换到暗色模式"
+          aria-label="切换暗黑"
           data-theme-toggle
         >
-          <span class="inline-flex items-center justify-center">
-            <i class="fa-solid fa-moon text-base dark:hidden"></i>
-            <i class="fa-solid fa-sun text-base hidden dark:inline text-amber-400"></i>
-          </span>
+        <span class="inline-flex items-center justify-center dark:hidden">
+          <i class="fa-solid fa-moon text-base"></i>
+        </span>
+        <span class="hidden items-center justify-center dark:inline-flex">
+          <i class="fa-solid fa-sun text-base text-amber-400"></i>
+        </span>
         </button>
         <button
           class="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100 transition-colors duration-300"
