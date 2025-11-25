@@ -1,3 +1,11 @@
+<!--
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-11-25 16:56:33
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-11-25 16:58:05
+ * @FilePath: \wenaili\modules\banner-widget\views\widget.html
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
 <section class="relative text-white overflow-hidden bg-white dark:bg-slate-950 transition-colors duration-300" data-banner-widget>
   <div class="absolute inset-0 z-0">
     <img
@@ -15,11 +23,11 @@
           {{ data.widget.eyebrow }}
         </p>
       {% endif %}
-      <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight text-gray-900 dark:text-white">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white">
         {{ data.widget.heading | safe }}
       </h1>
       {% if data.widget.description %}
-        <p class="text-xl text-gray-700 dark:text-blue-200 mb-8 leading-relaxed transition-colors duration-300">
+        <p class="text-xl text-blue-200 mb-8 leading-relaxed transition-colors duration-300">
           {{ data.widget.description | safe }}
         </p>
       {% endif %}
@@ -38,7 +46,7 @@
         {% endif %}
         {% if data.widget.secondaryCtaText and data.widget.secondaryCtaLink %}
           <a
-            class="px-8 py-3 bg-transparent border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-slate-900 font-medium rounded-lg transition-all duration-300 text-center"
+            class="px-8 py-3 bg-transparent border-2 border-white text-white hover:bg-white hover:text-blue-600 font-medium rounded-lg transition-all duration-300 text-center"
             href="{{ data.widget.secondaryCtaLink }}"
             data-discover="true"
           >
