@@ -29,7 +29,7 @@
   {% endif %}
 
   <main class="flex-grow">
-    <section class="relative bg-gradient-to-r from-blue-800 to-indigo-900 text-white py-24 overflow-hidden">
+    <section class="relative bg-gradient-to-r from-blue-800 to-indigo-900 dark:from-gray-800 dark:to-gray-900 text-white py-24 overflow-hidden transition-colors">
       <div class="absolute inset-0 overflow-hidden">
         {% if data.page.heroBackground %}
           <div
@@ -44,7 +44,7 @@
         </h1>
         {% if data.page.heroSubtitle %}
           <div class="max-w-3xl mx-auto text-center">
-            <p class="text-xl text-blue-100 mb-8">
+            <p class="text-xl text-blue-100 dark:text-blue-200 mb-8">
               {{ data.page.heroSubtitle }}
             </p>
             <form class="relative max-w-2xl mx-auto" method="get" action="{{ data.page._url }}">
@@ -53,9 +53,9 @@
                 name="q"
                 value="{{ searchTerm | escape }}"
                 placeholder="{{ data.page.searchPlaceholder or '搜索资讯...' | escape }}"
-                class="w-full px-5 py-4 pl-14 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 shadow-lg"
+                class="w-full px-5 py-4 pl-14 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors duration-300 shadow-lg placeholder-gray-500 dark:placeholder-gray-400"
               />
-              <i class="fa-solid fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-xl"></i>
+              <i class="fa-solid fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-300 text-xl"></i>
               {% if activeCategory %}
                 <input type="hidden" name="category" value="{{ activeCategory | escape }}">
               {% endif %}
@@ -71,7 +71,7 @@
       </div>
     </section>
 
-    <section class="bg-white sticky top-16 z-30 shadow-md">
+    <section class="bg-white dark:bg-gray-800 sticky top-16 z-30 shadow-md dark:shadow-gray-900/40 transition-colors">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-wrap items-center justify-between py-4 gap-4">
           <div class="flex flex-wrap items-center gap-3">
@@ -86,7 +86,7 @@
                 page: null
               } %}
               <a
-                class="px-5 py-2 rounded-full transition-all duration-300 whitespace-nowrap text-sm md:text-base {{ 'bg-blue-600 text-white font-medium shadow-md' if isActiveCategory else 'bg-gray-100 text-gray-700 hover:bg-gray-200' }}"
+                class="px-5 py-2 rounded-full transition-all duration-300 whitespace-nowrap text-sm md:text-base {{ 'bg-blue-600 text-white font-medium shadow-md' if isActiveCategory else 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600' }}"
                 href="{{ data.page._url | build(filterParams) }}"
                 data-filter="{{ filterValue | escape }}"
               >
@@ -106,8 +106,8 @@
             } %}
            
           </div>
-          <div class="ml-auto text-gray-600 text-sm">
-            <i class="fa-solid fa-newspaper text-blue-600 mr-2"></i>
+          <div class="ml-auto text-gray-600 dark:text-gray-400 text-sm">
+            <i class="fa-solid fa-newspaper text-blue-600 dark:text-blue-400 mr-2"></i>
             共 {{ data.totalPieces or data.pieces.length }} 条新闻
             {% if searchTerm %}
               ，搜索“{{ searchTerm | escape }}”
@@ -120,13 +120,13 @@
       </div>
     </section>
 
-    <section class="py-16 bg-gray-50">
+    <section class="py-16 bg-gray-50 dark:bg-gray-900 transition-colors">
       <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
           <aside class="lg:col-span-1 space-y-8">
-            <div class="bg-white p-6 rounded-xl shadow-md">
-              <h3 class="text-xl font-bold text-gray-900 mb-6 pb-3 border-b border-gray-200">
-                <i class="fa-solid fa-chart-line text-red-500 mr-2"></i>{{ data.page.popularTitle or '热门资讯' }}
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border border-gray-100 dark:border-gray-700">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6 pb-3 border-b border-gray-200 dark:border-gray-600">
+                <i class="fa-solid fa-chart-line text-red-500 dark:text-red-400 mr-2"></i>{{ data.page.popularTitle or '热门资讯' }}
               </h3>
               <ul class="space-y-5">
                 {% if hasCustomPopular %}
@@ -143,7 +143,7 @@
                         {% endif %}
                       </div>
                       <div>
-                        <h4 class="font-medium text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors duration-300">
+                        <h4 class="font-medium text-gray-900 dark:text-gray-100 line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300">
                           {% if item.url %}
                             <a href="{{ item.url | escape }}" data-discover="true">{{ item.title | escape }}</a>
                           {% else %}
@@ -151,8 +151,8 @@
                           {% endif %}
                         </h4>
                         {% if item.publishedAt %}
-                          <p class="text-gray-500 text-xs mt-2 flex items-center">
-                            <i class="fa-solid fa-calendar-alt mr-1 text-gray-400"></i>
+                          <p class="text-gray-500 dark:text-gray-400 text-xs mt-2 flex items-center">
+                            <i class="fa-solid fa-calendar-alt mr-1 text-gray-400 dark:text-gray-500"></i>
                             {{ item.publishedAt | date('YYYY-MM-DD') }}
                           </p>
                         {% endif %}
@@ -184,14 +184,14 @@
                         {% endif %}
                         </div>
                         <div>
-                          <h4 class="font-medium text-gray-900 line-clamp-2 hover:text-blue-600 transition-colors duration-300">
+                          <h4 class="font-medium text-gray-900 dark:text-gray-100 line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300">
                             <a href="{{ piece.readUrl or piece._url | escape }}" data-discover="true">
                               {{ piece.title | escape }}
                             </a>
                           </h4>
                           {% if piece.publishedAt %}
-                            <p class="text-gray-500 text-xs mt-2 flex items-center">
-                              <i class="fa-solid fa-calendar-alt mr-1 text-gray-400"></i>
+                            <p class="text-gray-500 dark:text-gray-400 text-xs mt-2 flex items-center">
+                              <i class="fa-solid fa-calendar-alt mr-1 text-gray-400 dark:text-gray-500"></i>
                               {{ piece.publishedAt | date('YYYY-MM-DD') }}
                             </p>
                           {% endif %}
@@ -240,12 +240,12 @@
               </ul>
             </div>
 
-            <div class="bg-blue-50 p-6 rounded-xl shadow-md">
-              <h3 class="text-xl font-bold text-gray-900 mb-4">
+            <div class="bg-blue-50 dark:bg-blue-500/10 p-6 rounded-xl shadow-md border border-blue-100 dark:border-blue-500/20">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                 {{ data.page.subscribeTitle or '订阅我们的行业资讯通讯' }}
               </h3>
               {% if data.page.subscribeDescription %}
-                <p class="text-gray-600 mb-6 text-sm">
+                <p class="text-gray-600 dark:text-gray-300 mb-6 text-sm">
                   {{ data.page.subscribeDescription }}
                 </p>
               {% endif %}
@@ -254,12 +254,12 @@
                   type="email"
                   name="email"
                   placeholder="您的邮箱地址"
-                  class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300"
+                  class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-colors duration-300 placeholder-gray-500 dark:placeholder-gray-400"
                   required
                 />
                 <button
                   type="submit"
-                  class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap flex items-center justify-center"
+                  class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-400 text-white font-medium rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 whitespace-nowrap flex items-center justify-center"
                 >
                   {{ data.page.subscribeButtonLabel or '立即订阅' }}
                   <i class="fa-solid fa-paper-plane ml-2"></i>
@@ -273,15 +273,15 @@
          
           <div class="lg:col-span-2">
             {% if not data.pieces.length %}
-              <div class="bg-white rounded-xl shadow-md border border-dashed border-gray-200 p-12 text-center text-gray-500">
-                <i class="fa-solid fa-magnifying-glass text-3xl mb-4 text-blue-400"></i>
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md border border-dashed border-gray-200 dark:border-gray-700 p-12 text-center text-gray-500 dark:text-gray-400">
+                <i class="fa-solid fa-magnifying-glass text-3xl mb-4 text-blue-400 dark:text-blue-300"></i>
                 <p class="text-lg font-medium mb-2">未找到匹配的资讯内容</p>
                 <p class="text-sm">尝试调整搜索关键词或切换筛选条件。</p>
               </div>
             {% endif %}
             <div class="space-y-6">
               {% for piece in data.pieces %}
-                <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100" data-category="{{ piece.category }}">
+                <article class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-xl dark:hover:shadow-gray-900/40 transition-all duration-300 border border-gray-100 dark:border-gray-700" data-category="{{ piece.category }}">
                   <div class="flex flex-col md:flex-row">
                     <div class="md:w-1/3 h-48 md:h-auto overflow-hidden">
                       {% set imageObject = apos.attachment.first(piece._coverImage) %}
@@ -297,28 +297,28 @@
                     </div>
                     <div class="p-6 md:p-8 md:w-2/3">
                       <div class="flex flex-wrap items-center gap-3 mb-3">
-                        <span class="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium">
+                        <span class="px-3 py-1 bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-200 rounded-full text-xs font-medium">
                           {{ categoryLabels[piece.category] or '资讯' }}
                         </span>
                         {% if piece.publishedAt %}
-                          <span class="text-gray-500 text-sm flex items-center">
-                            <i class="fa-solid fa-calendar-alt mr-1 text-gray-400"></i>
+                          <span class="text-gray-500 dark:text-gray-400 text-sm flex items-center">
+                            <i class="fa-solid fa-calendar-alt mr-1 text-gray-400 dark:text-gray-500"></i>
                             {{ piece.publishedAt | date('YYYY-MM-DD') }}
                           </span>
                         {% endif %}
                       </div>
-                      <h3 class="text-xl md:text-2xl font-bold text-gray-900 mb-4 hover:text-blue-600 transition-colors duration-300">
+                      <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300">
                         <a href="{{ piece.readUrl or piece._url | escape }}" data-discover="true">
                           {{ piece.title | escape }}
                         </a>
                       </h3>
                       {% if piece.excerpt %}
-                        <p class="text-gray-600 mb-6 leading-relaxed line-clamp-3">
+                        <p class="text-gray-600 dark:text-gray-300 mb-6 leading-relaxed line-clamp-3">
                           {{ piece.excerpt | escape }}
                         </p>
                       {% endif %}
                       <a
-                        class="inline-flex items-center text-blue-600 font-medium hover:text-blue-800 transition-colors duration-300 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg"
+                        class="inline-flex items-center text-blue-600 dark:text-blue-400 font-medium hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-300 bg-blue-50 dark:bg-blue-500/10 hover:bg-blue-100 dark:hover:bg-blue-500/20 px-4 py-2 rounded-lg"
                         href="{{ piece.readUrl or piece._url | escape }}"
                         data-discover="true"
                       >
@@ -328,7 +328,7 @@
                     </div>
                   </div>
                 </article>
-               
+
               {% endfor %}
             </div>
 
@@ -350,14 +350,14 @@
               {% endif %}
 
               <div class="mt-12 flex justify-center">
-                <nav class="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 shadow-md ring-1 ring-gray-200" aria-label="分页导航">
+                <nav class="inline-flex items-center gap-2 rounded-full bg-white dark:bg-gray-800 px-3 py-2 shadow-md ring-1 ring-gray-200 dark:ring-gray-700" aria-label="分页导航">
                   {% set prevDisabled = currentPage <= 1 %}
                   {% set prevUrl = '#' %}
                   {% if not prevDisabled and data.pager %}
                     {% set prevUrl = data.pager.url(currentPage - 1) %}
                   {% endif %}
                   <a
-                    class="w-10 h-10 inline-flex items-center justify-center rounded-full border border-gray-200 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 {% if prevDisabled %}opacity-50 cursor-not-allowed pointer-events-none{% endif %}"
+                    class="w-10 h-10 inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 {% if prevDisabled %}opacity-50 cursor-not-allowed pointer-events-none{% endif %}"
                     href="{{ prevUrl }}"
                     aria-label="上一页"
                     {% if prevDisabled %}aria-disabled="true"{% endif %}
@@ -371,13 +371,13 @@
                     {% set firstUrl = '#' %}
                   {% endif %}
                   <a
-                    class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == 1 %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white text-gray-700 border border-transparent hover:bg-blue-50 hover:text-blue-600{% endif %}"
+                    class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == 1 %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-transparent hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400{% endif %}"
                     href="{{ firstUrl }}"
                     {% if currentPage == 1 %}aria-current="page"{% endif %}
                   >1</a>
 
                   {% if startPage > 2 %}
-                    <span class="px-2 text-gray-400 select-none">…</span>
+                    <span class="px-2 text-gray-400 dark:text-gray-500 select-none">…</span>
                   {% endif %}
 
                   {% if endPage >= startPage %}
@@ -388,7 +388,7 @@
                         {% set pageUrl = '#' %}
                       {% endif %}
                       <a
-                        class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == page %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white text-gray-700 border border-transparent hover:bg-blue-50 hover:text-blue-600{% endif %}"
+                        class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == page %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-transparent hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400{% endif %}"
                         href="{{ pageUrl }}"
                         {% if currentPage == page %}aria-current="page"{% endif %}
                       >{{ page }}</a>
@@ -396,7 +396,7 @@
                   {% endif %}
 
                   {% if endPage < totalPages - 1 %}
-                    <span class="px-2 text-gray-400 select-none">…</span>
+                    <span class="px-2 text-gray-400 dark:text-gray-500 select-none">…</span>
                   {% endif %}
 
                   {% if totalPages > 1 %}
@@ -406,7 +406,7 @@
                       {% set lastUrl = '#' %}
                     {% endif %}
                     <a
-                      class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == totalPages %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white text-gray-700 border border-transparent hover:bg-blue-50 hover:text-blue-600{% endif %}"
+                      class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == totalPages %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-transparent hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400{% endif %}"
                       href="{{ lastUrl }}"
                       {% if currentPage == totalPages %}aria-current="page"{% endif %}
                     >{{ totalPages }}</a>
@@ -418,7 +418,7 @@
                     {% set nextUrl = data.pager.url(currentPage + 1) %}
                   {% endif %}
                   <a
-                    class="w-10 h-10 inline-flex items-center justify-center rounded-full border border-gray-200 text-gray-500 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200 {% if nextDisabled %}opacity-50 cursor-not-allowed pointer-events-none{% endif %}"
+                    class="w-10 h-10 inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 {% if nextDisabled %}opacity-50 cursor-not-allowed pointer-events-none{% endif %}"
                     href="{{ nextUrl }}"
                     aria-label="下一页"
                     {% if nextDisabled %}aria-disabled="true"{% endif %}
