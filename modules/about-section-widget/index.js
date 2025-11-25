@@ -36,16 +36,11 @@ export default {
         textarea: true,
         def: '我们的服务涵盖市场策划、品牌推广、获客转化、网站建设、系统开发等多个领域，为货代企业提供全方位的运营支持，帮助他们提升品牌影响力和业务增长。'
       },
-      imageUrl: {
-        type: 'string',
-        label: '右侧/左侧主图链接',
-        textarea: true,
-        def: 'https://space.coze.cn/api/coze_space/gen_image?image_size=landscape_16_9&prompt=freight%20forwarding%20business%20team%2C%20office%20environment%2C%20professional%20operation%20team&sign=7603482b21435acc82da94fa7868cfd0'
-      },
-      imageAlt: {
-        type: 'string',
-        label: '主图替代文本',
-        def: '关于我们 - 专业的物流货代运营团队'
+      _coverImage: {
+        label: '右侧/左侧主图',
+        type: 'relationship',
+        withType: '@apostrophecms/image',
+        max: 1
       },
       stats: {
         type: 'array',
@@ -95,7 +90,7 @@ export default {
       },
       media: {
         label: '媒体配置',
-        fields: [ 'imageUrl', 'imageAlt' ]
+        fields: [ '_coverImage' ]
       }
     }
   }

@@ -16,7 +16,6 @@
   'right': 'justify-end'
 } %}
 {% set singleAlignClass = alignMap[singleAlign] or 'justify-start' %}
-{% set singleWidthAttr = ' style="max-width: ' ~ singleWidth ~ '%"' %}
 {% set containerClass = 'max-w-6xl mx-auto px-4 sm:px-6 lg:px-8' if style == 'contained' else 'w-full px-4 sm:px-6 lg:px-10' %}
 {% set baseSectionClass = 'py-16 sm:py-20 bg-white dark:bg-slate-950 transition-colors' %}
 {% set gridClass = ({
@@ -34,28 +33,29 @@
     {% if cols == 'single' %}
       <div class="{{ gridClass }}">
         <div
-          class="w-full space-y-8"{{ singleWidthAttr | safe }}
+          class="w-full space-y-8 hover:transform hover:-translate-y-1 transition-all duration-200"
+          style="max-width: {{ singleWidth }}%;{% if singleAlign == 'left' %}margin-left: 0; margin-right: auto;{% elseif singleAlign == 'center' %}margin-left: auto; margin-right: auto;{% elseif singleAlign == 'right' %}margin-left: auto; margin-right: 0;{% endif %}"
         >
           {% area data.widget, 'one' with data.contextOptions %}
         </div>
       </div>
     {% else %}
       <div class="{{ gridClass }}">
-        <div class="space-y-8">
+        <div class="space-y-8 hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
           {% area data.widget, 'one' with data.contextOptions %}
         </div>
         {% if cols == 'double' or cols == 'triple' or cols == 'quadruple' %}
-          <div class="space-y-8">
+          <div class="space-y-8 hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
             {% area data.widget, 'two' with data.contextOptions %}
           </div>
         {% endif %}
         {% if cols == 'triple' or cols == 'quadruple' %}
-          <div class="space-y-8">
+          <div class="space-y-8 hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
             {% area data.widget, 'three' with data.contextOptions %}
           </div>
         {% endif %}
         {% if cols == 'quadruple' %}
-          <div class="space-y-8">
+          <div class="space-y-8 hover:shadow-lg hover:scale-[1.02] transition-all duration-200">
             {% area data.widget, 'four' with data.contextOptions %}
           </div>
         {% endif %}

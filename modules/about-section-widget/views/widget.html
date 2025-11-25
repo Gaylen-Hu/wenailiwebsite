@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-24 18:04:19
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-24 18:05:16
+ * @LastEditTime: 2025-11-25 16:34:02
  * @FilePath: \wenaili\modules\about-section-widget\views\widget.html
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -22,11 +22,13 @@
     </div>
     {% endif %}
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      {% set imageObject = apos.attachment.first(data.widget._coverImage) %}
+      {% if imageObject %}
       <div class="relative">
         <div class="rounded-xl overflow-hidden shadow-2xl">
           <img
-            src="{{ data.widget.imageUrl }}"
-            alt="{{ data.widget.imageAlt }}"
+            src="{{ apos.attachment.url(imageObject) | escape }}"
+            alt="{{ imageObject._alt or data.widget.title or '项目背景图片' | escape }}"
             class="w-full h-auto object-cover"
             loading="lazy"
           >
@@ -34,6 +36,7 @@
         <div class="absolute -bottom-6 -right-6 w-40 h-40 bg-blue-100 dark:bg-blue-500/10 rounded-full blur-sm -z-1 transition-colors duration-300" aria-hidden="true"></div>
         <div class="absolute -top-6 -left-6 w-24 h-24 bg-indigo-100 dark:bg-indigo-500/10 rounded-full blur-sm -z-1 transition-colors duration-300" aria-hidden="true"></div>
       </div>
+      {% endif %}
       <div class="text-gray-900 dark:text-gray-100">
         <h3 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6">
           {{ data.widget.heroTitle | safe }}

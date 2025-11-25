@@ -28,8 +28,6 @@ export default {
           {
             title: '市场部代运营',
             description: '为货代企业提供全面的市场策划、品牌推广、获客转化等服务，帮助企业提升市场影响力。',
-            imageUrl: 'https://space.coze.cn/api/coze_space/gen_image?image_size=square&prompt=marketing%20department%20brand%20packaging%2C%20creative%20strategy%2C%20brand%20design%2C%20logo%20design&sign=f0c06336c4da2daacf94dc2f5e7d95f6',
-            imageAlt: '市场部代运营',
             iconClass: 'fa-solid fa-bullhorn',
             linkLabel: '了解更多',
             linkUrl: '/services/marketing'
@@ -37,8 +35,6 @@ export default {
           {
             title: '技术部代运营',
             description: '提供专业的技术支持，包括系统开发、维护、优化等服务，确保企业IT系统稳定高效运行。',
-            imageUrl: 'https://space.coze.cn/api/coze_space/gen_image?image_size=square&prompt=technology%20department%20system%20development%2C%20brand%20system%20integration%2C%20tech%20support%20team&sign=bfae9bf40b53ba982511ceb2bc36558f',
-            imageAlt: '技术部代运营',
             iconClass: 'fa-solid fa-code',
             linkLabel: '了解更多',
             linkUrl: '/services/tech'
@@ -46,8 +42,6 @@ export default {
           {
             title: '品牌设计与建设',
             description: '为货代企业提供品牌设计、视觉识别系统建设等服务，提升品牌形象和认知度。',
-            imageUrl: 'https://space.coze.cn/api/coze_space/gen_image?image_size=square&prompt=brand%20design%20agency%2C%20creative%20marketing%20design%2C%20brand%20identity%20system%2C%20logo%20design&sign=8373abf933116b77da0f8a9d704c8924',
-            imageAlt: '品牌设计与建设',
             iconClass: 'fa-solid fa-paint-brush',
             linkLabel: '了解更多',
             linkUrl: '/services/brand'
@@ -55,16 +49,11 @@ export default {
         ],
         fields: {
           add: {
-            imageUrl: {
-              type: 'string',
-              label: '封面图片地址',
-              textarea: true,
-              required: true
-            },
-            imageAlt: {
-              type: 'string',
-              label: '封面图片替代文本',
-              def: ''
+            _coverImage: {
+              label: '封面图片',
+              type: 'relationship',
+              withType: '@apostrophecms/image',
+              max: 1
             },
             iconClass: {
               type: 'string',

@@ -8,9 +8,7 @@
  */
 export default {
   plugins: {
-    "@tailwindcss/postcss": {
-      darkMode: ['class', '[data-theme="dark"]'],
-    },
+    "@tailwindcss/postcss": {},
     autoprefixer: {}
   }
 };
