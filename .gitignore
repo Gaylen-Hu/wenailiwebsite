@@ -177,3 +177,5 @@ coverage/
 /docs
 
 start.sh
+ecosystem.config.cjs
+ecosystem.config.js

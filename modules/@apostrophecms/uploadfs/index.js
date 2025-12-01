@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-17 09:32:42
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-24 23:10:55
+ * @LastEditTime: 2025-12-01 23:03:55
  * @FilePath: \wenaili\modules\@apostrophecms\uploadfs\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,12 +10,15 @@
  * ApostropheCMS Uploadfs 模块配置
  * 用于配置阿里云OSS存储
  */
-console.log('uploadfs process.env.APOS_S3_KEY',process.env.APOS_S3_KEY)
-console.log('uploadfs process.env.APOS_S3_SECRET',process.env.APOS_S3_SECRET)
-console.log('uploadfs process.env.APOS_S3_BUCKET',process.env.APOS_S3_BUCKET)
-console.log('uploadfs process.env.APOS_S3_ENDPOINT',process.env.APOS_S3_ENDPOINT)
-console.log('uploadfs process.env.APOS_S3_REGION',process.env.APOS_S3_REGION)
-console.log('uploadfs process.env.APOS_CDN_URL',process.env.APOS_CDN_URL)
+import dotenv from 'dotenv';
+
+dotenv.config();
+console.log('wenaili uploadfs process.env.APOS_S3_KEY',process.env.APOS_S3_KEY)
+console.log('wenaili uploadfs process.env.APOS_S3_SECRET',process.env.APOS_S3_SECRET)
+console.log('wenaili uploadfs process.env.APOS_S3_BUCKET',process.env.APOS_S3_BUCKET)
+console.log('wenaili uploadfs process.env.APOS_S3_ENDPOINT',process.env.APOS_S3_ENDPOINT)
+console.log('wenaili uploadfs process.env.APOS_S3_REGION',process.env.APOS_S3_REGION)
+console.log('wenaili uploadfs process.env.APOS_CDN_URL',process.env.APOS_CDN_URL)
 
 export default {
   options: {
