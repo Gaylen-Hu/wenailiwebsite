@@ -1,20 +1,6 @@
-<section data-chart-widget class="py-8 bg-white dark:bg-slate-950 transition-colors">
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
-      {% for dataSet in data.widget._chartdataSet %}
-        <div class="bg-white dark:bg-slate-900 p-6 rounded-xl shadow-lg flex flex-col h-full border border-gray-100 dark:border-slate-800 transition-colors">
-          {% if data.widget.titleFields.chartTitle %}
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6 text-center transition-colors">
-              {{ data.widget.titleFields.chartTitle }}
-            </h3>
-          {% endif %}
-          {% set file = apos.attachment.url(dataSet.dataFile) %}
-          {% set uniqueTarget = data.widget.chartTarget + '-' + loop.index0 %}
-          <div class="flex-1 flex items-stretch">
-            {% component 'chart-widget:returnChartData' with { data: data.widget, dataFile: file, target: uniqueTarget } %}
-          </div>
-        </div>
-      {% endfor %}
-    </div>
+{% set widgetId = 'chart-' + apos.util.generateId() %}
+<div class="chart-widget-wrapper" id="{{ widgetId }}" data-chart-widget>
+  <div class="chart-widget-container" style="height: {{ data.widget.height or 320 }}px">
+    <!-- Chart will be rendered here by JavaScript -->
   </div>
-</section>
+</div>

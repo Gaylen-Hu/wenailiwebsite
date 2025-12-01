@@ -1,0 +1,117 @@
+<!--
+Chart Widget Usage Examples
+Based on the original React implementation
+-->
+<section class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4">图表组件示例</h2>
+      <div class="w-20 h-1 bg-blue-600 mx-auto mb-6"></div>
+      <p class="text-gray-600 max-w-2xl mx-auto text-xl">
+        基于原来React实现方案，使用ApostropheCMS图表组件创建美观的图表
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <!-- 业务增长趋势图 -->
+      <div class="bg-white p-6 rounded-xl shadow-lg">
+        <h3 class="text-xl font-bold text-gray-900 mb-6">业务增长趋势</h3>
+        <div class="h-80">
+          <!-- 这是通过chart-widget创建的线图示例 -->
+          <!--
+          配置参数:
+          chartType: "line"
+          chartLibrary: "echarts"
+          data: [
+            {"name": "1月", "业务量": 120, "客户数": 85},
+            {"name": "2月", "业务量": 150, "客户数": 92},
+            {"name": "3月", "业务量": 180, "客户数": 110},
+            {"name": "4月", "业务量": 200, "客户数": 125},
+            {"name": "5月", "业务量": 250, "客户数": 140},
+            {"name": "6月", "业务量": 280, "客户数": 160}
+          ]
+          xAxisKey: "name"
+          yAxisKeys: "业务量,客户数"
+          colors: "#0088FE,#00C49F"
+          -->
+        </div>
+      </div>
+
+      <!-- 客户渠道分布 -->
+      <div class="bg-white p-6 rounded-xl shadow-lg">
+        <h3 class="text-xl font-bold text-gray-900 mb-6">客户来源渠道分布</h3>
+        <div class="h-80 flex items-center justify-center">
+          <!-- 这是通过chart-widget创建的饼图示例 -->
+          <!--
+          配置参数:
+          chartType: "pie"
+          chartLibrary: "chartjs"
+          data: [
+            {"name": "搜索引擎", "value": 35},
+            {"name": "社交媒体", "value": 25},
+            {"name": "官网流量", "value": 20},
+            {"name": "合作伙伴", "value": 15},
+            {"name": "其他渠道", "value": 5}
+          ]
+          colors: "#0088FE,#00C49F,#FFBB28,#FF8042,#8884d8"
+          -->
+        </div>
+      </div>
+    </div>
+
+    <!-- 使用说明 -->
+    <div class="mt-16 bg-white p-8 rounded-xl shadow-lg">
+      <h3 class="text-2xl font-bold text-gray-900 mb-6">使用方法</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div>
+          <h4 class="text-lg font-semibold mb-3">1. 在内容管理后台添加图表组件</h4>
+          <p class="text-gray-600 mb-4">
+            在页面编辑器中，选择"图表组件"，配置图表类型和数据。
+          </p>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-3">2. 配置数据格式</h4>
+          <p class="text-gray-600 mb-4">
+            使用JSON格式输入数据，支持线图、柱状图、饼图等多种类型。
+          </p>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-3">3. 自定义样式</h4>
+          <p class="text-gray-600 mb-4">
+            设置颜色、尺寸、动画等选项，创建美观的图表效果。
+          </p>
+        </div>
+        <div>
+          <h4 class="text-lg font-semibold mb-3">4. 选择渲染库</h4>
+          <p class="text-gray-600 mb-4">
+            支持ECharts和Chart.js两种图表库，根据需求选择。
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 对应的React代码示例 -->
+<script>
+// 业务增长数据
+const businessGrowthData = [
+  { name: '1月', 业务量: 120, 客户数: 85 },
+  { name: '2月', 业务量: 150, 客户数: 92 },
+  { name: '3月', 业务量: 180, 客户数: 110 },
+  { name: '4月', 业务量: 200, 客户数: 125 },
+  { name: '5月', 业务量: 250, 客户数: 140 },
+  { name: '6月', 业务量: 280, 客户数: 160 }
+];
+
+// 客户渠道数据
+const channelData = [
+  { name: '搜索引擎', value: 35 },
+  { name: '社交媒体', value: 25 },
+  { name: '官网流量', value: 20 },
+  { name: '合作伙伴', value: 15 },
+  { name: '其他渠道', value: 5 }
+];
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
+</script>

@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-18 18:03:42
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-18 18:03:45
+ * @LastEditTime: 2025-12-01 13:47:22
  * @FilePath: \wenaili\modules\chart-data\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -11,8 +11,8 @@ import * as csv from 'csv';
 export default {
   extend: '@apostrophecms/piece-type',
   options: {
-    label: 'Chart Data',
-    pluralLabel: 'Chart Data'
+    label: '图表数据',
+    pluralLabel: '图表数据'
     // Additionally add a `pluralLabel` option if needed.
   },
   fields: {

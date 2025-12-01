@@ -1,16 +1,17 @@
 {% set sectionClass = data.widget.backgroundClass or 'py-20 bg-gray-50' %}
 
-<section class="{{ sectionClass }} data-viz-widget" data-data-visualization-widget>
+<section class="{{ sectionClass }} data-viz-widget" data-data-visualization-widget style="opacity: 0; animation: fadeInUp 0.8s ease-out forwards;">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center mb-16">
+    <!-- 标题区域 -->
+    <div class="text-center mb-16" style="opacity: 0; animation: fadeInUp 0.8s ease-out 0.2s forwards;">
       {% if data.widget.heading %}
-        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
           {{ data.widget.heading | escape }}
         </h2>
-        <div class="w-20 h-1 bg-blue-600 dark:bg-blue-500 mx-auto mb-6"></div>
+        <div class="w-20 h-1 bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-500 dark:to-purple-500 mx-auto mb-6 rounded-full"></div>
       {% endif %}
       {% if data.widget.subheading %}
-        <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-xl">
+        <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg md:text-xl leading-relaxed">
           {{ data.widget.subheading | escape }}
         </p>
       {% endif %}
@@ -18,48 +19,180 @@
 
     {% set chartCards = data.widget.charts or [] %}
     {% if chartCards.length %}
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <!-- 图表卡片网格 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
         {% for card in chartCards %}
-          <article class="bg-white dark:bg-gray-900/80 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xl p-6 flex flex-col gap-6 transition-all duration-300">
+          <article class="chart-card bg-white dark:bg-gray-900/90 backdrop-blur-sm border border-gray-100 dark:border-gray-800 rounded-2xl shadow-xl hover:shadow-2xl p-6 md:p-8 flex flex-col gap-6 transition-all duration-500 hover:scale-[1.02] group"
+                   style="opacity: 0; animation: fadeInUp 0.8s ease-out {{ (loop.index * 0.2) + 0.4 }}s forwards;">
+            <!-- 卡片标题 -->
             {% if card.title %}
-              <div>
-                <h3 class="text-xl font-bold text-gray-900 dark:text-white">
+              <div class="text-center">
+                <h3 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-300">
                   {{ card.title }}
-          </h3>
+                </h3>
                 {% if card.description %}
-                  <p class="mt-2 text-gray-600 dark:text-gray-300 text-base leading-relaxed">
+                  <p class="text-gray-600 dark:text-gray-300 text-sm md:text-base leading-relaxed">
                     {{ card.description | safe }}
                   </p>
-        {% endif %}
-        </div>
+                {% endif %}
+              </div>
             {% endif %}
 
-            <div class="chart-card-area space-y-4">
-              {% area card, 'chartArea' %}
-        </div>
-      </article>
+            <!-- 图表区域 -->
+            <div class="chart-card-area flex-1 min-h-[300px] md:min-h-[320px] relative overflow-hidden rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 p-4 group-hover:from-blue-50 group-hover:to-purple-50 dark:group-hover:from-blue-900/20 dark:group-hover:to-purple-900/20 transition-all duration-500">
+              <div class="absolute inset-0 bg-gradient-to-br from-white/50 to-transparent dark:from-white/5 dark:to-transparent pointer-events-none"></div>
+              <div class="relative z-10">
+                {% area card, 'chartArea' %}
+              </div>
+            </div>
+          </article>
         {% endfor %}
       </div>
     {% else %}
-      <div class="bg-white dark:bg-gray-900 border border-dashed border-gray-200 dark:border-gray-700 rounded-2xl p-10 text-center">
-        <p class="text-gray-600 dark:text-gray-300">
-          请在“小部件设置 → 图表卡片”中添加至少一个 Chart Widget。
-        </p>
-    </div>
+      <!-- 空状态 -->
+      <div class="bg-white dark:bg-gray-900/90 backdrop-blur-sm border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl p-12 md:p-16 text-center shadow-xl"
+           style="opacity: 0; animation: fadeInUp 0.8s ease-out 0.6s forwards;">
+        <div class="max-w-md mx-auto">
+          <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">开始创建数据可视化</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-6">
+            请在“小部件设置 → 图表卡片”中添加至少一个 SVG图表组件。
+          </p>
+          <div class="text-sm text-gray-500 dark:text-gray-400">
+            💡 提示：复制Recharts或其他图表库生成的SVG代码即可直接使用
+          </div>
+        </div>
+      </div>
     {% endif %}
   </div>
 </section>
 
 <style>
-  .data-viz-widget [data-chart-widget] {
-    width: 100%;
+  /* 动画关键帧 */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  .data-viz-widget [data-graph-canvas-wrapper] {
+
+  /* 图表卡片样式 */
+  .chart-card {
+    position: relative;
+  }
+
+  .chart-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #3b82f6, #8b5cf6, #06b6d4);
+    border-radius: 16px 16px 0 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .chart-card:hover::before {
+    opacity: 1;
+  }
+
+  /* SVG图表样式优化 */
+  .data-viz-widget .svg-chart-widget {
     width: 100% !important;
-    max-width: 100% !important;
+    height: 100% !important;
   }
-  .data-viz-widget canvas {
-    max-width: 100%;
+
+  .data-viz-widget .svg-chart-widget svg {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .data-viz-widget .chart-card:hover .svg-chart-widget svg {
+    transform: scale(1.02);
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 768px) {
+    .data-viz-widget .chart-card {
+      padding: 1rem;
+    }
+
+    .data-viz-widget .chart-card-area {
+      min-height: 250px;
+    }
+  }
+
+  /* 深色模式支持 */
+  @media (prefers-color-scheme: dark) {
+    .chart-card-area {
+      background: linear-gradient(135deg, rgba(31, 41, 55, 0.8) 0%, rgba(17, 24, 39, 0.9) 100%);
+    }
+  }
+
+  /* 加载动画 */
+  .svg-chart-loading {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
   }
 </style>
+
+<script>
+// 添加交互动画
+document.addEventListener('DOMContentLoaded', function() {
+  // 为图表卡片添加鼠标悬停效果
+  const chartCards = document.querySelectorAll('.chart-card');
+  chartCards.forEach((card, index) => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-4px) scale(1.02)';
+    });
+
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+    });
+  });
+
+  // 添加滚动触发动画
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }, index * 100);
+      }
+    });
+  }, observerOptions);
+
+  // 观察所有需要动画的元素
+  document.querySelectorAll('.chart-card').forEach(card => {
+    observer.observe(card);
+  });
+});
+</script>
 

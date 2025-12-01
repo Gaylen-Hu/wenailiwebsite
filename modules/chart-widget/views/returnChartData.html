@@ -1,4 +1,4 @@
-{% set baseClass = 'chart-widget__canvas-wrapper relative w-full h-full min-h-[20rem]' %}
+{% set baseClass = 'chart-widget__canvas-wrapper relative w-full h-full' %}
 {% if data.config.type == 'pie' or data.config.type == 'doughnut' %}
   {# 饼图/圆环图：响应式尺寸，类似 Recharts 的 ResponsiveContainer #}
   <div data-graph-canvas-wrapper data-chart-data="{{ data.config | jsonAttribute }}" class="{{ baseClass }} flex items-center justify-center">
