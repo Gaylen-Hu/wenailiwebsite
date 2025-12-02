@@ -1,0 +1,225 @@
+{% extends "layout.html" %}
+
+{% block main %}
+{# Hero Section #}
+<section class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-16 md:py-20">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto text-center">
+      <div class="inline-flex items-center justify-center w-16 h-16 bg-white/10 rounded-full mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <path d="M12 17h.01"></path>
+        </svg>
+      </div>
+      <h1 class="text-3xl md:text-5xl font-bold mb-4">{{ data.page.title or '常见问题' }}</h1>
+      <p class="text-xl text-blue-100 max-w-2xl mx-auto">
+        {{ data.page.description or 'Find answers to the most common questions about our services and solutions' }}
+      </p>
+    </div>
+  </div>
+</section>
+
+{# FAQ Section #}
+<section class="py-20 bg-gray-50 dark:bg-slate-900 transition-colors">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+
+    {# 筛选器区域 #}
+    {% if data.page.displayCategory === 'all' %}
+    <div class="mb-12">
+      <div class="flex flex-wrap gap-3 justify-center">
+        <a href="{{ data.page._url | build({category: null, isFeatured: null, search: null}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if not data.query.category and not data.query.isFeatured %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+          <i class="fa-solid fa-list mr-2"></i>全部
+        </a>
+
+        <a href="{{ data.page._url | build({category: 'service', isFeatured: null}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'service' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+          <i class="fa-solid fa-cog mr-2"></i>服务相关
+        </a>
+
+        <a href="{{ data.page._url | build({category: 'pricing', isFeatured: null}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'pricing' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+          <i class="fa-solid fa-tags mr-2"></i>价格相关
+        </a>
+
+        <a href="{{ data.page._url | build({category: 'technical', isFeatured: null}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'technical' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+          <i class="fa-solid fa-tools mr-2"></i>技术支持
+        </a>
+
+        <a href="{{ data.page._url | build({category: 'account', isFeatured: null}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'account' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+          <i class="fa-solid fa-user mr-2"></i>账户相关
+        </a>
+
+        <a href="{{ data.page._url | build({category: null, isFeatured: 'true'}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.isFeatured === 'true' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+          <i class="fa-solid fa-star mr-2"></i>推荐问题
+        </a>
+      </div>
+    </div>
+    {% endif %}
+      
+    {# FAQ List #}
+    {% if data.pieces.length > 0 %}
+    <div class="space-y-6">
+      {% for piece in data.pieces %}
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-lg border border-gray-100 dark:border-slate-700 transition-all duration-300 overflow-hidden">
+        <button
+          type="button"
+          class="w-full px-6 py-5 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors duration-200 faq-toggle group"
+          onclick="toggleFaq(this)"
+          aria-expanded="false"
+        >
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-blue-100 dark:bg-blue-500/20 rounded-lg flex items-center justify-center text-blue-600 dark:text-blue-300 flex-shrink-0 group-hover:bg-blue-200 dark:group-hover:bg-blue-500/30 transition-colors">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <path d="M12 17h.01"></path>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-gray-900 dark:text-white pr-4">{{ piece.question }}</h3>
+          </div>
+          <div class="flex items-center gap-3 flex-shrink-0">
+            {% if piece.category %}
+            <span class="px-3 py-1 bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 text-xs font-medium rounded-full">
+              {{ piece.category }}
+            </span>
+            {% endif %}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 dark:text-gray-500 transition-transform duration-300 faq-chevron">
+              <path d="m6 9 6 6 6-6"></path>
+            </svg>
+          </div>
+        </button>
+
+        <div class="faq-content overflow-hidden transition-all duration-300 ease-in-out max-h-0 opacity-0">
+          <div class="px-6 pb-6">
+            <div class="pt-2 border-t border-gray-100 dark:border-slate-700">
+              <div class="flex gap-4 mt-4">
+                <div class="w-10 h-10 bg-green-100 dark:bg-green-500/20 rounded-lg flex items-center justify-center text-green-600 dark:text-green-300 flex-shrink-0 mt-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20 6 9 17l-5-5"></path>
+                  </svg>
+                </div>
+                <div class="flex-1 prose prose-gray dark:prose-invert max-w-none">
+                  {% area piece, 'answer' %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    {# 空状态 #}
+    <div class="text-center py-20">
+      <div class="w-24 h-24 bg-gray-100 dark:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-8">
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 dark:text-gray-500">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <path d="M12 17h.01"></path>
+        </svg>
+      </div>
+      <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">暂无问题</h3>
+      <p class="text-gray-600 dark:text-gray-300 mb-8 text-lg max-w-md mx-auto">当前分类下还没有常见问题，请尝试其他分类或查看全部问题。</p>
+      <a href="{{ data.page._url }}" class="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+        <i class="fa-solid fa-arrow-left mr-3"></i>返回全部问题
+      </a>
+    </div>
+    {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function toggleFaq(button) {
+  const faqItem = button.closest('.bg-white, .bg-slate-800');
+  const content = faqItem.querySelector('.faq-content');
+  const chevron = button.querySelector('.faq-chevron');
+  const isExpanded = button.getAttribute('aria-expanded') === 'true';
+
+  if (isExpanded) {
+    // 折叠
+    content.style.maxHeight = content.scrollHeight + 'px';
+    content.offsetHeight; // 强制重绘
+    content.style.maxHeight = '0px';
+    content.style.opacity = '0';
+
+    setTimeout(() => {
+      chevron.classList.remove('rotate-180');
+      button.setAttribute('aria-expanded', 'false');
+    }, 150);
+  } else {
+    // 展开
+    content.style.maxHeight = content.scrollHeight + 'px';
+    content.style.opacity = '1';
+    chevron.classList.add('rotate-180');
+    button.setAttribute('aria-expanded', 'true');
+
+    setTimeout(() => {
+      content.style.maxHeight = 'none';
+    }, 300);
+  }
+}
+
+// 页面加载时初始化FAQ状态
+document.addEventListener('DOMContentLoaded', function() {
+  const faqContents = document.querySelectorAll('.faq-content');
+  faqContents.forEach(content => {
+    content.style.maxHeight = '0px';
+    content.style.opacity = '0';
+    content.style.overflow = 'hidden';
+    content.style.transition = 'max-height 0.3s ease-in-out, opacity 0.3s ease-in-out';
+  });
+});
+</script>
+
+<style>
+.faq-chevron.rotate-180 {
+  transform: rotate(180deg);
+}
+
+/* 确保深色模式下的过渡效果 */
+@media (prefers-color-scheme: dark) {
+  .bg-white {
+    background-color: rgb(30 41 59);
+  }
+}
+
+/* 平滑的悬停效果 */
+.faq-toggle:hover {
+  transform: translateY(-1px);
+}
+
+/* 焦点状态 */
+.faq-toggle:focus-visible {
+  outline: 2px solid rgb(59 130 246);
+  outline-offset: 2px;
+}
+</style>
+
+{# 联系我们 CTA 区域 #}
+<section class="py-16 bg-white dark:bg-slate-950 transition-colors">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">还有其他问题？</h2>
+      <p class="text-xl text-gray-600 dark:text-gray-300 mb-8">我们的专业团队随时为您提供帮助</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/contact" class="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+          <i class="fa-solid fa-envelope mr-3"></i>联系我们
+        </a>
+        <a href="tel:17367332304" class="inline-flex items-center px-8 py-4 bg-gray-100 dark:bg-slate-800 hover:bg-gray-200 dark:hover:bg-slate-700 text-gray-900 dark:text-white font-semibold rounded-xl shadow-sm hover:shadow-md transition-all duration-300">
+          <i class="fa-solid fa-phone mr-3"></i>17367332304
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+

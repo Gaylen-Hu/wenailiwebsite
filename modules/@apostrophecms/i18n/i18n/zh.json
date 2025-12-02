@@ -637,5 +637,10 @@
     "yes": "是",
     "yesLocalizeAndSwitchLocales": "是，本地化此页面并切换语言环境",
     "youTookControl": "您在另一个标签页或窗口中控制了此文档。文档一次只能在一个地方编辑。",
-    "yourDevice": "您的设备"
-}
+    "yourDevice": "您的设备",
+    "aposSeo": {
+        "keywords": "关键词",
+        "keywordsHtmlHelp": "输入SEO关键词，用逗号分隔。关键词有助于搜索引擎理解您的内容主题。",
+        "group": "SEO设置"
+    }
+    }

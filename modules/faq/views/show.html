@@ -1,0 +1,85 @@
+{% extends data.outerLayout %}
+
+{% block main %}
+<section class="bp-content">
+  <div class="max-w-[85rem] bg-muted/50 container mx-auto px-4 md:px-6 2xl:max-w-[1400px] py-24 lg:py-32">
+    <div class="rounded-2xl">
+      <div class="max-w-2xl mx-auto text-center mb-10">
+        <h2 class="text-2xl font-bold md:text-3xl md:leading-tight">常见问题</h2>
+        <p class="mt-4 text-muted-foreground">Find answers to the most common questions about our service</p>
+      </div>
+      
+      <div class="max-w-3xl mx-auto">
+        <div class="w-full space-y-4" data-orientation="vertical">
+          <div class="last:border-b-0 border rounded-lg px-6 bg-background shadow-sm">
+            <h3 class="flex">
+              <button 
+                type="button" 
+                class="focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 rounded-md text-left transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 py-4 text-lg font-medium w-full faq-toggle"
+                onclick="toggleFaq(this)"
+                aria-expanded="true"
+              >
+                <div class="flex items-center gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-circle-question-mark h-5 w-5 text-primary hidden sm:block" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <path d="M12 17h.01"></path>
+                  </svg>
+                  <span class="text-start mr-3">{{ data.piece.question }}</span>
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-down text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200 faq-chevron rotate-180" aria-hidden="true">
+                  <path d="m6 9 6 6 6-6"></path>
+                </svg>
+              </button>
+            </h3>
+            <div class="faq-content overflow-hidden text-sm">
+              <div class="pt-2 pb-4 text-muted-foreground">
+                <div class="flex gap-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check h-5 w-5 mt-0.5 text-primary shrink-0" aria-hidden="true">
+                    <path d="M20 6 9 17l-5-5"></path>
+                  </svg>
+                  <div class="prose prose-sm max-w-none">
+                    {% area data.piece, 'answer' %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {# 返回列表按钮 #}
+      <div class="max-w-3xl mx-auto mt-8 text-center">
+        <a href="/faqs" class="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+          <i class="fa-solid fa-arrow-left mr-2"></i>返回常见问题列表
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function toggleFaq(button) {
+  const content = button.parentElement.parentElement.querySelector('.faq-content');
+  const chevron = button.querySelector('.faq-chevron');
+  const isExpanded = button.getAttribute('aria-expanded') === 'true';
+  
+  if (isExpanded) {
+    content.classList.add('hidden');
+    chevron.classList.remove('rotate-180');
+    button.setAttribute('aria-expanded', 'false');
+  } else {
+    content.classList.remove('hidden');
+    chevron.classList.add('rotate-180');
+    button.setAttribute('aria-expanded', 'true');
+  }
+}
+</script>
+
+<style>
+.rotate-180 {
+  transform: rotate(180deg);
+}
+</style>
+{% endblock %}
+

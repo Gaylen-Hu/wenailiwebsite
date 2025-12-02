@@ -1,8 +1,16 @@
 /*
  * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-12-02 14:45:17
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-12-02 14:46:20
+ * @FilePath: \wenaili\app.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+/*
+ * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-11 18:59:09
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-23 17:06:38
+ * @LastEditTime: 2025-12-02 14:29:05
  * @FilePath: \wenaili\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -35,6 +43,13 @@ apostrophe({
     '@apostrophecms/favicon': {},
     '@apostrophecms/sitemap': {},
     '@apostrophecms/seo': {},
+    '@apostrophecms/global': {
+      options: {
+        seoGoogleAnalytics: true,
+        seoGoogleTagManager: true,
+        seoGoogleVerification: true
+      }
+    },
     '@apostrophecms/rich-text-widget': {
       options: {
         className: 'bp-rich-text'
@@ -74,6 +89,8 @@ apostrophe({
    'fixed-page':{},
     case:{},
     "case-page":{},
+    faq:{},
+    "faq-page":{},
     "about-page":{},
     // use vite for asset bundling and hot module reloading
     '@apostrophecms/vite': {},
