@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-12-02 14:45:17
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-12-02 14:46:20
+ * @LastEditTime: 2025-12-03 00:12:56
  * @FilePath: \wenaili\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -71,8 +71,20 @@ apostrophe({
         ignoreNoCodeWarning: true
       }
     },
+    // 通用图标选择器模块
+    'icon-picker-field': {},
+    // 颜色渐变字段模块
+    'color-gradient': {},
+    // 成绩字段模块
+    'grade-field': {},
+    // FontAwesome 图标库
+    'fontawesome': {},
+    // FontAwesome 测试页面
+    'fontawesome-test': {},
+    // 测试渐变字段模块
+
     // 为嵌套模块创建别名以便使用简短名称
-  
+
     'chart-data': {},
     'chart-widget': {},
     'basiclayout-widget': {},

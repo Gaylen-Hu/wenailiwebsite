@@ -1,0 +1,67 @@
+// modules/seo-enhanced/index.js
+module.exports = {
+  extend: '@apostrophecms/widget-type',
+  options: {
+    label: 'SEO增强',
+    icon: 'search-icon'
+  },
+  fields: {
+    add: {
+      focusKeywords: {
+        type: 'array',
+        label: '核心关键词',
+        help: '每篇文章的核心关键词（建议1-3个）',
+        max: 3,
+        fields: {
+          add: {
+            keyword: {
+              type: 'string',
+              label: '关键词',
+              required: true
+            }
+          }
+        }
+      },
+      secondaryKeywords: {
+        type: 'array',
+        label: '次要关键词',
+        help: '相关长尾关键词',
+        fields: {
+          add: {
+            keyword: {
+              type: 'string',
+              label: '关键词'
+            },
+            searchVolume: {
+              type: 'integer',
+              label: '搜索量',
+              help: '每月预估搜索量'
+            }
+          }
+        }
+      },
+      keywordDensity: {
+        type: 'float',
+        label: '关键词密度',
+        help: '自动计算的关键词密度',
+        readOnly: true
+      }
+    }
+  },
+  methods(self) {
+    return {
+      // 自动计算关键词密度
+      async calculateDensity(piece, field) {
+        if (!piece[field] || !piece.title) return 0;
+        
+        const content = piece.title + ' ' + (piece.main || '');
+        const keywords = piece[field].join(' ');
+        
+        const totalWords = content.split(/\s+/).length;
+        const keywordWords = keywords.split(/\s+/).length;
+        
+        return totalWords > 0 ? (keywordWords / totalWords) * 100 : 0;
+      }
+    };
+  }
+};

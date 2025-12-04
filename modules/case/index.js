@@ -84,7 +84,8 @@ export default {
       ctaUrl: {
         type: 'url',
         label: 'CTA 链接地址',
-        def: '/contact'
+        help: '如果为空，则跳转至详情页面',
+        def: ''
       },
       body: {
         type: 'area',

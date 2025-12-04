@@ -1,0 +1,186 @@
+{% extends "layout.html" %}
+
+{% block main %}
+<section class="py-20 bg-gray-50">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-8 text-center">
+          {{ data.piece.title }}
+        </h1>
+
+        <div class="mb-8 p-6 bg-blue-50 rounded-lg">
+          <h2 class="text-xl font-semibold text-blue-900 mb-4">FontAwesome 版本信息</h2>
+          <p class="text-blue-800">
+            当前版本: <strong>{{ data.fontawesomeVersion or '6.7.2' }}</strong><br>
+            状态: <span class="text-green-600 font-semibold">已加载 ✓</span>
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- 基础图标测试 -->
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">基础图标 (Solid)</h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-star text-yellow-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-star</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-heart text-red-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-heart</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-home text-blue-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-home</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-user text-green-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-user</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-cog text-gray-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-cog</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 物流图标测试 -->
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">物流图标</h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-truck text-blue-600 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-truck</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-plane text-sky-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-plane</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-ship text-indigo-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-ship</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-box text-amber-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-box</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-warehouse text-slate-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-warehouse</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 品牌图标测试 -->
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">品牌图标 (Brands)</h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <i class="fa-brands fa-facebook text-blue-600 text-xl"></i>
+                <span class="text-gray-700">fa-brands fa-facebook</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-brands fa-twitter text-sky-500 text-xl"></i>
+                <span class="text-gray-700">fa-brands fa-twitter</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-brands fa-instagram text-pink-500 text-xl"></i>
+                <span class="text-gray-700">fa-brands fa-instagram</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-brands fa-wechat text-green-500 text-xl"></i>
+                <span class="text-gray-700">fa-brands fa-wechat</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-brands fa-linkedin text-blue-700 text-xl"></i>
+                <span class="text-gray-700">fa-brands fa-linkedin</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 大小和颜色测试 -->
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">大小和颜色</h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-star fa-xs text-yellow-400"></i>
+                <span class="text-gray-700">fa-xs (小)</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-star fa-lg text-yellow-500"></i>
+                <span class="text-gray-700">fa-lg (大)</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-star fa-2xl text-yellow-600"></i>
+                <span class="text-gray-700">fa-2xl (超大)</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-heart fa-xl text-red-500"></i>
+                <span class="text-gray-700">彩色图标</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 动画效果测试 -->
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">动画效果</h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-spinner fa-spin text-blue-500 text-xl"></i>
+                <span class="text-gray-700">fa-spin (旋转)</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-circle-notch fa-spin text-green-500 text-xl"></i>
+                <span class="text-gray-700">加载动画</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-cog fa-spin text-gray-500 text-xl"></i>
+                <span class="text-gray-700">齿轮旋转</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-star text-yellow-500 fa-beat text-xl"></i>
+                <span class="text-gray-700">跳动效果</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 业务图标测试 -->
+          <div class="bg-gray-50 p-6 rounded-lg">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">业务图标</h3>
+            <div class="space-y-3">
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-rocket text-purple-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-rocket</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-lightbulb text-yellow-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-lightbulb</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-trophy text-orange-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-trophy</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-users text-indigo-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-users</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <i class="fa-solid fa-chart-line text-green-500 text-xl"></i>
+                <span class="text-gray-700">fa-solid fa-chart-line</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 p-6 bg-green-50 rounded-lg">
+          <h3 class="text-lg font-semibold text-green-800 mb-2">✅ FontAwesome 加载成功</h3>
+          <p class="text-green-700">
+            如果你能看到上面的所有图标正常显示，说明 FontAwesome 6.7.2 已经成功升级并正常工作！
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
