@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-11 17:49:31
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-12-04 02:43:35
+ * @LastEditTime: 2025-12-04 12:38:19
  * @FilePath: \wenaili\views\layout.html
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -28,51 +28,57 @@
   {{ super() }}
   <meta name="description" content="{{ seoDescription }}">
   <meta name="keywords" content="{{ seoKeywords }}">
-{% endblock %}
-
-{% block beforeMain %}  
-<link
+  <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
       crossorigin="anonymous"
     />
+
+
     {% if data.global.analytics %}
     {# Google Analytics #}
-    {% if data.global.analytics.googleAnalytics %}
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ data.global.analytics.googleAnalytics }}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', '{{ data.global.analytics.googleAnalytics }}');
-    </script>
-  {% endif %}
-  {% if data.global.analytics.googleAnalytics4 %}
+      {% if data.global.analytics?.googleAnalytics %}
+      <script async src="https://www.googletagmanager.com/gtag/js?id={{ data.global.analytics.googleAnalytics }}"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ data.global.analytics.googleAnalytics }}');
+      </script>
+      {% endif %}
+      {% if data.global.analytics.googleAnalytics4 %}
   <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id={{ data.global.analytics.googleAnalytics4 }}"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', '{{ data.global.analytics.googleAnalytics4 }}');
-  </script>
+      <script async src="https://www.googletagmanager.com/gtag/js?id={{ data.global.analytics.googleAnalytics4 }}"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', '{{ data.global.analytics.googleAnalytics4 }}');
+      </script>
+    {% endif %}
+    {# 百度统计 #}
+    {% if data.global.analytics.baiduAnalytics %}
+      <script>
+        var _hmt = _hmt || [];
+        (function() {
+          var hm = document.createElement("script");
+          hm.src = "https://hm.baidu.com/hm.js?{{ data.global.analytics.baiduAnalytics }}";
+          var s = document.getElementsByTagName("script")[0]; 
+          s.parentNode.insertBefore(hm, s);
+        })();
+      </script>
+    {% endif %}
+  {% if data.global.analytics.customHeadCode %}
+  {{ data.global.analytics.customHeadCode | safe }}
+  {% endif %}
 {% endif %}
-{# 百度统计 #}
-{% if data.global.analytics.baiduAnalytics %}
-  <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?{{ data.global.analytics.baiduAnalytics }}";
-      var s = document.getElementsByTagName("script")[0]; 
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
-{% endif %}
-{% if data.global.analytics.customHeadCode %}
-{{ data.global.analytics.customHeadCode | safe }}
-{% endif %}
-{% endif %}
+{% endblock %}
+
+{% block beforeMain %}  
+
+
+   
+   
 
 <div class="bp-wrapper">
   {% render header.header(data) %}
