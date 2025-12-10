@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-12-03 10:30:00
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-12-03 10:30:00
+ * @LastEditTime: 2025-12-06 21:43:04
  * @FilePath: \wenaili\modules\icon-picker-field\index.js
  * @Description: 通用图标选择器字段类型模块
  */
@@ -24,6 +24,14 @@ export default {
           name: 'iconPicker',
           convert: self.convertIconInput,
           vueComponent: 'InputIconPickerField'
+        });
+      },
+      addIconSelectFieldType() {
+        // 创建一个简化的图标选择字段，适用于数组子字段
+        self.apos.schema.addFieldType({
+          name: 'iconSelect',
+          convert: self.convertIconInput,
+          vueComponent: 'InputIconSelectField'
         });
       },
       getIconOptions() {
@@ -139,6 +147,7 @@ export default {
       async convertIconInput(req, field, data, object) {
         // Icon picker field stores a simple string value
         const value = data[field.name];
+        console.log('valuevaluevalue',value)
         if (typeof value === 'string' && value.trim()) {
           object[field.name] = value.trim();
         } else {

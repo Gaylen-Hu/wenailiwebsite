@@ -29,12 +29,15 @@ export default {
           widgets: {
             '@apostrophecms/rich-text': {
               toolbar: [
-                'Bold', 'Italic', 'Link', 'Unlink', 
-                'BulletedList', 'NumberedList', 
+                'Bold', 'Italic', 'Link', 'Unlink',
+                'BulletedList', 'NumberedList',
                 'Blockquote'
-              ]
+              ],
+              className: 'faq-rich-text'
             },
-            '@apostrophecms/image': {}
+            '@apostrophecms/image': {
+              className: 'faq-image'
+            }
           }
         }
       },

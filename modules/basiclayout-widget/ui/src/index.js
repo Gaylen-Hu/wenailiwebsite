@@ -71,7 +71,7 @@ export default () => {
     setupScrollEffects() {
       let ticking = false;
 
-      const handleScroll = () => {
+      this.handleScroll = () => {
         if (!ticking) {
           requestAnimationFrame(() => {
             this.updateScrollEffects();
@@ -81,7 +81,7 @@ export default () => {
         }
       };
 
-      window.addEventListener('scroll', handleScroll, { passive: true });
+      window.addEventListener('scroll', this.handleScroll, { passive: true });
     }
 
     // 更新滚动效果
@@ -114,11 +114,11 @@ export default () => {
 
     // 设置响应式调整
     setupResponsiveAdjustments() {
-      const handleResize = () => {
+      this.handleResize = () => {
         this.adjustForScreenSize();
       };
 
-      window.addEventListener('resize', handleResize);
+      window.addEventListener('resize', this.handleResize);
       this.adjustForScreenSize(); // 初始调整
     }
 

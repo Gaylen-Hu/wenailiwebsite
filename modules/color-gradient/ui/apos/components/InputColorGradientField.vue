@@ -1,13 +1,33 @@
 <template>
-   <h2>hello world</h2>
+  <AposInputWrapper :field="field" :error="effectiveError" :uid="uid" :display-options="displayOptions" :modifiers="modifiers">
+    <template #body>
+      <div class="apos-input-object">
+        <div class="apos-input-wrapper">
+          <!-- Gradient preview section -->
+          <div
+            id="color-square"
+            :style="{ background: gradient }"
+            class="gradient-preview"
+          />
+          <!-- Schema form for editing gradient properties -->
+          <AposSchema
+            :schema="gradientSchema"
+            :trigger-validation="triggerValidation"
+            :generation="generation"
+            v-model="gradientSchemaInput"
+          >
+          </AposSchema>
+        </div>
+      </div>
+    </template>
+  </AposInputWrapper>
 </template>
 
 <script>
+import { ref, computed, watch, onMounted, nextTick } from 'vue';
 import AposInputMixin from 'apostrophe/modules/@apostrophecms/schema/ui/apos/mixins/AposInputMixin';
 import AposInputWrapper from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposInputWrapper.vue';
 import AposSchema from 'apostrophe/modules/@apostrophecms/schema/ui/apos/components/AposSchema.vue';
-
-console.log('InputColorGradientField loaded, AposSchema:', !!AposSchema);
 
 export default {
   name: 'InputColorGradientField',
@@ -16,84 +36,112 @@ export default {
     AposSchema
   },
   mixins: [AposInputMixin],
-  data() {
-    return {
-      next: this.getNext(),
-      gradientSchemaInput: { data: this.getNext() }
-    };
-  },
-  computed: {
-    gradientSchema() {
-      // 确保 apos 和模块数据存在
-      if (typeof apos !== 'undefined' && apos.modules && apos.modules['color-gradient']) {
-        return apos.modules['color-gradient'].gradientSchema || [];
-      }
-      return [];
+  props: {
+    // The generation prop is used to trigger validation in parent components
+    generation: {
+      type: Number,
+      required: false,
+      default: null
     },
-    gradient() {
-      try {
-        // Ensure we have valid data before creating gradient
-        if (!this.next || !this.next.colors || !Array.isArray(this.next.colors) || this.next.colors.length === 0) {
-          return 'linear-gradient(90deg, #ff0000 0%, #0000ff 100%)';
-        }
-
-        const angle = this.next.angle || 90;
-
-        // Build the gradient string from the angle and color stops
-        const colorStops = this.next.colors.map(color => {
-          return `${color.color || '#ff0000'} ${color.stop || 0}%`;
-        }).join(', ');
-
-        return `linear-gradient(${angle}deg, ${colorStops})`;
-      } catch (error) {
-        console.error('Gradient computation error:', error);
-        return 'linear-gradient(90deg, #ff0000 0%, #0000ff 100%)';
-      }
+    // The model value containing our gradient data
+    modelValue: {
+      type: Object,
+      required: true
     }
   },
-  watch: {
-    generation() {
-      this.next = this.getNext();
-      this.gradientSchemaInput = { data: this.next };
-    },
-    gradientSchemaInput: {
-      handler(newValue) {
-        if (!newValue.hasErrors) {
-          this.next = newValue.data;
-          this.$emit('update:modelValue', { data: this.next });
-        }
-      },
-      deep: true
-    }
-  },
-  methods: {
-    getNext() {
-      return this.modelValue && this.modelValue.data ? this.modelValue.data : (this.field.def || {
+  setup(props, { emit }) {
+    // Get initial gradient data from props or use defaults
+    const getNext = () => {
+      return props.modelValue.data ?? (props.field.def || {
         angle: 90,
         colors: [
           { color: '#d0021bff', stop: 0 },
           { color: '#4a11ffff', stop: 100 }
         ]
       });
-    },
-    validate(value) {
-      if (this.gradientSchemaInput.hasErrors) {
+    };
+
+    // Create reactive state for the gradient data
+    const next = ref(getNext());
+
+    // Get the schema from Apostrophe modules
+    const gradientSchema = apos.modules['color-gradient'].gradientSchema;
+
+    // Create the input for the schema form
+    const gradientSchemaInput = ref({ data: next.value });
+
+    /**
+     * Vue 3 Reactivity Note:
+     * In Vue 3, reactivity for initial values sometimes needs an explicit trigger.
+     * The onMounted hook with nextTick ensures our gradient is properly rendered
+     * after the component is fully mounted.
+     */
+    onMounted(() => {
+      nextTick(() => {
+        // Create a new object reference to force reactivity
+        next.value = { ...next.value };
+      });
+    });
+
+    // Watch for generation changes from parent component
+    watch(() => props.generation, () => {
+      next.value = getNext();
+      gradientSchemaInput.value = { data: next.value };
+    });
+
+    // Watch for internal schema input changes
+    watch(gradientSchemaInput, (newValue) => {
+      if (!newValue.hasErrors) {
+        next.value = newValue.data;
+        // Emit update to parent component
+        emit('update:modelValue', { data: next.value });
+      }
+    }, { deep: true });
+
+    // Validator function for the gradient data
+    function validate(value) {
+      if (gradientSchemaInput.value.hasErrors) {
         return 'invalid';
       }
       return false;
     }
-  },
-  mounted() {
-    console.log('InputColorGradientField mounted');
-    console.log('Field:', this.field);
-    console.log('ModelValue:', this.modelValue);
-    console.log('GradientSchema:', this.gradientSchema);
 
-    this.$nextTick(() => {
-      // Force reactivity update
-      this.next = { ...this.next };
-      console.log('After reactivity update:', this.next);
+    /**
+     * Compute the CSS gradient string from our data
+     * This dynamically creates a linear-gradient CSS function
+     * based on the angle and colors in our data.
+     */
+    const gradient = computed(() => {
+      // Ensure we have valid data before creating gradient
+      if (!next.value.colors || !next.value.angle) {
+        return '';
+      }
+
+      // Build the gradient string from the angle and color stops
+      const gradientString = next.value.colors.reduce((acc, curr, i, colors) => {
+        acc += `${curr.color} ${curr.stop}%`;
+        // Add comma between color stops, or close parenthesis for the last stop
+        if (i !== colors.length - 1) {
+          acc += ', ';
+        } else {
+          acc += ')';
+        }
+
+        return acc;
+      }, `linear-gradient(${next.value.angle}deg, `);
+
+      return gradientString;
     });
+
+    // Return values for the template
+    return {
+      next,
+      gradientSchema,
+      gradientSchemaInput,
+      getNext,
+      gradient,
+      validate
+    };
   }
 };
 </script>

@@ -1,3 +1,11 @@
+/*
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-12-05 18:42:56
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-12-05 18:42:57
+ * @FilePath: \wenaili\modules\grade-field\index.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 export default {
   extend: '@apostrophecms/module',
   options: {
@@ -22,6 +30,12 @@ export default {
             type: 'integer',
             name: 'midterm',
             label: '期中考试',
+            required: true
+          },
+          {
+            type: 'integer',
+            name: 'midterm12',
+            label: '期初考试',
             required: true
           },
           {

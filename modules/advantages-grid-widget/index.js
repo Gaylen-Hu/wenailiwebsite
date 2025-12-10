@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-12 22:32:58
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-12-03 00:54:37
+ * @LastEditTime: 2025-12-05 21:52:33
  * @FilePath: \wenaili\modules\advantages-grid-widget\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -26,16 +26,11 @@ export default {
         textarea: true,
         def: '选择奈李的服务，您的货代企业将获得专业、高效、全面的运营支持，帮助您提升品牌影响力，优化业务流程，实现业务增长。'
       },
-      testfield: {
-        type: 'grade',
-        label: '成绩字段',
+      // testfield: {
+      //   type: 'grade',
+      //   label: '成绩字段',
 
-      },
-      testfield2: {
-        type: 'grade',
-        label: '成绩字段2',
-
-      },
+      // },
       items: {
         type: 'array',
         label: '优势卡片',
@@ -67,10 +62,10 @@ export default {
         fields: {
           add: {
             iconClass: {
-              type: 'string',
-              label: '图标类名',
+              type: 'iconPicker',
+              label: '图标',
               def: 'fa-solid fa-rocket',
-              help: '请输入 Font Awesome 图标类，例如：fa-solid fa-rocket'
+              help: '选择一个 Font Awesome 图标'
             },
             title: {
               type: 'string',
@@ -95,7 +90,7 @@ export default {
     group: {
       content: {
         label: '内容设置',
-        fields: [ 'heading', 'subheading', 'items', 'testfield' ]
+        fields: [ 'heading', 'subheading', 'items' ]
       }
     }
   }

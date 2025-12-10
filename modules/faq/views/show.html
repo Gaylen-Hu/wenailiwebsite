@@ -38,7 +38,7 @@
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check h-5 w-5 mt-0.5 text-primary shrink-0" aria-hidden="true">
                     <path d="M20 6 9 17l-5-5"></path>
                   </svg>
-                  <div class="prose prose-sm max-w-none">
+                  <div class="prose prose-sm max-w-none prose-gray dark:prose-invert">
                     {% area data.piece, 'answer' %}
                   </div>
                 </div>
@@ -79,6 +79,109 @@ function toggleFaq(button) {
 <style>
 .rotate-180 {
   transform: rotate(180deg);
+}
+
+/* FAQ富文本样式配置 */
+.faq-rich-text {
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgb(75 85 99);
+}
+
+.dark .faq-rich-text {
+  color: rgb(209 213 219);
+}
+
+.faq-rich-text p {
+  margin-bottom: 1rem;
+}
+
+.faq-rich-text ul,
+.faq-rich-text ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.faq-rich-text li {
+  margin-bottom: 0.5rem;
+}
+
+.faq-rich-text blockquote {
+  border-left: 4px solid rgb(59 130 246);
+  padding-left: 1rem;
+  margin: 1rem 0;
+  font-style: italic;
+  background-color: rgb(249 250 251);
+}
+
+.dark .faq-rich-text blockquote {
+  border-left-color: rgb(96 165 250);
+  background-color: rgb(31 41 55);
+}
+
+.faq-rich-text strong,
+.faq-rich-text b {
+  font-weight: 600;
+  color: rgb(17 24 39);
+}
+
+.dark .faq-rich-text strong,
+.dark .faq-rich-text b {
+  color: rgb(243 244 246);
+}
+
+.faq-rich-text a {
+  color: rgb(59 130 246);
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.faq-rich-text a:hover {
+  color: rgb(37 99 235);
+}
+
+.dark .faq-rich-text a {
+  color: rgb(96 165 250);
+}
+
+.dark .faq-rich-text a:hover {
+  color: rgb(147 197 253);
+}
+
+/* FAQ图片样式 */
+.faq-image {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  margin: 1rem 0;
+}
+
+.faq-image img {
+  border-radius: 8px;
+}
+
+/* 确保FAQ答案在暗黑模式下正确显示 */
+.faq-content .prose {
+  color: inherit;
+}
+
+.faq-content .prose p,
+.faq-content .prose li,
+.faq-content .prose blockquote {
+  color: inherit;
+}
+
+.faq-content .prose a {
+  color: rgb(59 130 246);
+}
+
+.dark .faq-content .prose a {
+  color: rgb(96 165 250);
+}
+
+.faq-content .prose strong,
+.faq-content .prose b {
+  color: inherit;
+  font-weight: 600;
 }
 </style>
 {% endblock %}

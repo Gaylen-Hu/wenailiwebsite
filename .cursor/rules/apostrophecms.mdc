@@ -17,7 +17,7 @@ alwaysApply: true
 - npm 6.x 或更高 
 - MongoDB 3.6 或更高 
 - 可选：Imagemagick (用于图像处理，支持GIF) 
-
+  
 ## 2. 项目初始化与配置
 
 ### 2.1 创建新项目
