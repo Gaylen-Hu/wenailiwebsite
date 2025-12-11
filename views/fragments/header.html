@@ -281,6 +281,22 @@
 [data-mobile-disclosure-panel].open {
   display: block !important;
 }
+
+/* 链接鼠标指针样式 */
+header a {
+  cursor: pointer !important;
+}
+header a:hover {
+  cursor: pointer !important;
+}
+
+/* 按钮鼠标指针样式 */
+header button {
+  cursor: pointer !important;
+}
+header button:hover {
+  cursor: pointer !important;
+}
 </style>
 <script data-apos-asset type="module">
   const handleDesktopDropdowns = (() => {
@@ -303,6 +319,7 @@
       menu.classList.add('hidden');
       toggle.setAttribute('aria-expanded', 'false');
       toggle.querySelector('i')?.classList.remove('rotate-180');
+      activeKey = null;
     };
 
     const openMenu = (key) => {
@@ -314,6 +331,7 @@
       menu.classList.remove('hidden');
       toggle.setAttribute('aria-expanded', 'true');
       toggle.querySelector('i')?.classList.add('rotate-180');
+      activeKey = key;
     };
 
     toggles.forEach((toggle) => {
@@ -322,21 +340,28 @@
         return;
       }
 
-      toggle.addEventListener('click', (event) => {
-        event.preventDefault();
-        if (activeKey === key) {
-          closeMenu(key);
-          activeKey = null;
-        } else {
-          if (activeKey) {
-            closeMenu(activeKey);
-          }
-          openMenu(key);
-          activeKey = key;
+      const navElement = toggle.closest('[data-nav]');
+
+      // Hover to open menu
+      navElement.addEventListener('mouseenter', () => {
+        if (activeKey && activeKey !== key) {
+          closeMenu(activeKey);
         }
+        openMenu(key);
+      });
+
+      // Hover to close menu (when leaving the entire nav element)
+      navElement.addEventListener('mouseleave', () => {
+        // Add a small delay to prevent flickering
+        setTimeout(() => {
+          if (activeKey === key) {
+            closeMenu(key);
+          }
+        }, 100);
       });
     });
 
+    // Close menu when clicking outside (for accessibility)
     document.addEventListener('click', (event) => {
       if (!activeKey) {
         return;
@@ -350,14 +375,12 @@
       }
       if (!event.target.closest('[data-nav]') && !event.target.closest('[data-nav-menu]')) {
         closeMenu(activeKey);
-        activeKey = null;
       }
     });
 
     window.addEventListener('resize', () => {
-      if (window.innerWidth >= 768 && activeKey) {
+      if (window.innerWidth < 768 && activeKey) {
         closeMenu(activeKey);
-        activeKey = null;
       }
     });
   })();
