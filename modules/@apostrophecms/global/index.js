@@ -231,6 +231,12 @@ export default {
         type: 'object',
         fields: {
           add: {
+           baiduSiteVerification: {
+            type: 'string',
+            label: '百度站长平台验证码',
+            help: '例如: codeva-VjJ73fmJTK',
+            placeholder: 'codeva-VjJ73fmJTK'
+           },
             googleAnalytics: {
               type: 'string',
               label: 'Google Analytics 跟踪ID',

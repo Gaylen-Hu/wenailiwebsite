@@ -18,10 +18,6 @@ import apostrophe from 'apostrophe';
 import dotenv from 'dotenv';
 
 dotenv.config();
-console.log('process.env.NODE_ENV',process.env.NODE_ENV)
-console.log('process.env.APOS_BASE_URL',process.env.APOS_BASE_URL)
-console.log('process.env.APOS_SECRET',process.env.APOS_SECRET)
-console.log('process.env.APOS_BASE_URL',process.env.APOS_BASE_URL)
 apostrophe({
   root: import.meta,
   shortName: 'wenaili',

@@ -36,6 +36,10 @@
 
 
     {% if data.global.analytics %}
+    {# 百度站长平台验证 #}
+    {% if data.global.analytics.baiduSiteVerification %}
+      <meta name="baidu-site-verification" content="{{ data.global.analytics.baiduSiteVerification }}">
+    {% endif %}
     {# Google Analytics #}
       {% if data.global.analytics?.googleAnalytics %}
       <script async src="https://www.googletagmanager.com/gtag/js?id={{ data.global.analytics.googleAnalytics }}"></script>

@@ -15,7 +15,7 @@
             :trigger-validation="triggerValidation"
             :generation="generation"
             v-model="gradientSchemaInput"
-          >
+          > 
           </AposSchema>
         </div>
       </div>
