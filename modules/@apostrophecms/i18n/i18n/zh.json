@@ -641,7 +641,7 @@
     "aposSeo": {
         "keywords": "关键词",
         "keywordsHtmlHelp": "输入SEO关键词，用逗号分隔。关键词有助于搜索引擎理解您的内容主题。",
-        "group": "SEO设置",
+        "group": "SEO设置", 
         "robotsNoFollow": "不抓取页面链接（nofollow）",
         "robotsNoIndex": "不索引页面（noindex）",
         "robots": "Robots标签",
