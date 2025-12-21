@@ -641,6 +641,20 @@
     "aposSeo": {
         "keywords": "关键词",
         "keywordsHtmlHelp": "输入SEO关键词，用逗号分隔。关键词有助于搜索引擎理解您的内容主题。",
-        "group": "SEO设置"
+        "group": "SEO设置",
+        "robotsNoFollow": "不抓取页面链接（nofollow）",
+        "robotsNoIndex": "不索引页面（noindex）",
+        "robots": "Robots标签",
+        "robotsHtmlHelp": "搜索引擎索引设置。为了允许Google完全索引和抓取您的页面，请保留这些未选中。<a href=\"https://moz.com/learn/seo/robots-meta-directives\" data-toggle=\"tooltip\" target=\"new_window\" title=\"Learn More About Robots Meta Tag\">Learn more about these options</a>",
+        "robotsTxtSelection": "Robots.txt选择",
+        "robotsTxtSelectionHelp": "此设置将添加一个robots.txt文件，以确定搜索引擎是否可以索引此站点。如果禁止，将阻止所有页面。如果允许索引，您仍然可以阻止特定页面。",
+        "robotsTxtAllow": "允许搜索引擎索引此站点",
+        "robotsTxtDisallow": "不允许搜索引擎索引此站点",
+        "robotsTxtCustom": "自定义robots.txt内容",
+        "robotsCustomText": "要添加到robots.txt文件的文本",
+        "description": "描述",
+        "descriptionHtmlHelp": "页面内容的简短而准确的摘要，用于搜索引擎结果中。应该在<a href=\"https://moz.com/learn/seo/meta-description\" target=\"_blank\">50-160个字符</a>之间。",
+        "title": "标题",
+        "titleHtmlHelp": "定义页面在搜索引擎结果或页面标签中的标题。应该在<a href=\"https://moz.com/learn/seo/title-tag\" target=\"_blank\">60个字符</a>以下。"
     }
     }

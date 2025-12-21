@@ -22,7 +22,7 @@ module.exports = {
         seoKeywords: {
           label: 'keywords',
           type: 'string',
-          htmlHelp: 'keywordsHtmlHelp'
+          htmlHelp: '输入核心关键词，用逗号分隔，关键词有助于搜索引擎理解您的内容主题。'
         },
         seoRobots: {
           label: 'aposSeo:robots',
@@ -46,6 +46,7 @@ module.exports = {
           fields: [
             'seoTitle',
             'seoDescription',
+            'seoKeywords',
             'seoRobots'
           ],
           last: true

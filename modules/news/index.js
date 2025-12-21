@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-10 09:29:27
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-11-19 15:33:25
+ * @LastEditTime: 2025-12-19 20:57:09
  * @FilePath: \myapp\apos-app\modules\news\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -25,10 +25,27 @@ export default {
         ],
         def: 'industry'
       },
+
+      scheduledPublish: {
+        type: 'boolean',
+        label: '定时发布',
+        def: false,
+        help: '启用后，文章将在指定的发布时间自动发布'
+      },
       publishedAt: {
         type: 'date',
         label: '发布时间',
-        required: true
+        required: function(data, name, object, field, callback) {
+          // 如果启用了定时发布，则发布时间必填
+          if (data.scheduledPublish && !data.publishedAt) {
+            return callback('启用定时发布时，发布时间为必填项');
+          }
+          // 否则发布时间也必填（原有逻辑）
+          if (!data.publishedAt) {
+            return callback('发布时间为必填项');
+          }
+          return callback(null);
+        }
       },
       author: {
         type: 'string',
@@ -87,7 +104,7 @@ export default {
     group: {
       basics: {
         label: '基础信息',
-        fields: [ 'title', 'category', 'publishedAt', 'author', '_coverImage', 'excerpt', 'highlight' ]
+        fields: [ 'title', 'category', 'scheduledPublish', 'publishedAt', 'author', '_coverImage', 'excerpt', 'highlight' ]
       },
       metadata: {
         label: '附加信息',

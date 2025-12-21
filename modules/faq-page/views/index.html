@@ -105,7 +105,12 @@
                   </svg>
                 </div>
                 <div class="flex-1 prose prose-gray dark:prose-invert max-w-none">
+                 {% if piece.answer %}
                   {% area piece, 'answer' %}
+                  {% endif %}
+                  {% if piece.answer2 %}
+                  <p>{{ piece.answer2 }}</p>
+                  {% endif %}
                 </div>
               </div>
             </div>

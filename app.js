@@ -94,6 +94,7 @@ apostrophe({
     asset: {},
     news: {},
     "news-page":{},
+    'scheduled-publisher': {},
    'fixed-page':{},
     case:{},
     "case-page":{},

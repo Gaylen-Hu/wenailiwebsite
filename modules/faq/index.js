@@ -1,3 +1,5 @@
+import { Title } from "chart.js";
+
 export default {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -12,6 +14,13 @@ export default {
   },
   fields: {
     add: {
+      title: {
+        type: 'string',
+        label: '标题',
+        hidden: true,
+        searchable: true,
+        help: '常见问题的标题'
+      },
       // 问题
       question: {
         type: 'string',
@@ -20,11 +29,18 @@ export default {
         searchable: true,
         help: '常见问题的标题'
       },
+      answer2: {
+        type: 'string',
+        label: '答案',
+        required: true,
+        searchable: true,
+        help: '常见问题的答案'
+      },
       // 答案
       answer: {
         type: 'area',
         label: '答案',
-        required: true,
+        hidden: true,
         options: {
           widgets: {
             '@apostrophecms/rich-text': {
@@ -35,9 +51,6 @@ export default {
               ],
               className: 'faq-rich-text'
             },
-            '@apostrophecms/image': {
-              className: 'faq-image'
-            }
           }
         }
       },
@@ -88,11 +101,7 @@ export default {
     group: {
       basics: {
         label: '基本信息',
-        fields: ['title', 'question', 'category']
-      },
-      content: {
-        label: '内容',
-        fields: ['answer']
+        fields: [ 'question','answer2', 'category']
       },
       meta: {
         label: '发布信息',

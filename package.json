@@ -52,6 +52,7 @@
     "dotenv": "^17.2.3",
     "echarts": "^6.0.0",
     "framer-motion": "^12.23.24",
+    "node-schedule": "^2.1.1",
     "normalize.css": "^8.0.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.17"
