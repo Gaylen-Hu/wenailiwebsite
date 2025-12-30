@@ -9,18 +9,34 @@
 {% extends "layout.html" %}
 
 {% block main %}
-  {% set categoryLabels = {
-    'industry': '物流资讯',
-    'exhibition': '展会资讯',
-    'company': '公司新闻'
-  } %}
+  {% set rawUrl = (data.page and data.page._url) or data.url or (data.req and data.req.url) or '/' %}
+  {% set normalizedUrl = rawUrl or '/' %}
+  {% set isEnglish = normalizedUrl == '/en' or normalizedUrl == '/en/' or '/en/' in normalizedUrl %}
+  
+  {% if isEnglish %}
+    {% set categoryLabels = {
+      'industry': 'Logistics News',
+      'exhibition': 'Exhibition News',
+      'company': 'Company News'
+    } %}
+  {% else %}
+    {% set categoryLabels = {
+      'industry': '物流资讯',
+      'exhibition': '展会资讯',
+      'company': '公司新闻'
+    } %}
+  {% endif %}
 
   <article class="py-16 bg-white dark:bg-gray-900 transition-colors">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
       <div class="max-w-4xl mx-auto">
         <header class="text-center mb-10">
           <span class="inline-flex items-center px-4 py-1 rounded-full bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-200 text-sm font-medium mb-4">
-            {{ categoryLabels[data.piece.category] or '资讯' }}
+            {% if categoryLabels[data.piece.category] %}
+              {{ categoryLabels[data.piece.category] }}
+            {% else %}
+              {% if isEnglish %}News{% else %}资讯{% endif %}
+            {% endif %}
           </span>
           <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             {{ data.piece.title | escape }}

@@ -1,3 +1,11 @@
+/*
+ * @Author: xinyuHu hxyrkcy@outlook.com
+ * @Date: 2025-12-29 23:10:54
+ * @LastEditors: xinyuHu hxyrkcy@outlook.com
+ * @LastEditTime: 2025-12-31 00:12:41
+ * @FilePath: \wenaili\modules\faq-page\index.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 export default {
   extend: '@apostrophecms/piece-page-type',
   options: {
@@ -5,46 +13,13 @@ export default {
     perPage: 50,
     piecesFilters: [
       {
-        name: 'category'
-      },
-      {
         name: 'isFeatured'
       }
     ]
   },
   fields: {
     add: {
-      displayCategory: {
-        type: 'select',
-        label: '显示分类',
-        choices: [
-          {
-            label: '全部',
-            value: 'all'
-          },
-          {
-            label: '服务相关',
-            value: 'service'
-          },
-          {
-            label: '价格相关',
-            value: 'pricing'
-          },
-          {
-            label: '技术支持',
-            value: 'technical'
-          },
-          {
-            label: '账户相关',
-            value: 'account'
-          },
-          {
-            label: '其他',
-            value: 'other'
-          }
-        ],
-        def: 'all'
-      },
+     
       showFeaturedFirst: {
         type: 'boolean',
         label: '优先显示推荐问题',
@@ -55,40 +30,54 @@ export default {
     group: {
       basics: {
         label: '基础设置',
-        fields: ['displayCategory', 'showFeaturedFirst']
+        fields: ['showFeaturedFirst']
       }
     }
   },
-  extendMethods(self) {
+  handlers(self) {
     return {
-      indexQuery(_super, req) {
-        const query = _super(req);
+      async beforeIndex(req) {
+        const cursor = req.data.cursor;
         
+        // 如果URL查询参数中有_category，应用筛选
+        if (req.query._category) {
+          cursor.and({ _category: req.query._category });
+        }
+        
+        // 如果URL查询参数中有isFeatured，应用筛选
+        if (req.query.isFeatured === 'true') {
+          cursor.and({ isFeatured: true });
+        }
+        
+        // 如果URL查询参数中有search，应用搜索
         if (req.query.search) {
-          return query.search(req.query.search);
+          cursor.search(req.query.search);
         }
         
-        return query;
-      },
-      filterByIndexPage(_super, query, page) {
-        if (page.displayCategory && page.displayCategory !== 'all') {
-          query.category(page.displayCategory);
-        }
-        
-        if (page.showFeaturedFirst) {
-          query.sort({ isFeatured: -1, sortOrder: 1, createdAt: -1 });
+        // 根据页面设置排序
+        if (req.data.page && req.data.page.showFeaturedFirst) {
+          cursor.sort({ isFeatured: -1, sortOrder: 1, createdAt: -1 });
         } else {
-          query.sort({ sortOrder: 1, createdAt: -1 });
+          cursor.sort({ sortOrder: 1, createdAt: -1 });
         }
         
-        return query;
-      },
-      chooseParentPage(_super, pages, piece) {
-        if (piece.category && pages.length > 1) {
-          const pieceCategory = typeof piece.category === 'string' ? piece.category : 'all';
-          return pages.find((page) => page.displayCategory === pieceCategory) || _super(pages, piece);
+        // 加载所有已发布的问题类型，用于视图中的筛选按钮
+        req.data.categories = await self.apos.modules['faq-category'].find(req, {
+          archived: { $ne: true }
+        })
+          .project({ _id: 1, title: 1, value: 1, sortOrder: 1 })
+          .sort({ sortOrder: 1, createdAt: 1 })
+          .toArray();
+        
+        // 设置语言标识，优先使用 aposLocale，否则使用 URL 检查
+        if (req.data.page && req.data.page.aposLocale) {
+          const locale = String(req.data.page.aposLocale);
+          req.data.isEnglish = locale === 'en' || locale === 'en:published' || locale === 'en:draft' || locale.startsWith('en:');
+        } else {
+          const rawUrl = (req.data.page && req.data.page._url) || req.url || '/';
+          const urlStr = String(rawUrl);
+          req.data.isEnglish = urlStr === '/en' || urlStr === '/en/' || urlStr.startsWith('/en/') || urlStr.startsWith('/en?');
         }
-        return _super(pages, piece);
       }
     };
   }

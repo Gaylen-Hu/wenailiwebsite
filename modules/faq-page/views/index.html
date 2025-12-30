@@ -24,43 +24,57 @@
 <section class="py-20 bg-gray-50 dark:bg-slate-900 transition-colors">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto">
+      {# 使用 handler 中设置的语言标识 #}
+      {% set rawUrl = (data.page and data.page._url) or data.url or (data.req and data.req.url) or '/' %}
+  {% set normalizedUrl = rawUrl or '/' %}
+  {% set isEnglish = normalizedUrl == '/en' or normalizedUrl == '/en/' or '/en/' in normalizedUrl %}
+  
 
     {# 筛选器区域 #}
-    {% if data.page.displayCategory === 'all' %}
     <div class="mb-12">
       <div class="flex flex-wrap gap-3 justify-center">
-        <a href="{{ data.page._url | build({category: null, isFeatured: null, search: null}) }}"
-           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if not data.query.category and not data.query.isFeatured %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
-          <i class="fa-solid fa-list mr-2"></i>全部
+        <a href="{{ data.page._url | build({_category: null, isFeatured: null, search: null}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if not data.query._category and not data.query.isFeatured %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+          <i class="fa-solid fa-list mr-2"></i>
+          {% if isEnglish %}
+            All
+          {% else %}
+            全部
+          {% endif %}
         </a>
 
-        <a href="{{ data.page._url | build({category: 'service', isFeatured: null}) }}"
-           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'service' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
-          <i class="fa-solid fa-cog mr-2"></i>服务相关
-        </a>
+        {% if data.categories and data.categories.length > 0 %}
+          {% for category in data.categories %}
+            {% set categoryId = category._id | string %}
+            {% if data.query._category %}
+              {% set queryCategoryId = data.query._category | string %}
+            {% else %}
+              {% set queryCategoryId = '' %}
+            {% endif %}
+            {% set isActive = queryCategoryId === categoryId %}
+            <a href="{{ data.page._url | build({_category: category._id, isFeatured: null}) }}"
+               class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if isActive %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+              {% if category.icon %}
+                <i class="{{ category.icon }} mr-2"></i>
+              {% else %}
+                <i class="fa-solid fa-tag mr-2"></i>
+              {% endif %}
+              {{ category.title }}
+            </a>
+          {% endfor %}
+        {% endif %}
 
-        <a href="{{ data.page._url | build({category: 'pricing', isFeatured: null}) }}"
-           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'pricing' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
-          <i class="fa-solid fa-tags mr-2"></i>价格相关
-        </a>
-
-        <a href="{{ data.page._url | build({category: 'technical', isFeatured: null}) }}"
-           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'technical' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
-          <i class="fa-solid fa-tools mr-2"></i>技术支持
-        </a>
-
-        <a href="{{ data.page._url | build({category: 'account', isFeatured: null}) }}"
-           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'account' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
-          <i class="fa-solid fa-user mr-2"></i>账户相关
-        </a>
-
-        <a href="{{ data.page._url | build({category: null, isFeatured: 'true'}) }}"
+        <a href="{{ data.page._url | build({_category: null, isFeatured: 'true'}) }}"
            class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.isFeatured === 'true' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
-          <i class="fa-solid fa-star mr-2"></i>推荐问题
+          <i class="fa-solid fa-star mr-2"></i> 
+          {% if isEnglish %}
+            Recommended
+          {% else %}
+            推荐问题
+          {% endif %}
         </a>
       </div>
     </div>
-    {% endif %}
       
     {# FAQ List #}
     {% if data.pieces.length > 0 %}
@@ -84,9 +98,9 @@
             <h3 class="text-lg font-semibold text-gray-900 dark:text-white pr-4">{{ piece.question }}</h3>
           </div>
           <div class="flex items-center gap-3 flex-shrink-0">
-            {% if piece.category %}
+            {% if piece._category and piece._category.length > 0 %}
             <span class="px-3 py-1 bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 text-xs font-medium rounded-full">
-              {{ piece.category }}
+              {{ piece._category[0].title }}
             </span>
             {% endif %}
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 dark:text-gray-500 transition-transform duration-300 faq-chevron">

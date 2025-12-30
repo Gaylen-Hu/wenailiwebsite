@@ -1,5 +1,3 @@
-import { Title } from "chart.js";
-
 export default {
   extend: '@apostrophecms/piece-type',
   options: {
@@ -55,33 +53,19 @@ export default {
         }
       },
       // 分类
-      category: {
-        type: 'select',
-        label: '分类',
+      _category: {
+        type: 'relationship',
+        label: '问题类型',
+        withType: 'faq-category',
+        max: 1,
         required: true,
-        choices: [
-          {
-            label: '服务相关',
-            value: 'service'
-          },
-          {
-            label: '价格相关',
-            value: 'pricing'
-          },
-          {
-            label: '技术支持',
-            value: 'technical'
-          },
-          {
-            label: '账户相关',
-            value: 'account'
-          },
-          {
-            label: '其他',
-            value: 'other'
+        help: '选择问题所属的类型',
+        builders: {
+          project: {
+            title: 1,
+            value: 1
           }
-        ],
-        def: 'other'
+        }
       },
       // 是否推荐
       isFeatured: {
@@ -101,7 +85,7 @@ export default {
     group: {
       basics: {
         label: '基本信息',
-        fields: [ 'question','answer2', 'category']
+        fields: [ 'question','answer2', '_category']
       },
       meta: {
         label: '发布信息',
@@ -114,8 +98,8 @@ export default {
       isFeatured: {
         label: '推荐问题'
       },
-      category: {
-        label: '分类'
+      _category: {
+        label: '问题类型'
       }
     }
   },
@@ -125,9 +109,9 @@ export default {
         label: '问题',
         component: 'AposCellBasic'
       },
-      category: {
-        label: '分类',
-        component: 'AposCellBasic'
+      _category: {
+        label: '问题类型',
+        component: 'AposCellRelationship'
       },
       isFeatured: {
         label: '推荐',
