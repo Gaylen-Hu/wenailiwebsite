@@ -33,36 +33,57 @@
     {# 筛选器区域 #}
     <div class="mb-12">
       <div class="flex flex-wrap gap-3 justify-center">
-        <a href="{{ data.page._url | build({_category: null, isFeatured: null, search: null}) }}"
-           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if not data.query._category and not data.query.isFeatured %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+        
+        <a href="{{ data.page._url | build({category: null, isFeatured: null, search: null}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if not data.query.category and not data.query.isFeatured %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
           <i class="fa-solid fa-list mr-2"></i>
-          {% if isEnglish %}
+           {% if isEnglish %}
             All
           {% else %}
             全部
           {% endif %}
         </a>
 
-        {% if data.categories and data.categories.length > 0 %}
-          {% for category in data.categories %}
-            {% set categoryId = category._id | string %}
-            {% if data.query._category %}
-              {% set queryCategoryId = data.query._category | string %}
+        
+        <a href="{{ data.page._url | build({category: 'service', isFeatured: null}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'service' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+          <i class="fa-solid fa-cog mr-2"></i>
+          {% if isEnglish %}
+            Service Related
+          {% else %}
+            服务相关
+          {% endif %}
+        </a>
+
+        <a href="{{ data.page._url | build({category: 'pricing', isFeatured: null}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'pricing' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+            <i class="fa-solid fa-tags mr-2"></i>
+            {% if isEnglish %}
+              Pricing Related
             {% else %}
-              {% set queryCategoryId = '' %}
+              价格相关
             {% endif %}
-            {% set isActive = queryCategoryId === categoryId %}
-            <a href="{{ data.page._url | build({_category: category._id, isFeatured: null}) }}"
-               class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if isActive %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
-              {% if category.icon %}
-                <i class="{{ category.icon }} mr-2"></i>
-              {% else %}
-                <i class="fa-solid fa-tag mr-2"></i>
-              {% endif %}
-              {{ category.title }}
-            </a>
-          {% endfor %}
-        {% endif %}
+        </a>
+
+        <a href="{{ data.page._url | build({category: 'technical', isFeatured: null}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'technical' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+          <i class="fa-solid fa-tools mr-2"></i>
+          {% if isEnglish %}
+            Technical Support
+          {% else %}
+            技术支持
+          {% endif %}
+        </a>
+
+        <a href="{{ data.page._url | build({category: 'account', isFeatured: null}) }}"
+           class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.category === 'account' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">
+          <i class="fa-solid fa-user mr-2"></i>
+          {% if isEnglish %}
+            Account Related
+          {% else %}
+            账户相关
+          {% endif %}
+        </a>
 
         <a href="{{ data.page._url | build({_category: null, isFeatured: 'true'}) }}"
            class="px-6 py-3 rounded-xl text-sm font-semibold transition-all duration-300 shadow-sm hover:shadow-md {% if data.query.isFeatured === 'true' %}bg-blue-600 text-white shadow-blue-200{% else %}bg-white dark:bg-slate-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700 border border-gray-200 dark:border-slate-700{% endif %}">

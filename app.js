@@ -2,7 +2,7 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-12-02 14:45:17
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-12-29 22:07:18
+ * @LastEditTime: 2026-01-06 11:18:57
  * @FilePath: \wenaili\app.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -99,7 +99,6 @@ apostrophe({
     case:{},
     "case-page":{},
     faq:{},
-    "faq-category":{},
     "faq-page":{},
     "about-page":{},
     // use vite for asset bundling and hot module reloading
