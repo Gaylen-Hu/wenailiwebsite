@@ -181,19 +181,18 @@ export default {
           }, CHECK_INTERVAL);
           
           // 确保在应用关闭时清理定时器
-          process.on('SIGTERM', () => {
+          const cleanupInterval = () => {
             if (self.scheduleInterval) {
               clearInterval(self.scheduleInterval);
-              console.log('新闻模块：已清理定时发布检查定时器（SIGTERM）');
+              self.scheduleInterval = null;
+              console.log('新闻模块：已清理定时发布检查定时器');
             }
-          });
+          };
           
-          process.on('SIGINT', () => {
-            if (self.scheduleInterval) {
-              clearInterval(self.scheduleInterval);
-              console.log('新闻模块：已清理定时发布检查定时器（SIGINT）');
-            }
-          });
+          // 使用 once 确保只执行一次，避免重复注册
+          process.once('SIGTERM', cleanupInterval);
+          process.once('SIGINT', cleanupInterval);
+          process.once('exit', cleanupInterval);
           
           console.log('新闻模块：定时发布检查服务已成功启动');
         } catch (error) {

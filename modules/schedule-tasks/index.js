@@ -6,20 +6,46 @@ export default {
     init(self) {
       // 确保定时任务在服务器启动时注册
       self.publishScheduledNews = self.publishScheduledNews.bind(self);
+      self.cronJobName = 'publish-scheduled-news';
     },
     handlers(self) {
       return {
         '@apostrophecms/apostrophe:run': {
           async start() {
             // 每5分钟执行一次定时发布检查
-            self.apos.cron.addJob('publish-scheduled-news', '*/5 * * * *', async () => {
-              await self.publishScheduledNews();
-            });
-            
-            console.log('定时任务模块已启动，定时发布检查已安排');
+            if (self.apos.cron && self.apos.cron.addJob) {
+              self.apos.cron.addJob(self.cronJobName, '*/5 * * * *', async () => {
+                await self.publishScheduledNews();
+              });
+              console.log('定时任务模块已启动，定时发布检查已安排');
+            } else {
+              console.warn('定时任务模块：apos.cron 不可用，跳过定时任务注册');
+            }
           }
         }
       };
+    },
+    construct(self, options) {
+      // 清理定时任务的方法
+      self.cleanup = function() {
+        if (self.apos.cron && self.apos.cron.removeJob) {
+          try {
+            self.apos.cron.removeJob(self.cronJobName);
+            console.log('[定时任务模块] 已清理 cron 定时任务');
+          } catch (error) {
+            console.error('[定时任务模块] 清理 cron 定时任务失败:', error);
+          }
+        }
+      };
+      
+      // 监听应用关闭事件
+      const cleanupHandler = () => {
+        self.cleanup();
+      };
+      
+      process.on('SIGTERM', cleanupHandler);
+      process.on('SIGINT', cleanupHandler);
+      process.on('exit', cleanupHandler);
     },
     methods(self) {
       return {

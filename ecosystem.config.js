@@ -2,12 +2,12 @@
  * @Author: xinyuHu hxyrkcy@outlook.com
  * @Date: 2025-11-16 23:13:19
  * @LastEditors: xinyuHu hxyrkcy@outlook.com
- * @LastEditTime: 2025-12-01 20:50:35
+ * @LastEditTime: 2026-01-07 22:10:01
  * @FilePath: \wenaili\ecosystem.config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
-console.log('process.env.NODE_ENV',process.env.NODE_ENV)
+console.log('process.env.NODE_ENV',process.env)
 module.exports = {
   apps: [
     {
@@ -39,10 +39,10 @@ module.exports = {
         // MongoDB 配置
         APOS_MONGODB_URI: process.env.APOS_MONGODB_URI || '',
         // Email 配置
-        APOS_EMAIL_SMTP_HOST: process.env.APOS_EMAIL_SMTP_HOST || '',
+        APOS_EMAIL_SMTP_HOST: process.env.APOS_EMAIL_SMTP_HOST || 'smtp.exmail.qq.com',
         APOS_EMAIL_SMTP_PORT: process.env.APOS_EMAIL_SMTP_PORT || '465',
-        APOS_EMAIL_SMTP_USER: process.env.APOS_EMAIL_SMTP_USER || '',
-        APOS_EMAIL_SMTP_PASS: process.env.APOS_EMAIL_SMTP_PASS || ''
+        APOS_EMAIL_SMTP_USER: process.env.APOS_EMAIL_SMTP_USER || 'melanie@wenaili.com',
+        APOS_EMAIL_SMTP_PASS: process.env.APOS_EMAIL_SMTP_PASS || 'Gq9KvpRRs2rJb5pp'
       },
 
       // 日志配置
