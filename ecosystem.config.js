@@ -14,9 +14,9 @@ module.exports = {
       name: 'wenaili-app',
       script: './app.js',
 
-      // 多进程
-      instances: 'max',           // 使用所有可用 CPU 核心
-      exec_mode: 'cluster',       // 集群模式
+      // 多进程 - 2核CPU使用单进程性能更好
+      instances: 1,
+      exec_mode: 'fork',
 
       // 环境变量
       env: {
@@ -52,12 +52,15 @@ module.exports = {
       log_date_format: 'YYYY-MM-DD HH:mm Z',
 
       // 高级与重启策略
-      max_memory_restart: '1G',
+      max_memory_restart: '2G',
       watch: false,
       ignore_watch: ['node_modules', 'logs'],
       autorestart: true,
       max_restarts: 10,
-      min_uptime: '10s'
+      min_uptime: '10s',
+
+      // Node.js 参数优化
+      node_args: '--max-old-space-size=2048'
     }
   ]
 };
