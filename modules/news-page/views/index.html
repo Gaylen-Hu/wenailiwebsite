@@ -374,30 +374,31 @@
                 {% set endPage = totalPages - 1 %}
               {% endif %}
 
+              {# 构建分页基础参数，保留当前筛选条件 #}
+              {% set baseParams = {
+                q: searchTerm or null,
+                category: activeCategory or null,
+                tag: activeTag or null,
+                highlight: persistentHighlightParam
+              } %}
+
               <div class="mt-12 flex justify-center">
                 <nav class="inline-flex items-center gap-2 rounded-full bg-white dark:bg-gray-800 px-3 py-2 shadow-md ring-1 ring-gray-200 dark:ring-gray-700" aria-label="分页导航">
                   {% set prevDisabled = currentPage <= 1 %}
-                  {% set prevUrl = '#' %}
-                  {% if not prevDisabled and data.pager %}
-                    {% set prevUrl = data.pager.url(currentPage - 1) %}
-                  {% endif %}
+                  {% set prevParams = baseParams | merge({ page: currentPage - 1 if currentPage > 1 else null }) %}
                   <a
                     class="w-10 h-10 inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 {% if prevDisabled %}opacity-50 cursor-not-allowed pointer-events-none{% endif %}"
-                    href="{{ prevUrl }}"
+                    href="{% if prevDisabled %}#{% else %}{{ data.page._url | build(prevParams) }}{% endif %}"
                     aria-label="上一页"
                     {% if prevDisabled %}aria-disabled="true"{% endif %}
                   >
                     <i class="fa-solid fa-chevron-left text-sm"></i>
                   </a>
 
-                  {% if data.pager %}
-                    {% set firstUrl = data.pager.url(1) %}
-                  {% else %}
-                    {% set firstUrl = '#' %}
-                  {% endif %}
+                  {% set firstParams = baseParams | merge({ page: null }) %}
                   <a
                     class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == 1 %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-transparent hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400{% endif %}"
-                    href="{{ firstUrl }}"
+                    href="{{ data.page._url | build(firstParams) }}"
                     {% if currentPage == 1 %}aria-current="page"{% endif %}
                   >1</a>
 
@@ -407,14 +408,10 @@
 
                   {% if endPage >= startPage %}
                     {% for page in range(startPage, endPage + 1) %}
-                      {% if data.pager %}
-                        {% set pageUrl = data.pager.url(page) %}
-                      {% else %}
-                        {% set pageUrl = '#' %}
-                      {% endif %}
+                      {% set pageParams = baseParams | merge({ page: page }) %}
                       <a
                         class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == page %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-transparent hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400{% endif %}"
-                        href="{{ pageUrl }}"
+                        href="{{ data.page._url | build(pageParams) }}"
                         {% if currentPage == page %}aria-current="page"{% endif %}
                       >{{ page }}</a>
                     {% endfor %}
@@ -425,26 +422,19 @@
                   {% endif %}
 
                   {% if totalPages > 1 %}
-                    {% if data.pager %}
-                      {% set lastUrl = data.pager.url(totalPages) %}
-                    {% else %}
-                      {% set lastUrl = '#' %}
-                    {% endif %}
+                    {% set lastParams = baseParams | merge({ page: totalPages }) %}
                     <a
                       class="min-w-[2.5rem] h-10 inline-flex items-center justify-center rounded-full text-sm font-medium transition-colors duration-200 {% if currentPage == totalPages %}bg-blue-600 text-white border border-blue-600 shadow-sm{% else %}bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 border border-transparent hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400{% endif %}"
-                      href="{{ lastUrl }}"
+                      href="{{ data.page._url | build(lastParams) }}"
                       {% if currentPage == totalPages %}aria-current="page"{% endif %}
                     >{{ totalPages }}</a>
                   {% endif %}
 
                   {% set nextDisabled = currentPage >= totalPages %}
-                  {% set nextUrl = '#' %}
-                  {% if not nextDisabled and data.pager %}
-                    {% set nextUrl = data.pager.url(currentPage + 1) %}
-                  {% endif %}
+                  {% set nextParams = baseParams | merge({ page: currentPage + 1 }) %}
                   <a
                     class="w-10 h-10 inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 {% if nextDisabled %}opacity-50 cursor-not-allowed pointer-events-none{% endif %}"
-                    href="{{ nextUrl }}"
+                    href="{% if nextDisabled %}#{% else %}{{ data.page._url | build(nextParams) }}{% endif %}"
                     aria-label="下一页"
                     {% if nextDisabled %}aria-disabled="true"{% endif %}
                   >
