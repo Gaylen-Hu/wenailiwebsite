@@ -95,6 +95,7 @@ apostrophe({
     news: {},
     "news-page":{},
     'scheduled-publisher': {},
+    'llms-txt': {},
    'fixed-page':{},
     case:{},
     "case-page":{},
