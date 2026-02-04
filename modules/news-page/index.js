@@ -158,25 +158,71 @@ export default {
 
         cursor.sort({ publishedAt: -1, createdAt: -1 });
 
-        const tagDocs = await self.apos.modules.news.find(req)
-          .project({ tags: 1 })
-          .areas(false)
-          .toArray();
+        // 使用缓存获取标签列表
+        const cacheKey = 'news:tags:list';
+        const cache = self.apos.modules['cache-layer'];
 
-        const tagSet = new Set();
-        for (const doc of tagDocs) {
-          if (doc.tags && doc.tags.length) {
-            for (const item of doc.tags) {
-              if (item && item.tag) {
-                tagSet.add(item.tag);
+        let availableTags = [];
+
+        if (cache && cache.isConnected) {
+          // 尝试从缓存获取
+          availableTags = await cache.getOrSet(
+            cacheKey,
+            async () => {
+              // 缓存未命中，从数据库查询
+              const tagDocs = await self.apos.modules.news.find(req)
+                .project({ tags: 1 })
+                .areas(false)
+                .toArray();
+
+              const tagSet = new Set();
+              for (const doc of tagDocs) {
+                if (doc.tags && doc.tags.length) {
+                  for (const item of doc.tags) {
+                    if (item && item.tag) {
+                      tagSet.add(item.tag);
+                    }
+                  }
+                }
+              }
+
+              const tags = Array.from(tagSet).sort((a, b) => {
+                return String(a).localeCompare(String(b), 'zh-Hans-CN', { sensitivity: 'base' });
+              });
+
+              console.log(`[news-page] 标签缓存未命中，已从数据库加载 ${tags.length} 个标签`);
+              return tags;
+            },
+            3600 // 缓存 1 小时
+          );
+
+          if (availableTags && availableTags.length > 0) {
+            console.log(`[news-page] 标签缓存命中，返回 ${availableTags.length} 个标签`);
+          }
+        } else {
+          // 缓存不可用，直接查询数据库
+          const tagDocs = await self.apos.modules.news.find(req)
+            .project({ tags: 1 })
+            .areas(false)
+            .toArray();
+
+          const tagSet = new Set();
+          for (const doc of tagDocs) {
+            if (doc.tags && doc.tags.length) {
+              for (const item of doc.tags) {
+                if (item && item.tag) {
+                  tagSet.add(item.tag);
+                }
               }
             }
           }
+
+          availableTags = Array.from(tagSet).sort((a, b) => {
+            return String(a).localeCompare(String(b), 'zh-Hans-CN', { sensitivity: 'base' });
+          });
         }
 
-        req.data.availableTags = Array.from(tagSet).sort((a, b) => {
-          return String(a).localeCompare(String(b), 'zh-Hans-CN', { sensitivity: 'base' });
-        });
+        req.data.availableTags = availableTags;
       }
     };
   }

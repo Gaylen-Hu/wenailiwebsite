@@ -92,6 +92,8 @@ apostrophe({
 
     // `asset` supports the project's build for client-side assets.
     asset: {},
+    // Redis 缓存层 - 用于优化查询性能
+    'cache-layer': {},
     news: {},
     "news-page":{},
     'scheduled-publisher': {},

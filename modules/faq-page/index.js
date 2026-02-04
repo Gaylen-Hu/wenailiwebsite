@@ -61,13 +61,45 @@ export default {
           cursor.sort({ sortOrder: 1, createdAt: -1 });
         }
         
-        // 加载所有已发布的问题类型，用于视图中的筛选按钮
-        req.data.categories = await self.apos.modules['faq-category'].find(req, {
-          archived: { $ne: true }
-        })
-          .project({ _id: 1, title: 1, value: 1, sortOrder: 1 })
-          .sort({ sortOrder: 1, createdAt: 1 })
-          .toArray();
+        // 使用缓存获取分类列表
+        const cacheKey = 'faq:categories:list';
+        const cache = self.apos.modules['cache-layer'];
+
+        let categories = [];
+
+        if (cache && cache.isConnected) {
+          // 尝试从缓存获取
+          categories = await cache.getOrSet(
+            cacheKey,
+            async () => {
+              // 缓存未命中，从数据库查询
+              const cats = await self.apos.modules['faq-category'].find(req, {
+                archived: { $ne: true }
+              })
+                .project({ _id: 1, title: 1, value: 1, sortOrder: 1 })
+                .sort({ sortOrder: 1, createdAt: 1 })
+                .toArray();
+
+              console.log(`[faq-page] 分类缓存未命中，已从数据库加载 ${cats.length} 个分类`);
+              return cats;
+            },
+            3600 // 缓存 1 小时
+          );
+
+          if (categories && categories.length > 0) {
+            console.log(`[faq-page] 分类缓存命中，返回 ${categories.length} 个分类`);
+          }
+        } else {
+          // 缓存不可用，直接查询数据库
+          categories = await self.apos.modules['faq-category'].find(req, {
+            archived: { $ne: true }
+          })
+            .project({ _id: 1, title: 1, value: 1, sortOrder: 1 })
+            .sort({ sortOrder: 1, createdAt: 1 })
+            .toArray();
+        }
+
+        req.data.categories = categories;
         
         // 设置语言标识，优先使用 aposLocale，否则使用 URL 检查
         if (req.data.page && req.data.page.aposLocale) {
