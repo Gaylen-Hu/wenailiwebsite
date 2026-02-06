@@ -100,6 +100,86 @@
   </main>
   {% render footer.footer(data) %}
 
+  {# 悬浮侧边栏 - 微信二维码 & 联系方式 #}
+  {% if data.global.wechatQrCode %}
+  <div class="fixed right-0 top-1/2 -translate-y-1/2 z-40 flex flex-col items-end gap-3" id="floating-sidebar">
+    {# 微信二维码入口 #}
+    <div class="group relative">
+      <button
+        type="button"
+        aria-label="查看微信二维码"
+        class="w-12 h-12 rounded-l-xl bg-green-500 text-white flex items-center justify-center shadow-lg hover:bg-green-600 transition-all duration-300 hover:w-14"
+        data-qr-trigger
+      >
+        <i class="fa-brands fa-weixin text-xl"></i>
+      </button>
+      {# Hover 展开面板 #}
+      <div class="absolute right-full top-1/2 -translate-y-1/2 mr-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 p-4 w-52">
+          <div class="text-center">
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-200 mb-3">微信扫码联系我们</p>
+            <div class="w-40 h-40 mx-auto rounded-lg overflow-hidden bg-gray-50 dark:bg-gray-700">
+              {% area data.global, 'wechatQrCode' %}
+            </div>
+            <p class="text-xs text-gray-400 dark:text-gray-500 mt-2">扫一扫，添加微信</p>
+          </div>
+          {# 小三角箭头 #}
+          <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full w-0 h-0 border-t-8 border-b-8 border-l-8 border-transparent border-l-white dark:border-l-gray-800"></div>
+        </div>
+      </div>
+    </div>
+
+    {# 电话快捷入口 #}
+    {% if data.global.phone %}
+    <div class="group relative">
+      <a
+        href="tel:{{ data.global.phone }}"
+        aria-label="拨打电话"
+        class="w-12 h-12 rounded-l-xl bg-blue-600 text-white flex items-center justify-center shadow-lg hover:bg-blue-700 transition-all duration-300 hover:w-14"
+      >
+        <i class="fa-solid fa-phone text-lg"></i>
+      </a>
+      <div class="absolute right-full top-1/2 -translate-y-1/2 mr-3 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 pointer-events-none group-hover:pointer-events-auto">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-100 dark:border-gray-700 px-4 py-2.5 whitespace-nowrap">
+          <span class="text-sm text-gray-700 dark:text-gray-200">{{ data.global.phone }}</span>
+          <div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-full w-0 h-0 border-t-6 border-b-6 border-l-6 border-transparent border-l-white dark:border-l-gray-800"></div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  {# 二维码弹窗遮罩（移动端点击触发） #}
+  <div
+    id="qr-modal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 backdrop-blur-sm"
+    role="dialog"
+    aria-modal="true"
+    aria-label="微信二维码"
+  >
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 mx-4 max-w-xs w-full text-center relative animate-fade-in">
+      <button
+        type="button"
+        class="absolute top-3 right-3 w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-colors"
+        data-qr-close
+        aria-label="关闭"
+      >
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="mb-3">
+        <div class="w-16 h-16 mx-auto rounded-full bg-green-50 dark:bg-green-500/10 flex items-center justify-center mb-3">
+          <i class="fa-brands fa-weixin text-3xl text-green-500"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-100">微信扫码联系</h3>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">扫描下方二维码添加微信</p>
+      </div>
+      <div class="w-48 h-48 mx-auto rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-700">
+        {% area data.global, 'wechatQrCode' %}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
   <button
     id="back-to-top-button"
     type="button"
@@ -133,6 +213,37 @@
     btn.addEventListener('click', scrollToTop);
     window.addEventListener('scroll', toggleButton, { passive: true });
     toggleButton();
+  })();
+</script>
+<script>
+  // 二维码弹窗控制（移动端点击打开）
+  (function () {
+    const triggers = document.querySelectorAll('[data-qr-trigger]');
+    const modal = document.getElementById('qr-modal');
+    const closeBtns = document.querySelectorAll('[data-qr-close]');
+    if (!modal || !triggers.length) return;
+
+    function openModal() {
+      if (window.innerWidth < 768) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.classList.add('overflow-hidden');
+      }
+    }
+    function closeModal() {
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    triggers.forEach(function (btn) { btn.addEventListener('click', openModal); });
+    closeBtns.forEach(function (btn) { btn.addEventListener('click', closeModal); });
+    modal.addEventListener('click', function (e) {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') closeModal();
+    });
   })();
 </script>
 {% endblock %}

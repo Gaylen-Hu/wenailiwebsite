@@ -187,6 +187,16 @@ export default {
      
 
       
+      wechatQrCode: {
+        label: '微信二维码',
+        type: 'area',
+        options: {
+          max: 1,
+          widgets: {
+            '@apostrophecms/image': {}
+          }
+        }
+      },
       social: {
         label: '社交媒体账户',
         type: 'array',
@@ -283,7 +293,7 @@ export default {
     group: {
       brand: {
         label: '品牌',
-        fields: [ 'title', 'logo', 'detail', 'social' ]
+        fields: [ 'title', 'logo', 'detail', 'wechatQrCode', 'social' ]
       },
       navigations: {
         label: '导航',
