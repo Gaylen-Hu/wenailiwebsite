@@ -98,8 +98,6 @@ export default {
           }
         }
       },
-
-
       // 版权
       copyright: {
         type: 'string',
