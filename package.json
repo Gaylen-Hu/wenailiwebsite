@@ -13,7 +13,8 @@
     "dev": "nodemon",
     "build": "NODE_ENV=production node app @apostrophecms/asset:build",
     "serve": "NODE_ENV=production node app",
-    "release": "npm install && npm run build && node app @apostrophecms/migration:migrate"
+    "release": "npm install && npm run build && node app @apostrophecms/migration:migrate && npm run sitemap:refresh",
+    "sitemap:refresh": "NODE_ENV=production node app @apostrophecms/sitemap:update-cache"
   },
   "nodemonConfig": {
     "delay": 1000,

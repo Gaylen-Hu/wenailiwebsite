@@ -18,7 +18,9 @@
 {% set seoDescription = data.piece.seoDescription or data.page.seoDescription or defaultDescription %}
 {% set seoKeywords = data.piece.seoKeywords or data.page.seoKeywords or defaultKeywords %}
 {% set siteName = data.global.title or 'Wenaili' %}
-{% set pageUrl = data.absoluteUrl or (data.baseUrl ~ (data.url or '/')) %}
+{% set document = data.piece or data.page %}
+{% set canonicalTarget = document._seoCanonical[0]._url if document and document._seoCanonical and document._seoCanonical.length else (data.absoluteUrl or (data.baseUrl ~ (data.url or '/'))) %}
+{% set pageUrl = canonicalTarget | canonicalUrl(data.baseUrl) %}
 {% set coverImage = apos.attachment.first(data.piece._coverImage) if data.piece and data.piece._coverImage else null %}
 {% set coverImageUrl = apos.attachment.url(coverImage, { size: 'max' }) | absoluteUrl(data.baseUrl) if coverImage else null %}
 {% block title %}

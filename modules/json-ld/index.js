@@ -3,7 +3,8 @@ export default {
   init(self) {
     self.apos.template.addFilter({
       jsonLd: self.jsonLd,
-      absoluteUrl: self.absoluteUrl
+      absoluteUrl: self.absoluteUrl,
+      canonicalUrl: self.canonicalUrl
     });
   },
   methods(self) {
@@ -22,6 +23,17 @@ export default {
         if (!url) return null;
         try {
           return new URL(url, baseUrl).toString();
+        } catch (error) {
+          return url;
+        }
+      },
+      canonicalUrl(url, baseUrl) {
+        if (!url) return null;
+        try {
+          const canonical = new URL(url, baseUrl);
+          canonical.search = '';
+          canonical.hash = '';
+          return canonical.toString();
         } catch (error) {
           return url;
         }
