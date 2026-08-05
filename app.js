@@ -99,6 +99,7 @@ apostrophe({
     'scheduled-publisher': {},
     'llms-txt': {},
    'fixed-page':{},
+    'json-ld': {},
     case:{},
     "case-page":{},
     faq:{},

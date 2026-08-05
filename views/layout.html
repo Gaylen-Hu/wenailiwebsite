@@ -17,6 +17,10 @@
 {% set seoTitle = data.piece.seoTitle or data.page.seoTitle or inferredTitle or defaultTitle %}
 {% set seoDescription = data.piece.seoDescription or data.page.seoDescription or defaultDescription %}
 {% set seoKeywords = data.piece.seoKeywords or data.page.seoKeywords or defaultKeywords %}
+{% set siteName = data.global.title or 'Wenaili' %}
+{% set pageUrl = data.absoluteUrl or (data.baseUrl ~ (data.url or '/')) %}
+{% set coverImage = apos.attachment.first(data.piece._coverImage) if data.piece and data.piece._coverImage else null %}
+{% set coverImageUrl = apos.attachment.url(coverImage, { size: 'max' }) | absoluteUrl(data.baseUrl) if coverImage else null %}
 {% block title %}
   {{ seoTitle }}
   {% if not seoTitle %}
@@ -28,6 +32,60 @@
   {{ super() }}
   <meta name="description" content="{{ seoDescription }}">
   <meta name="keywords" content="{{ seoKeywords }}">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": {{ (data.baseUrl ~ '/#website') | jsonLd | safe }},
+        "name": {{ siteName | jsonLd | safe }},
+        "url": {{ data.baseUrl | jsonLd | safe }},
+        "description": {{ data.global.detail | jsonLd | safe }}
+      },
+      {
+        "@type": "Organization",
+        "@id": {{ (data.baseUrl ~ '/#organization') | jsonLd | safe }},
+        "name": {{ siteName | jsonLd | safe }},
+        "url": {{ data.baseUrl | jsonLd | safe }},
+        "description": {{ data.global.detail | jsonLd | safe }}{% if data.global.phone %},
+        "telephone": {{ data.global.phone | jsonLd | safe }}{% endif %}{% if data.global.email %},
+        "email": {{ data.global.email | jsonLd | safe }}{% endif %}{% if data.global.address %},
+        "address": { "@type": "PostalAddress", "streetAddress": {{ data.global.address | jsonLd | safe }} }{% endif %}{% if data.global.social and data.global.social.length %},
+        "sameAs": [{% for account in data.global.social %}{{ account.link | jsonLd | safe }}{% if not loop.last %}, {% endif %}{% endfor %}]{% endif %}
+      },
+      {
+        "@type": "WebPage",
+        "@id": {{ pageUrl | jsonLd | safe }},
+        "url": {{ pageUrl | jsonLd | safe }},
+        "name": {{ seoTitle | jsonLd | safe }},
+        "description": {{ seoDescription | jsonLd | safe }},
+        "isPartOf": { "@id": {{ (data.baseUrl ~ '/#website') | jsonLd | safe }} }
+      }{% if data.piece and data.piece.type === 'news' %},
+      {
+        "@type": "Article",
+        "@id": {{ (pageUrl ~ '#article') | jsonLd | safe }},
+        "mainEntityOfPage": { "@id": {{ pageUrl | jsonLd | safe }} },
+        "headline": {{ data.piece.title | jsonLd | safe }},
+        "description": {{ (data.piece.excerpt or seoDescription) | jsonLd | safe }},
+        "datePublished": {{ (data.piece.publishedAt or data.piece.createdAt) | jsonLd | safe }},
+        "dateModified": {{ (data.piece.updatedAt or data.piece.publishedAt or data.piece.createdAt) | jsonLd | safe }},
+        "author": { "@type": "Person", "name": {{ (data.piece.author or siteName) | jsonLd | safe }} },
+        "publisher": { "@id": {{ (data.baseUrl ~ '/#organization') | jsonLd | safe }} }{% if coverImageUrl %},
+        "image": {{ coverImageUrl | jsonLd | safe }}{% endif %}
+      }{% endif %}{% if data.page.type === 'faq-page' and data.pieces and data.pieces.length %},
+      {
+        "@type": "FAQPage",
+        "@id": {{ (pageUrl ~ '#faq') | jsonLd | safe }},
+        "mainEntity": [
+          {% for faq in data.pieces %}
+          { "@type": "Question", "name": {{ faq.question | jsonLd | safe }}, "acceptedAnswer": { "@type": "Answer", "text": {{ faq.answer2 | jsonLd | safe }} } }{% if not loop.last %},{% endif %}
+          {% endfor %}
+        ]
+      }{% endif %}
+    ]
+  }
+  </script>
   <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
