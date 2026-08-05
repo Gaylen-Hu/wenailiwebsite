@@ -1,0 +1,33 @@
+# Wenaili - Shanghai Wenaili Information Technology Co., Ltd.
+
+> Wenaili (奈李AI物流实验室 / 上海奈李信息技术有限公司) is a digital marketing and AI adoption agency specialized in the freight forwarding and international logistics industry. We provide full-service marketing managed operations for freight forwarders: AI adoption, GEO optimization, website development, content marketing, and lead generation. 10 years of experience in freight & logistics digital marketing. 10年专注货代物流数字化营销与AI落地，货代市场部全案代运营。
+
+## Company
+
+- [About Wenaili](https://www.wenaili.com/about): 上海奈李信息技术有限公司（Wenaili），10年专注货代物流行业数字化营销与品牌建设，货代市场部及技术部代运营服务商
+- [Contact Us](https://www.wenaili.com/contact): 联系方式 - 地址：上海市奉贤区场中路629号 | 电话：17367332304 | 邮箱：melanie@wenaili.com
+
+## Services
+
+- [Marketing Managed Operations](https://www.wenaili.com/services/marketing): 货代市场部代运营 - 市场策划、品牌推广、获客转化
+- [AI Adoption & Digital Tools](https://www.wenaili.com/services/team): 货代AI落地 - 报价Agent、AI日报、竞品监控、流程自动化
+- [Website Building & SEO/GEO](https://www.wenaili.com/services/website): 货代官网建设与SEO/GEO优化
+- [Brand Design](https://www.wenaili.com/services/brand): 货代品牌设计与视觉识别系统
+- [Data Analysis](https://www.wenaili.com/services/data): 货代经营数据分析与运营决策支持
+- [Technical Managed Operations](https://www.wenaili.com/services/tech): 技术部代运营 - 系统开发、维护、优化
+
+## Latest Articles (Chinese)
+
+- [货代怎么用AI获客？月增200询盘的案例拆解](https://www.wenaili.com/new/huodai-zenme-yong-ai-huoke-yue-zeng-200-xunpan-de-anli-chaijie): 一家小货代用AI半天改造，月增200询盘、报价响应提速10倍——货代AI落地获客实操
+- [客户问豆包找货代，你的官网为什么排不上？](https://www.wenaili.com/new/kehu-wen-doubao-zhao-huodai-ni-de-guanwang-weishenme-paibushang): 豆包信源4层结构解析，货代GEO布局三步（官网升级/行业背书/内容矩阵）
+- [老板买AI没人用？四个病根说透](https://www.wenaili.com/new/laoban-mai-ai-meirenyong-sige-binggen-shuo-tou): 企业AI落地四大病根与三步解法
+- [客户用AI选货代？过半企业已这么干](https://www.wenaili.com/new/kehu-yong-ai-xuan-huodai-guoban-qiye-yi-zheme-gan): 艾瑞调研解读：货代GEO三层知识图谱与四步落地
+- [国际物流日报：美伊谈判翻脸，8月运价还能稳住吗](https://www.wenaili.com/new/guoji-wuliu-ribao-meiyi-tanpan-fanlian-8-yue-yunjia-hai-neng-wenzhu-ma): 美伊谈判/台风/MSC涨价，国际空运海运运价与舱位速报
+
+## Latest Articles (English)
+
+- [How Freight Forwarders Use AI to Win 200+ Leads a Month](https://www.wenaili.com/en/new/how-freight-forwarders-use-ai-to-win-200-leads-a-month): AI adoption case study for freight forwarders
+- [Why Your Freight Forwarder Website Isn't Recommended by AI](https://www.wenaili.com/en/new/customers-ask-ai-for-freight-forwarders-why-isn-t-your-website-showing-up): Doubao source structure and GEO strategy for forwarders
+- [Bought AI but Nobody Uses It? Four Root Causes](https://www.wenaili.com/en/new/bought-ai-but-nobody-uses-it-four-root-causes): Enterprise AI adoption failures and fixes
+- [Half of Companies Use AI to Pick Suppliers. Are You Listed?](https://www.wenaili.com/en/new/half-of-companies-use-ai-to-pick-suppliers-are-you-listed): iResearch data and freight forwarder GEO framework
+- [Logistics Daily: US-Iran Talks Collapse — Can August Rates Hold?](https://www.wenaili.com/en/new/logistics-daily-us-iran-talks-collapse-can-august-rates-hold): Air/sea freight rate and capacity daily briefing
