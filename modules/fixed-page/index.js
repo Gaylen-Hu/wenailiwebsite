@@ -5,7 +5,7 @@ export default {
   },
   fields: {
     add: {
-      main: {
+      fixedPageTemplate: {
         type: 'select',
         label: '固定页面',
         help: '选择固定的页面',

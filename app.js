@@ -96,7 +96,6 @@ apostrophe({
     'cache-layer': {},
     news: {},
     "news-page":{},
-    'scheduled-publisher': {},
     'llms-txt': {},
    'fixed-page':{},
     'json-ld': {},
@@ -104,6 +103,7 @@ apostrophe({
     "case-page":{},
     faq:{},
     "faq-page":{},
+    'faq-category': {},
     "about-page":{},
     // use vite for asset bundling and hot module reloading
     '@apostrophecms/vite': {},

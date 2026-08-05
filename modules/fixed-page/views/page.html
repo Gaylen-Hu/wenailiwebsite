@@ -23,7 +23,7 @@
 {% extends "layout.html" %}
 
 {% block main %}
-  {% set mainChoice = data.doc.main or 'services' %}
+  {% set mainChoice = data.page.fixedPageTemplate or data.doc.fixedPageTemplate or data.page.main or data.doc.main or 'services' %}
 
   {% if mainChoice == 'services' %}
     {% render services.services(data) %}
