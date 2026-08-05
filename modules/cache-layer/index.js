@@ -135,11 +135,19 @@ export default {
         }
 
         try {
-          const keys = await self.client.keys(pattern);
-          if (keys.length === 0) {
-            return 0;
+          let deleted = 0;
+          let batch = [];
+          for await (const key of self.client.scanIterator({ MATCH: pattern, COUNT: 100 })) {
+            batch.push(key);
+            if (batch.length === 100) {
+              deleted += await self.client.del(batch);
+              batch = [];
+            }
           }
-          const result = await self.client.del(keys);
+          if (batch.length) {
+            deleted += await self.client.del(batch);
+          }
+          const result = deleted;
           if (self.options.debug) {
             console.log(`[Cache-Layer] 删除缓存模式: ${pattern} (${result} 个键)`);
           }

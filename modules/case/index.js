@@ -122,6 +122,18 @@ export default {
       }
     }
 },
+  handlers(self) {
+    return {
+      afterSave: {
+        async invalidateHomeShowcase() {
+          const cache = self.apos.modules['cache-layer'];
+          if (cache?.isConnected) {
+            await cache.delPattern('case:home-showcase:*');
+          }
+        }
+      }
+    };
+  },
   components(self) {
     return {
       async homeShowcase(req, data = {}) {
@@ -142,6 +154,17 @@ export default {
           criteria.category = category;
         }
 
+        const cache = self.apos.modules['cache-layer'];
+        const cacheKey = cache?.makeKey(
+          'case',
+          'home-showcase',
+          req.locale || req.data?.locale || 'default',
+          JSON.stringify(data)
+        );
+        if (cacheKey && cache?.isConnected) {
+          const cached = await cache.get(cacheKey);
+          if (cached) return JSON.parse(cached);
+        }
         const baseSort = { updatedAt: -1, createdAt: -1 };
         const categoryLabels = {
           market: '市场代运营',
@@ -249,13 +272,15 @@ export default {
           };
         });
 
-        return {
+        const result = {
           title,
           description,
           pieces: mappedPieces,
           categoryLabels,
           limit
         };
+        if (cacheKey && cache?.isConnected) await cache.set(cacheKey, JSON.stringify(result), 300);
+        return result;
       }
     };
   }

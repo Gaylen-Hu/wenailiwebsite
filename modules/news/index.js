@@ -281,6 +281,18 @@ export default {
   },
   
   // 其他方法保持不变...
+  handlers(self) {
+    return {
+      afterSave: {
+        async invalidateHomeShowcase() {
+          const cache = self.apos.modules['cache-layer'];
+          if (cache?.isConnected) {
+            await cache.delPattern('news:home-showcase:*');
+          }
+        }
+      }
+    };
+  },
   components(self) {
     return {
       async homeShowcase(req, data = {}) {
@@ -315,6 +327,17 @@ export default {
           ? data.category.trim()
           : null;
 
+        const cache = self.apos.modules['cache-layer'];
+        const cacheKey = cache?.makeKey(
+          'news',
+          'home-showcase',
+          req.locale || req.data?.locale || 'default',
+          JSON.stringify(data)
+        );
+        if (cacheKey && cache?.isConnected) {
+          const cached = await cache.get(cacheKey);
+          if (cached) return JSON.parse(cached);
+        }
         const baseSort = { publishedAt: -1, createdAt: -1 };
         const categoryLabels = {
           industry: '物流资讯',
@@ -391,7 +414,7 @@ export default {
           };
         });
 
-        return {
+        const result = {
           pieces,
           mode,
           limit,
@@ -402,6 +425,8 @@ export default {
           buttonLabel,
           categoryLabels
         };
+        if (cacheKey && cache?.isConnected) await cache.set(cacheKey, JSON.stringify(result), 300);
+        return result;
       }
     };
   }
