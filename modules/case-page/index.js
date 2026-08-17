@@ -203,6 +203,65 @@ export default {
         cursor.sort({ featured: -1, createdAt: -1 });
       }
     };
+  },
+  extendMethods(self) {
+    return {
+      async beforeShow(_super, req) {
+        await _super(req);
+        await self.loadPieceNavigation(req);
+      }
+    };
+  },
+  methods(self) {
+    return {
+      async loadPieceNavigation(req) {
+        const current = req.data.piece;
+        if (!current?.createdAt) {
+          req.data.previousPiece = null;
+          req.data.nextPiece = null;
+          return;
+        }
+
+        const cases = self.apos.modules.case;
+        const projection = {
+          title: 1,
+          company: 1,
+          _url: 1,
+          createdAt: 1
+        };
+        const previousCriteria = {
+          $or: [
+            { createdAt: { $gt: current.createdAt } },
+            {
+              createdAt: current.createdAt,
+              _id: { $gt: current._id }
+            }
+          ]
+        };
+        const nextCriteria = {
+          $or: [
+            { createdAt: { $lt: current.createdAt } },
+            {
+              createdAt: current.createdAt,
+              _id: { $lt: current._id }
+            }
+          ]
+        };
+
+        [ req.data.previousPiece, req.data.nextPiece ] = await Promise.all([
+          cases.find(req, previousCriteria)
+            .sort({ createdAt: 1, _id: 1 })
+            .project(projection)
+            .areas(false)
+            .toObject(),
+          cases.find(req, nextCriteria)
+            .sort({ createdAt: -1, _id: -1 })
+            .project(projection)
+            .areas(false)
+            .toObject()
+        ]);
+      }
+    };
   }
 };
 

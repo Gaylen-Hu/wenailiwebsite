@@ -103,6 +103,7 @@ export default {
             'project-highlights': {},
             'client-testimonial': {},
             'case-cta': {},
+            'html-content': {},
           }
         }
       }

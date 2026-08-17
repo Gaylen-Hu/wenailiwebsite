@@ -39,7 +39,7 @@
                   </div>
                   {% if card.image %}
                     <img
-                      src="{{ card.image | safe }}"
+                      src="{{ card.image | escape }}"
                       alt="{{ card.alt or card.title }}"
                       class="w-full h-auto object-cover h-40"
                       loading="lazy"

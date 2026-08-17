@@ -2,6 +2,7 @@
 {% set statusId = 'contact-page-status-' + data.widget._id %}
 {% set submitAction = (apos.prefix or '') + '/api/v1/contact-page-widget/submit' %}
 {% set notificationEmail = data.widget.notificationEmail or '' %}
+{% set notificationEmailSignature = apos.contactPageWidget.signNotificationEmail(notificationEmail) %}
 {% set formText = data.widget.formText or {} %}
 {% set contactHeading = data.widget.contactHeading or '联系方式' %}
 {% set faqHeading = data.widget.faqHeading or '常见问题' %}
@@ -57,6 +58,7 @@
             action="{{ submitAction }}"
             method="post"
             data-notification-email="{{ notificationEmail }}"
+            data-notification-email-signature="{{ notificationEmailSignature }}"
             novalidate
           >
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -161,6 +163,7 @@
     const submitBtn = form.querySelector('[type="submit"]');
     const csrfEndpoint = '{{ (apos.prefix or "") }}/modules/@apostrophecms/csrf/token';
     const defaultNotificationEmail = form.dataset.notificationEmail || '';
+    const notificationEmailSignature = form.dataset.notificationEmailSignature || '';
     let cachedCsrfToken = null;
     const messages = {
       loading: '{{ (formText.loadingText or "提交中，请稍候...") | e("js") }}',
@@ -230,6 +233,7 @@
           payload.privacy = false;
         }
         payload.notificationEmail = payload.notificationEmail || defaultNotificationEmail || '';
+        payload.notificationEmailSignature = notificationEmailSignature;
 
         const response = await fetch(action, {
           method,

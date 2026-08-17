@@ -47,7 +47,7 @@
           <div class="rounded-xl overflow-hidden shadow-2xl border border-transparent dark:border-slate-800 transition-colors">
             {% if data.widget.image and data.widget.image.url %}
               <img
-                src="{{ data.widget.image.url | safe }}"
+                src="{{ data.widget.image.url | escape }}"
                 alt="{{ data.widget.image.alt or data.widget.heading }}"
                 class="w-full h-auto object-cover"
                 loading="lazy"

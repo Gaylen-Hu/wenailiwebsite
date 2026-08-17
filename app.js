@@ -95,6 +95,7 @@ apostrophe({
     'contact-wrap-widget': {},
     'contact-page-widget': {},
     'columns-widget': {},
+    'html-content-widget': {},
 
     // `asset` supports the project's build for client-side assets.
     asset: {},

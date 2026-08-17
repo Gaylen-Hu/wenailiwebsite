@@ -1,9 +1,12 @@
+import { createHmac, timingSafeEqual } from 'node:crypto';
+
 export default {
   extend: '@apostrophecms/widget-type',
   options: {
     label: '联系我们页面',
     icon: 'phone',
-    preview: true
+    preview: true,
+    alias: 'contactPageWidget'
   },
   fields: {
     add: {
@@ -229,6 +232,27 @@ export default {
         }
         return String(value).trim();
       },
+      signNotificationEmail(value) {
+        const email = self.sanitizeText(value);
+        const secret = self.apos.options.secret;
+        if (!email || !secret) {
+          return '';
+        }
+        return createHmac('sha256', secret)
+          .update(`contact-page-widget:${email}`)
+          .digest('hex');
+      },
+      verifyNotificationEmailSignature(value, signature) {
+        const expected = self.signNotificationEmail(value);
+        const received = self.sanitizeText(signature);
+        if (!expected || !/^[a-f0-9]{64}$/i.test(received)) {
+          return false;
+        }
+        return timingSafeEqual(
+          Buffer.from(expected, 'hex'),
+          Buffer.from(received, 'hex')
+        );
+      },
       parseEmailList(value) {
         const sanitized = self.sanitizeText(value);
         if (!sanitized) {
@@ -274,8 +298,20 @@ export default {
         const pageId = getField(['pageId', 'page_id', 'docId', 'doc_id', 'pieceId']);
         const widgetId = getField(['widgetId', 'widget_id']);
 
-        const notificationEmailRaw = body.notificationEmail ?? body.to ?? body.receiver;
-        const toAddresses = self.parseEmailList(notificationEmailRaw || self.options.defaultNotificationEmail);
+        const notificationEmailRaw = self.sanitizeText(
+          body.notificationEmail || self.options.defaultNotificationEmail
+        );
+        if (!self.verifyNotificationEmailSignature(
+          notificationEmailRaw,
+          body.notificationEmailSignature
+        )) {
+          req.res.status(400);
+          return {
+            success: false,
+            message: '提交信息无效，请刷新页面后重试。'
+          };
+        }
+        const toAddresses = self.parseEmailList(notificationEmailRaw);
         if (!toAddresses.length) {
           self.apos.util.error('contact-page-widget: 未配置通知邮箱，邮件未发送。');
           req.res.status(500);
@@ -303,7 +339,6 @@ export default {
           pageId,
           widgetId
         };
-        console.log('formPayload', formPayload);
         try {
           await self.email(
             req,
@@ -332,11 +367,17 @@ export default {
       }
     };
   },
+  helpers(self) {
+    return {
+      signNotificationEmail(value) {
+        return self.signNotificationEmail(value);
+      }
+    };
+  },
   apiRoutes(self) {
     return {
       post: {
         async submit(req) {
-          console.log('req', req);
           return self.handleSubmit(req);
         }
       }

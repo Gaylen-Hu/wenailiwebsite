@@ -225,6 +225,75 @@ export default {
         req.data.availableTags = availableTags;
       }
     };
+  },
+  extendMethods(self) {
+    return {
+      async beforeShow(_super, req) {
+        await _super(req);
+        await self.loadPieceNavigation(req);
+      }
+    };
+  },
+  methods(self) {
+    return {
+      async loadPieceNavigation(req) {
+        const current = req.data.piece;
+        if (!current?.publishedAt || !current?.createdAt) {
+          req.data.previousPiece = null;
+          req.data.nextPiece = null;
+          return;
+        }
+
+        const news = self.apos.modules.news;
+        const projection = {
+          title: 1,
+          _url: 1,
+          publishedAt: 1,
+          createdAt: 1
+        };
+        const previousCriteria = {
+          $or: [
+            { publishedAt: { $gt: current.publishedAt } },
+            {
+              publishedAt: current.publishedAt,
+              createdAt: { $gt: current.createdAt }
+            },
+            {
+              publishedAt: current.publishedAt,
+              createdAt: current.createdAt,
+              _id: { $gt: current._id }
+            }
+          ]
+        };
+        const nextCriteria = {
+          $or: [
+            { publishedAt: { $lt: current.publishedAt } },
+            {
+              publishedAt: current.publishedAt,
+              createdAt: { $lt: current.createdAt }
+            },
+            {
+              publishedAt: current.publishedAt,
+              createdAt: current.createdAt,
+              _id: { $lt: current._id }
+            }
+          ]
+        };
+
+        [ req.data.previousPiece, req.data.nextPiece ] = await Promise.all([
+          news.find(req, previousCriteria)
+            .sort({ publishedAt: 1, createdAt: 1, _id: 1 })
+            .project(projection)
+            .areas(false)
+            .toObject(),
+          news.find(req, nextCriteria)
+            .sort({ publishedAt: -1, createdAt: -1, _id: -1 })
+            .project(projection)
+          .areas(false)
+            .toObject()
+        ]);
+      }
+    };
   }
 };
 

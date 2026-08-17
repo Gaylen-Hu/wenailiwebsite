@@ -238,7 +238,7 @@
                 <i class="fa-solid fa-star"></i>
               </div>
               <p class="text-gray-700 dark:text-gray-300 italic mb-6">
-                {{ testimonial.quote | safe }}
+                {{ testimonial.quote | escape }}
               </p>
               <div class="flex items-end">
                 {% set avatarDoc = testimonial._avatar and testimonial._avatar[0] %}

@@ -112,7 +112,8 @@ export default {
             '@apostrophecms/rich-text': {},
             '@apostrophecms/image': {},
             '@apostrophecms/video': {},
-            'columns': {}
+            'columns': {},
+            'html-content': {}
           }
         }
       }
@@ -157,10 +158,10 @@ export default {
     return {
       async startScheduledCheck() {
         try {
-          // 每小时检查一次（5 * 60 * 1000 毫秒）
+          // 每小时检查一次
           const CHECK_INTERVAL = 60 * 60 * 1000;
           
-          console.log('新闻模块：启动定时发布检查，间隔：5分钟');
+          console.log('新闻模块：启动定时发布检查，间隔：1小时');
           
           // 立即执行一次检查（延迟5秒，让服务器完全启动）
           setTimeout(async () => {
@@ -180,20 +181,6 @@ export default {
             }
           }, CHECK_INTERVAL);
           
-          // 确保在应用关闭时清理定时器
-          const cleanupInterval = () => {
-            if (self.scheduleInterval) {
-              clearInterval(self.scheduleInterval);
-              self.scheduleInterval = null;
-              console.log('新闻模块：已清理定时发布检查定时器');
-            }
-          };
-          
-          // 使用 once 确保只执行一次，避免重复注册
-          process.once('SIGTERM', cleanupInterval);
-          process.once('SIGINT', cleanupInterval);
-          process.once('exit', cleanupInterval);
-          
           console.log('新闻模块：定时发布检查服务已成功启动');
         } catch (error) {
           console.error('新闻模块：启动定时检查失败:', error);
@@ -210,8 +197,28 @@ export default {
         
       // 简化版：发布定时文章
       async publishScheduledNews() {
+        const cache = self.apos.modules['cache-layer'];
+        const lockKey = 'locks:news:scheduled-publish';
+        const lockToken = `${process.pid}:${Date.now()}:${Math.random()}`;
+        let ownsLock = false;
+
         try {
           const req = self.apos.task.getReq();
+          if (cache?.isConnected && cache.client) {
+            try {
+              const lockResult = await cache.client.set(lockKey, lockToken, {
+                NX: true,
+                EX: 300
+              });
+              if (lockResult !== 'OK') {
+                return;
+              }
+              ownsLock = true;
+            } catch (error) {
+              console.warn('定时发布锁不可用，继续使用单实例发布流程:', error.message);
+            }
+          }
+
           const now = new Date();
           
           // 使用标准的 find 方法，不重写它
@@ -250,6 +257,20 @@ export default {
           
         } catch (error) {
           console.error('定时发布失败:', error);
+        } finally {
+          if (ownsLock && cache?.client) {
+            try {
+              await cache.client.eval(
+                'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end',
+                {
+                  keys: [ lockKey ],
+                  arguments: [ lockToken ]
+                }
+              );
+            } catch (error) {
+              console.error('定时发布锁释放失败:', error.message);
+            }
+          }
         }
       }
     };

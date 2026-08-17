@@ -1,0 +1,29 @@
+{% if previousPiece or nextPiece %}
+  <nav class="mt-12 mb-12 pt-8 border-t border-gray-200 dark:border-gray-700" aria-label="{{ previousLabel }}/{{ nextLabel }}">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {% if previousPiece %}
+        <a href="{{ previousPiece._url }}" class="group flex min-h-28 flex-col justify-center rounded-xl border border-gray-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-500">
+          <span class="mb-2 text-sm font-medium text-blue-600 dark:text-blue-400">
+            <i class="fa-solid fa-arrow-left mr-2" aria-hidden="true"></i>{{ previousLabel }}
+          </span>
+          <span class="font-semibold leading-snug text-gray-900 transition group-hover:text-blue-600 dark:text-gray-100 dark:group-hover:text-blue-400">
+            {{ (previousPiece.company or previousPiece.title) | escape }}
+          </span>
+        </a>
+      {% else %}
+        <div class="hidden sm:block"></div>
+      {% endif %}
+
+      {% if nextPiece %}
+        <a href="{{ nextPiece._url }}" class="group flex min-h-28 flex-col justify-center rounded-xl border border-gray-200 bg-white p-5 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-blue-400 hover:shadow-md sm:text-right dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-500">
+          <span class="mb-2 text-sm font-medium text-blue-600 dark:text-blue-400">
+            {{ nextLabel }}<i class="fa-solid fa-arrow-right ml-2" aria-hidden="true"></i>
+          </span>
+          <span class="font-semibold leading-snug text-gray-900 transition group-hover:text-blue-600 dark:text-gray-100 dark:group-hover:text-blue-400">
+            {{ (nextPiece.company or nextPiece.title) | escape }}
+          </span>
+        </a>
+      {% endif %}
+    </div>
+  </nav>
+{% endif %}

@@ -79,6 +79,12 @@
             </ul>
           </footer>
         {% endif %}
+
+        {% set previousPiece = data.previousPiece %}
+        {% set nextPiece = data.nextPiece %}
+        {% set previousLabel = 'Previous' if isEnglish else '上一篇' %}
+        {% set nextLabel = 'Next' if isEnglish else '下一篇' %}
+        {% include 'fragments/piece-navigation.html' %}
       </div>
     </div>
   </article>

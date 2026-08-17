@@ -10,6 +10,7 @@
 {% set statusId = 'contact-wrap-status-' + data.widget._id %}
 {% set submitAction = (apos.prefix or '') + '/api/v1/contact-wrap-widget/submit' %}
 {% set notificationEmail = data.widget.notificationEmail or '' %}
+{% set notificationEmailSignature = apos.contactWrapWidget.signNotificationEmail(notificationEmail) %}
 {% set notificationSubject = data.widget.notificationSubject or '' %}
 {% set fieldClass = "w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors duration-300 dark:bg-gray-900 dark:border-gray-700 dark:text-gray-100 dark:placeholder-gray-400 dark:focus:ring-blue-400" %}
 {% set formText = data.widget.formText or {} %}
@@ -56,6 +57,7 @@
       action="{{ submitAction }}"
       method="post"
       data-notification-email="{{ notificationEmail }}"
+      data-notification-email-signature="{{ notificationEmailSignature }}"
       data-notification-subject="{{ notificationSubject }}"
       novalidate
     >
@@ -170,6 +172,7 @@
         const submitBtn = form.querySelector('[type="submit"]');
         const csrfEndpoint = '{{ (apos.prefix or "") }}/modules/@apostrophecms/csrf/token';
         const defaultNotificationEmail = form.dataset.notificationEmail || '';
+        const notificationEmailSignature = form.dataset.notificationEmailSignature || '';
         const defaultNotificationSubject = form.dataset.notificationSubject || '';
         let cachedCsrfToken = null;
         const messages = {
@@ -242,6 +245,7 @@
             }
             // payload._csrf = csrfToken;
             payload.notificationEmail = payload.notificationEmail || defaultNotificationEmail || '';
+            payload.notificationEmailSignature = notificationEmailSignature;
             payload.notificationSubject = payload.notificationSubject || defaultNotificationSubject || '';
 
             const response = await fetch(action, {

@@ -197,12 +197,6 @@
                              loading="lazy"
                            />
                          {% endif %}
-                        {# 调试输出 _coverImage 数据 #}
-                        {% if piece._coverImage %}
-                          <pre class="mt-2 p-2 bg-gray-50 rounded text-xs text-gray-600 overflow-auto max-h-40">{{ piece._coverImage | dump | safe }}</pre>
-                        {% else %}
-                          <pre class="mt-2 p-2 bg-gray-50 rounded text-xs text-red-600 sdsadas">_coverImage is empty</pre>
-                        {% endif %}
                         </div>
                         <div>
                           <h4 class="font-medium text-gray-900 dark:text-gray-100 line-clamp-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-300">

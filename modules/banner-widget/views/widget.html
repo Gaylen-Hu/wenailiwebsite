@@ -24,11 +24,11 @@
         </p>
       {% endif %}
       <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight text-white">
-        {{ data.widget.heading | safe }}
+        {{ apos.htmlContent.sanitize(data.widget.heading) | safe }}
       </h1>
       {% if data.widget.description %}
         <p class="text-xl text-blue-200 mb-8 leading-relaxed transition-colors duration-300">
-          {{ data.widget.description | safe }}
+          {{ apos.htmlContent.sanitize(data.widget.description) | safe }}
         </p>
       {% endif %}
       <div class="flex flex-col sm:flex-row gap-4">
