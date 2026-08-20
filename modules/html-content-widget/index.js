@@ -35,36 +35,36 @@ export default {
   },
   helpers(self) {
     return {
-      sanitize(html) {
-        return sanitizeHtml(html || '', {
-          allowedTags,
-          allowedAttributes: {
-            '*': [ 'class', 'id', 'title', 'role', 'aria-*', 'data-*' ],
-            a: [ 'href', 'name', 'target', 'rel' ],
-            img: [ 'src', 'alt', 'width', 'height', 'loading' ],
-            source: [ 'src', 'srcset', 'type', 'media' ],
-            video: [ 'src', 'controls', 'poster', 'preload', 'width', 'height' ],
-            col: [ 'span', 'width' ],
-            colgroup: [ 'span', 'width' ],
-            td: [ 'colspan', 'rowspan', 'headers' ],
-            th: [ 'colspan', 'rowspan', 'headers', 'scope' ],
-            time: [ 'datetime' ]
-          },
-          allowedSchemes: [ 'http', 'https', 'mailto', 'tel' ],
-          allowedSchemesByTag: {
-            img: [ 'http', 'https', 'data' ],
-            source: [ 'http', 'https' ]
-          },
-          transformTags: {
-            a(tagName, attribs) {
-              if (attribs.target === '_blank') {
-                attribs.rel = 'noopener noreferrer';
-              }
-              return { tagName, attribs };
-            }
-          }
-        });
-      }
+      // sanitize(html) {
+      //   return sanitizeHtml(html || '', {
+      //     allowedTags,
+      //     allowedAttributes: {
+      //       '*': [ 'class', 'id', 'title', 'role', 'aria-*', 'data-*' ],
+      //       a: [ 'href', 'name', 'target', 'rel' ],
+      //       img: [ 'src', 'alt', 'width', 'height', 'loading' ],
+      //       source: [ 'src', 'srcset', 'type', 'media' ],
+      //       video: [ 'src', 'controls', 'poster', 'preload', 'width', 'height' ],
+      //       col: [ 'span', 'width' ],
+      //       colgroup: [ 'span', 'width' ],
+      //       td: [ 'colspan', 'rowspan', 'headers' ],
+      //       th: [ 'colspan', 'rowspan', 'headers', 'scope' ],
+      //       time: [ 'datetime' ]
+      //     },
+      //     allowedSchemes: [ 'http', 'https', 'mailto', 'tel' ],
+      //     allowedSchemesByTag: {
+      //       img: [ 'http', 'https', 'data' ],
+      //       source: [ 'http', 'https' ]
+      //     },
+      //     transformTags: {
+      //       a(tagName, attribs) {
+      //         if (attribs.target === '_blank') {
+      //           attribs.rel = 'noopener noreferrer';
+      //         }
+      //         return { tagName, attribs };
+      //       }
+      //     }
+      //   });
+      // }
     };
   }
 };
