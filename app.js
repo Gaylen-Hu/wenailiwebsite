@@ -106,6 +106,7 @@ apostrophe({
     'llms-txt': {},
    'fixed-page':{},
     'json-ld': {},
+    'seo-enhanced': {},
     'security-headers': {},
     'robots-txt': {},
     'legacy-doc-audit': {},

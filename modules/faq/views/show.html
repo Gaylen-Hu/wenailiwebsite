@@ -1,11 +1,14 @@
 {% extends data.outerLayout %}
 
 {% block main %}
+{% set rawUrl = (data.page and data.page._url) or data.url or '/' %}
+{% set isEnglish = rawUrl == '/en' or rawUrl == '/en/' or '/en/' in rawUrl %}
 <section class="bp-content">
   <div class="max-w-[85rem] bg-muted/50 container mx-auto px-4 md:px-6 2xl:max-w-[1400px] py-24 lg:py-32">
-    <div class="rounded-2xl">
+      <div class="rounded-2xl">
+      <h1 class="sr-only">{{ data.piece.question }}</h1>
       <div class="max-w-2xl mx-auto text-center mb-10">
-        <h2 class="text-2xl font-bold md:text-3xl md:leading-tight">常见问题</h2>
+        <h2 class="text-2xl font-bold md:text-3xl md:leading-tight">{{ 'Frequently Asked Questions' if isEnglish else '常见问题' }}</h2>
         <p class="mt-4 text-muted-foreground">Find answers to the most common questions about our service</p>
       </div>
       
@@ -39,7 +42,11 @@
                     <path d="M20 6 9 17l-5-5"></path>
                   </svg>
                   <div class="prose prose-sm max-w-none prose-gray dark:prose-invert">
-                    {% area data.piece, 'answer' %}
+                    {% if data.piece.answer and data.piece.answer.items and data.piece.answer.items.length %}
+                      {% area data.piece, 'answer' %}
+                    {% elseif data.piece.answer2 %}
+                      <p>{{ data.piece.answer2 }}</p>
+                    {% endif %}
                   </div>
                 </div>
               </div>
@@ -50,8 +57,8 @@
       
       {# 返回列表按钮 #}
       <div class="max-w-3xl mx-auto mt-8 text-center">
-        <a href="/faqs" class="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
-          <i class="fa-solid fa-arrow-left mr-2"></i>返回常见问题列表
+        <a href="{{ data.page._url or ('/en/faq' if isEnglish else '/faq') }}" class="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors">
+          <i class="fa-solid fa-arrow-left mr-2"></i>{{ 'Back to FAQ' if isEnglish else '返回常见问题列表' }}
         </a>
       </div>
     </div>
@@ -185,4 +192,3 @@ function toggleFaq(button) {
 }
 </style>
 {% endblock %}
-

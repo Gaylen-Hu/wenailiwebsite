@@ -10,30 +10,78 @@
 {% extends data.outerLayout %}
 {% import 'fragments/footer.html' as footer %} {# 引入底部 #}
 {% import 'fragments/header.html' as header %} {# 引入头部 #}
-{% set defaultTitle = '物流货代企业运营专家 - 奈李信息技术' %}
-{% set defaultDescription = '专业的物流货代公司市场部及技术部代运营服务提供商，助力货代企业提升品牌影响力与业务增长。提供货代网站建设、SEO优化、数据分析、数字化AI工具等服务，让您的货代企业在竞争中脱颖而出。' %}
-{% set defaultKeywords = '物流货代,货代运营,市场部代运营,技术部代运营,物流营销,货代网站建设,货代SEO优化,货代数据分析,数字化AI工具,物流货代品牌建设' %}
+{% set defaultTitle = '货代市场部代运营与AI/GEO优化服务商｜上海奈李' %}
+{% set defaultDescription = '上海奈李专注货代行业市场部与技术部代运营，提供货代GEO优化、AI数字化落地、官网建设、品牌设计与数据分析服务。' %}
 {% set inferredTitle = data.piece.title or data.page.title %}
 {% set seoTitle = data.piece.seoTitle or data.page.seoTitle or inferredTitle or defaultTitle %}
 {% set seoDescription = data.piece.seoDescription or data.page.seoDescription or defaultDescription %}
-{% set seoKeywords = data.piece.seoKeywords or data.page.seoKeywords or defaultKeywords %}
 {% set siteName = data.global.title or 'Wenaili' %}
 {% set document = data.piece or data.page %}
-{% set canonicalTarget = document._seoCanonical[0]._url if document and document._seoCanonical and document._seoCanonical.length else (data.absoluteUrl or (data.baseUrl ~ (data.url or '/'))) %}
+{% set isEnglish = data.locale == 'en' or (document and (document.aposLocale == 'en:published' or document.aposLocale == 'en:draft')) %}
+{% set pageCanonical = document._seoCanonical[0]._url if document and document._seoCanonical and document._seoCanonical.length else null %}
+{% set pieceCanonical = document[document.seoSelectType][0]._url if document and document.seoSelectType and document[document.seoSelectType] and document[document.seoSelectType].length else null %}
+{% set localizedSelf = data.seoAlternateByLocale.en if isEnglish else data.seoAlternateByLocale.zh %}
+{% set canonicalTarget = pageCanonical or pieceCanonical or localizedSelf or data.absoluteUrl or (data.baseUrl ~ (data.url or '/')) %}
 {% set pageUrl = canonicalTarget | canonicalUrl(data.baseUrl) %}
 {% set coverImage = apos.attachment.first(data.piece._coverImage) if data.piece and data.piece._coverImage else null %}
 {% set coverImageUrl = apos.attachment.url(coverImage, { size: 'max' }) | absoluteUrl(data.baseUrl) if coverImage else null %}
+{% set defaultShareImageUrl = '/images/logo.png' | absoluteUrl(data.baseUrl) %}
+{% set shareImageUrl = coverImageUrl or defaultShareImageUrl %}
+{% set languageCode = 'en' if isEnglish else 'zh-CN' %}
 {% block title %}
-  {{ seoTitle }}
-  {% if not seoTitle %}
-    {{ apos.log('Looks like you forgot to override the title block in a template that does not have access to an Apostrophe page or piece.') }}
-  {% endif %}
+  {{ data.piece.seoTitle or data.page.seoTitle or data.piece.title or data.page.title or '货代市场部代运营与AI/GEO优化服务商｜上海奈李' }}
 {% endblock %}
 
 {% block extraHead %}
   {{ super() }}
-  <meta name="description" content="{{ seoDescription }}">
-  <meta name="keywords" content="{{ seoKeywords }}">
+  {% set document = data.piece or data.page %}
+  {% set defaultDescription = '上海奈李专注货代行业市场部与技术部代运营，提供货代GEO优化、AI数字化落地、官网建设、品牌设计与数据分析服务。' %}
+  {% set seoTitle = data.piece.seoTitle or data.page.seoTitle or data.piece.title or data.page.title or '货代市场部代运营与AI/GEO优化服务商｜上海奈李' %}
+  {% set seoDescription = data.piece.seoDescription or data.page.seoDescription or data.home.seoDescription or defaultDescription %}
+  {% set siteName = data.global.title or 'Wenaili 奈李' %}
+  {% set isEnglish = data.locale == 'en' or (document and (document.aposLocale == 'en:published' or document.aposLocale == 'en:draft')) %}
+  {% set pageCanonical = document._seoCanonical[0]._url if document and document._seoCanonical and document._seoCanonical.length else null %}
+  {% set pieceCanonical = document[document.seoSelectType][0]._url if document and document.seoSelectType and document[document.seoSelectType] and document[document.seoSelectType].length else null %}
+  {% set localizedSelf = data.seoAlternateByLocale.en if isEnglish else data.seoAlternateByLocale.zh %}
+  {% set canonicalTarget = pageCanonical or pieceCanonical or localizedSelf or data.absoluteUrl or (data.baseUrl ~ (data.url or '/')) %}
+  {% set pageUrl = canonicalTarget | canonicalUrl(data.baseUrl) %}
+  {% set coverImage = apos.attachment.first(data.piece._coverImage) if data.piece and data.piece._coverImage else null %}
+  {% set coverImageUrl = apos.attachment.url(coverImage, { size: 'max' }) | absoluteUrl(data.baseUrl) if coverImage else null %}
+  {% set defaultShareImageUrl = '/images/logo.png' | absoluteUrl(data.baseUrl) %}
+  {% set shareImageUrl = coverImageUrl or defaultShareImageUrl %}
+  {% set languageCode = 'en' if isEnglish else 'zh-CN' %}
+
+  {% if not (data.piece.seoDescription or data.page.seoDescription or data.home.seoDescription) %}
+    <meta name="description" content="{{ defaultDescription }}">
+  {% endif %}
+  {% if not (document and document.seoRobots and document.seoRobots.length) %}
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+  {% endif %}
+  {% if not (pageCanonical or pieceCanonical) %}
+    <link rel="canonical" href="{{ pageUrl }}">
+  {% endif %}
+
+  {% for alternate in data.seoAlternates %}
+    <link rel="alternate" hreflang="{{ alternate.hreflang }}" href="{{ alternate.url }}">
+  {% endfor %}
+  {% if data.seoDefaultAlternate %}
+    <link rel="alternate" hreflang="x-default" href="{{ data.seoDefaultAlternate }}">
+  {% endif %}
+
+  <meta property="og:type" content="{{ 'article' if data.piece and data.piece.type === 'news' else 'website' }}">
+  <meta property="og:site_name" content="{{ siteName }}">
+  <meta property="og:locale" content="{{ 'en_US' if isEnglish else 'zh_CN' }}">
+  <meta property="og:title" content="{{ seoTitle }}">
+  <meta property="og:description" content="{{ seoDescription }}">
+  <meta property="og:url" content="{{ pageUrl }}">
+  <meta property="og:image" content="{{ shareImageUrl }}">
+  <meta property="og:image:alt" content="{{ data.piece.title or data.page.title or siteName }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ seoTitle }}">
+  <meta name="twitter:description" content="{{ seoDescription }}">
+  <meta name="twitter:image" content="{{ shareImageUrl }}">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="shortcut icon" href="/favicon.ico">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -43,17 +91,36 @@
         "@id": {{ (data.baseUrl ~ '/#website') | jsonLd | safe }},
         "name": {{ siteName | jsonLd | safe }},
         "url": {{ data.baseUrl | jsonLd | safe }},
-        "description": {{ data.global.detail | jsonLd | safe }}
+        "description": {{ (data.global.detail or defaultDescription) | jsonLd | safe }},
+        "inLanguage": ["zh-CN", "en"]
       },
       {
         "@type": "Organization",
         "@id": {{ (data.baseUrl ~ '/#organization') | jsonLd | safe }},
         "name": {{ siteName | jsonLd | safe }},
+        "legalName": "上海奈李信息技术有限公司",
+        "alternateName": ["奈李", "Wenaili", "奈李AI物流实验室"],
         "url": {{ data.baseUrl | jsonLd | safe }},
-        "description": {{ data.global.detail | jsonLd | safe }}{% if data.global.phone %},
+        "logo": {{ defaultShareImageUrl | jsonLd | safe }},
+        "foundingDate": "2015",
+        "description": {{ (data.global.detail or defaultDescription) | jsonLd | safe }},
+        "knowsAbout": ["货代市场部代运营", "货代GEO优化", "物流数字营销", "货代AI落地", "货代官网建设", "物流数据分析"]{% if data.global.phone %},
         "telephone": {{ data.global.phone | jsonLd | safe }}{% endif %}{% if data.global.email %},
         "email": {{ data.global.email | jsonLd | safe }}{% endif %}{% if data.global.address %},
-        "address": { "@type": "PostalAddress", "streetAddress": {{ data.global.address | jsonLd | safe }} }{% endif %}{% if data.global.social and data.global.social.length %},
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": {{ data.global.address | jsonLd | safe }},
+          "addressLocality": "上海市",
+          "addressRegion": "上海",
+          "addressCountry": "CN"
+        }{% endif %}{% if data.global.phone or data.global.email %},
+        "contactPoint": {
+          "@type": "ContactPoint"{% if data.global.phone %},
+          "telephone": {{ data.global.phone | jsonLd | safe }}{% endif %}{% if data.global.email %},
+          "email": {{ data.global.email | jsonLd | safe }}{% endif %},
+          "contactType": "sales",
+          "availableLanguage": ["Chinese", "English"]
+        }{% endif %}{% if data.global.social and data.global.social.length %},
         "sameAs": [{% for account in data.global.social %}{{ account.link | jsonLd | safe }}{% if not loop.last %}, {% endif %}{% endfor %}]{% endif %}
       },
       {
@@ -62,39 +129,59 @@
         "url": {{ pageUrl | jsonLd | safe }},
         "name": {{ seoTitle | jsonLd | safe }},
         "description": {{ seoDescription | jsonLd | safe }},
-        "isPartOf": { "@id": {{ (data.baseUrl ~ '/#website') | jsonLd | safe }} }
+        "inLanguage": {{ languageCode | jsonLd | safe }},
+        "primaryImageOfPage": { "@type": "ImageObject", "url": {{ shareImageUrl | jsonLd | safe }} },
+        "isPartOf": { "@id": {{ (data.baseUrl ~ '/#website') | jsonLd | safe }} },
+        "about": { "@id": {{ (data.baseUrl ~ '/#organization') | jsonLd | safe }} }
       }{% if data.piece and data.piece.type === 'news' %},
       {
-        "@type": "Article",
+        "@type": "NewsArticle",
         "@id": {{ (pageUrl ~ '#article') | jsonLd | safe }},
         "mainEntityOfPage": { "@id": {{ pageUrl | jsonLd | safe }} },
         "headline": {{ data.piece.title | jsonLd | safe }},
         "description": {{ (data.piece.excerpt or seoDescription) | jsonLd | safe }},
         "datePublished": {{ (data.piece.publishedAt or data.piece.createdAt) | jsonLd | safe }},
         "dateModified": {{ (data.piece.updatedAt or data.piece.publishedAt or data.piece.createdAt) | jsonLd | safe }},
-        "author": { "@type": "Person", "name": {{ (data.piece.author or siteName) | jsonLd | safe }} },
-        "publisher": { "@id": {{ (data.baseUrl ~ '/#organization') | jsonLd | safe }} }{% if coverImageUrl %},
-        "image": {{ coverImageUrl | jsonLd | safe }}{% endif %}
-      }{% endif %}{% if data.page.type === 'faq-page' and data.pieces and data.pieces.length %},
+        "inLanguage": {{ languageCode | jsonLd | safe }},
+        "author": {
+          "@type": "Organization",
+          "name": {{ (data.piece.author or '奈李资讯团队') | jsonLd | safe }},
+          "url": {{ (data.baseUrl ~ '/aboutus') | jsonLd | safe }}
+        },
+        "publisher": { "@id": {{ (data.baseUrl ~ '/#organization') | jsonLd | safe }} },
+        "image": {{ shareImageUrl | jsonLd | safe }}
+      }{% endif %}{% if data.piece and data.piece.type === 'case' %},
+      {
+        "@type": "CreativeWork",
+        "@id": {{ (pageUrl ~ '#case-study') | jsonLd | safe }},
+        "mainEntityOfPage": { "@id": {{ pageUrl | jsonLd | safe }} },
+        "name": {{ data.piece.title | jsonLd | safe }},
+        "abstract": {{ (data.piece.summary or seoDescription) | jsonLd | safe }},
+        "inLanguage": {{ languageCode | jsonLd | safe }},
+        "creator": { "@id": {{ (data.baseUrl ~ '/#organization') | jsonLd | safe }} },
+        "image": {{ shareImageUrl | jsonLd | safe }}
+      }{% endif %}{% if data.seoService %},
+      {
+        "@type": "Service",
+        "@id": {{ (pageUrl ~ '#service') | jsonLd | safe }},
+        "name": {{ seoTitle | jsonLd | safe }},
+        "description": {{ seoDescription | jsonLd | safe }},
+        "url": {{ pageUrl | jsonLd | safe }},
+        "provider": { "@id": {{ (data.baseUrl ~ '/#organization') | jsonLd | safe }} },
+        "areaServed": { "@type": "Country", "name": "China" }
+      }{% endif %}{% if data.seoFaqEntities and data.seoFaqEntities.length %},
       {
         "@type": "FAQPage",
         "@id": {{ (pageUrl ~ '#faq') | jsonLd | safe }},
         "mainEntity": [
-          {% for faq in data.pieces %}
-          { "@type": "Question", "name": {{ faq.question | jsonLd | safe }}, "acceptedAnswer": { "@type": "Answer", "text": {{ faq.answer2 | jsonLd | safe }} } }{% if not loop.last %},{% endif %}
+          {% for faq in data.seoFaqEntities %}
+          { "@type": "Question", "name": {{ faq.question | jsonLd | safe }}, "acceptedAnswer": { "@type": "Answer", "text": {{ faq.answer | jsonLd | safe }} } }{% if not loop.last %},{% endif %}
           {% endfor %}
         ]
       }{% endif %}
     ]
   }
   </script>
-  <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-      crossorigin="anonymous"
-    />
-
-
     {% if data.global.analytics %}
     {# 百度站长平台验证 #}
     {% if data.global.analytics.baiduSiteVerification %}

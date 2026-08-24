@@ -291,6 +291,11 @@ export default {
   
   // 使用 init 方法启动定时任务（更简单的方式）
   async init(self) {
+    // Build and verification commands can opt out without changing production behavior.
+    if (process.env.DISABLE_SCHEDULED_PUBLISHER === '1') {
+      return;
+    }
+
     // 使用 setTimeout 延迟启动，确保所有模块都已初始化完成
     setTimeout(async () => {
       try {

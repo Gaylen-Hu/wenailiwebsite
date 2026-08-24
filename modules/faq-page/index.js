@@ -39,9 +39,9 @@ export default {
       async beforeIndex(req) {
         const cursor = req.data.cursor;
         
-        // 如果URL查询参数中有_category，应用筛选
-        if (req.query._category) {
-          cursor.and({ _category: req.query._category });
+        // 分类是 faq 文档上的 select 字段，URL 使用公开的 category 参数。
+        if (req.query.category) {
+          cursor.and({ category: req.query.category });
         }
         
         // 如果URL查询参数中有isFeatured，应用筛选

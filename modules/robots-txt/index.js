@@ -1,6 +1,6 @@
 /** Serve a crawler-safe robots.txt independently of legacy Global settings. */
 export default {
-  middleware() {
+  middleware(self) {
     return {
       robotsTxt: {
         before: '@apostrophecms/express',
@@ -8,8 +8,15 @@ export default {
           if (req.path !== '/robots.txt') {
             return next();
           }
-          res.type('text/plain');
-          return res.send('User-agent: *\nDisallow: \n\nSitemap: https://www.wenaili.com/sitemap.xml\n');
+          const baseUrl = String(self.apos.baseUrl || 'https://www.wenaili.com')
+            .replace(/\/$/, '');
+          res.type('text/plain; charset=utf-8');
+          res.setHeader('Cache-Control', 'public, max-age=3600');
+          return res.send(
+            'User-agent: *\n' +
+            'Allow: /\n\n' +
+            `Sitemap: ${baseUrl}/sitemap.xml\n`
+          );
         }
       }
     };
