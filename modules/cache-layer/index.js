@@ -136,16 +136,10 @@ export default {
 
         try {
           let deleted = 0;
-          let batch = [];
-          for await (const key of self.client.scanIterator({ MATCH: pattern, COUNT: 100 })) {
-            batch.push(key);
-            if (batch.length === 100) {
-              deleted += await self.client.del(batch);
-              batch = [];
+          for await (const keys of self.client.scanIterator({ MATCH: pattern, COUNT: 100 })) {
+            if (keys.length) {
+              deleted += await self.client.unlink(keys);
             }
-          }
-          if (batch.length) {
-            deleted += await self.client.del(batch);
           }
           const result = deleted;
           if (self.options.debug) {

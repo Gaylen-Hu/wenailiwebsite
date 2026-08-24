@@ -280,11 +280,10 @@ export default {
           categoryLabels,
           limit
         };
-        if (cacheKey && cache?.isConnected) await cache.set(cacheKey, JSON.stringify(result), 300);
+        if (cacheKey && cache?.isConnected) await cache.set(cacheKey, JSON.stringify(result), 900);
         return result;
       }
     };
   }
 };
-
 
