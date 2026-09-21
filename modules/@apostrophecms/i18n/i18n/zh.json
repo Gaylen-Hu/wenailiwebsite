@@ -622,6 +622,7 @@
     "uploadedError": "{{ count }} 个文件上传失败",
     "uploadedError_plural": "{{ count }} 个文件上传失败",
     "uploading": "正在上传 {{ name }}",
+    "uploadTooLarge": "文件过大：上传上限为 {{ maxSize }}MB。请压缩后重试。",
     "url": "URL",
     "user": "用户",
     "username": "用户名",

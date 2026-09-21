@@ -4,7 +4,7 @@
 
 ## Company
 
-- [About Wenaili](https://www.wenaili.com/about): 上海奈李信息技术有限公司（Wenaili），10年专注货代物流行业数字化营销与品牌建设，货代市场部及技术部代运营服务商
+- [About Wenaili](https://www.wenaili.com/aboutus): 上海奈李信息技术有限公司（Wenaili），10年专注货代物流行业数字化营销与品牌建设，货代市场部及技术部代运营服务商
 - [Contact Us](https://www.wenaili.com/contact): 联系方式 - 地址：上海市奉贤区场中路629号 | 电话：17367332304 | 邮箱：melanie@wenaili.com
 
 ## Services

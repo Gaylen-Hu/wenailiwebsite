@@ -203,6 +203,8 @@ apostrophe({
     'json-ld': {},
     'seo-enhanced': {},
     'security-headers': {},
+    // 上传体积上限的服务端强制校验（核心的 maxSize 只是前端提示文案）
+    'upload-limit': {},
     'robots-txt': {},
     'legacy-doc-audit': {},
     'legacy-redirects': {},

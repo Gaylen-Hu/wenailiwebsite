@@ -1,7 +1,29 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(systemctl status:*)",
+      "Bash(redis-cli:*)",
+      "Bash(pm2:*)",
+      "Bash(curl:*)",
+      "Bash(mongo:*)",
+      "Bash(mongosh:*)",
+      "Bash(node --check:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(find:*)",
+      "Bash(node -e \"const apos = require\\(''''apostrophe''''\\); console.log\\(apos\\)\")",
+      "Bash(ls:*)",
+      "Bash(npm run build:*)",
+      "Bash(sudo nginx:*)",
+      "Bash(sudo rm:*)",
+      "Bash(sudo systemctl reload:*)",
+      "Bash(sudo systemctl:*)",
+      "Bash(sudo iptables:*)",
+      "Bash(sudo apt-get install:*)",
+      "Bash(dpkg:*)",
+      "Bash(sudo iptables-save:*)",
+      "Bash(sudo tee:*)"
     ]
   }
 }
