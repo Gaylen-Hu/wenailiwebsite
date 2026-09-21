@@ -12,6 +12,14 @@ export default {
   },
 
   async init(self) {
+    // Deployment CLI tasks should exit as soon as their work is complete.
+    // A connected Redis socket would otherwise keep the Node.js event loop alive.
+    if (process.env.DISABLE_REDIS === '1') {
+      self.client = null;
+      self.isConnected = false;
+      return;
+    }
+
     // 创建 Redis 客户端
     const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 

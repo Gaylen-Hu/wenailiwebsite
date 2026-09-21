@@ -55,6 +55,7 @@ jobs:
       APOS_S3_REGION: oss-cn-hangzhou
       APOS_S3_ENDPOINT: https://oss-cn-hangzhou.aliyuncs.com
       REDIS_URL: redis://127.0.0.1:6379
+      DISABLE_REDIS: '1'
       DISABLE_SCHEDULED_PUBLISHER: '1'
 
     steps:
@@ -175,6 +176,7 @@ jobs:
           echo "Using Node $(node --version), npm $(npm --version), PM2 $(pm2 --version)."
 
           export APOS_RELEASE_ID="$EXPECTED_SHA"
+          export DISABLE_REDIS=1
           export DISABLE_SCHEDULED_PUBLISHER=1
 
           # 注意顺序：此时不能先 export NODE_ENV=production。
@@ -189,7 +191,7 @@ jobs:
           node app @apostrophecms/migration:migrate
           npm run sitemap:refresh
 
-          unset DISABLE_SCHEDULED_PUBLISHER
+          unset DISABLE_REDIS DISABLE_SCHEDULED_PUBLISHER
           mkdir -p logs
           pm2 startOrReload ecosystem.config.cjs --env production --update-env
           pm2 save
