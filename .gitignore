@@ -176,3 +176,6 @@ coverage/
 /docs
 
 start.sh
+
+# Claude Code — 本地权限/偏好，不应入库（团队共享的 settings.json 仍可提交）
+.claude/settings.local.json
