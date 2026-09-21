@@ -64,7 +64,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          node-version: 20.19.5
+          node-version-file: .nvmrc
           cache: npm
 
       - name: Install dependencies
@@ -153,6 +153,26 @@ jobs:
             echo 'Deployment stopped: the checked-out commit does not match the tested commit.' >&2
             exit 1
           fi
+
+          # NVM is commonly initialized only by interactive shells. GitHub Actions
+          # connects with a non-interactive shell, so load it explicitly and use
+          # the same Node release as CI.
+          export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+          if [[ -s "$NVM_DIR/nvm.sh" ]]; then
+            set +u
+            . "$NVM_DIR/nvm.sh"
+            nvm use --silent
+            set -u
+          fi
+
+          for required_command in node npm pm2 curl; do
+            if ! command -v "$required_command" > /dev/null 2>&1; then
+              echo "Deployment stopped: $required_command is not available on the server." >&2
+              exit 127
+            fi
+          done
+
+          echo "Using Node $(node --version), npm $(npm --version), PM2 $(pm2 --version)."
 
           export APOS_RELEASE_ID="$EXPECTED_SHA"
           export DISABLE_SCHEDULED_PUBLISHER=1
