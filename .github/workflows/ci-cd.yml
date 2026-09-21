@@ -133,6 +133,8 @@ jobs:
             -p "$DEPLOY_PORT" \
             -o BatchMode=yes \
             -o IdentitiesOnly=yes \
+            -o ServerAliveInterval=30 \
+            -o ServerAliveCountMax=10 \
             -o StrictHostKeyChecking=yes \
             "$DEPLOY_USER@$DEPLOY_HOST" \
             "DEPLOY_PATH_B64='$deploy_path_b64' EXPECTED_SHA='$GITHUB_SHA' bash -s" <<'REMOTE_SCRIPT'
@@ -188,8 +190,32 @@ jobs:
 
           export NODE_ENV=production
           npm run build
-          node app @apostrophecms/migration:migrate
-          npm run sitemap:refresh
+
+          # These tasks can scan the entire production database without writing
+          # to stdout for several minutes. Emit progress as well as SSH
+          # keepalives so NAT/firewall idle timeouts cannot sever the deploy.
+          run_with_heartbeat() {
+            local label="$1"
+            shift
+            "$@" &
+            local task_pid=$!
+
+            while kill -0 "$task_pid" 2>/dev/null; do
+              for _ in {1..6}; do
+                sleep 5
+                kill -0 "$task_pid" 2>/dev/null || break
+              done
+              if kill -0 "$task_pid" 2>/dev/null; then
+                echo "$label is still running..."
+              fi
+            done
+
+            wait "$task_pid"
+          }
+
+          run_with_heartbeat "Database migration" \
+            node app @apostrophecms/migration:migrate
+          run_with_heartbeat "Sitemap refresh" npm run sitemap:refresh
 
           unset DISABLE_REDIS DISABLE_SCHEDULED_PUBLISHER
           mkdir -p logs

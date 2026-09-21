@@ -6,6 +6,9 @@ module.exports = {
       name: 'wenaili-app',
       script: './app.js',
       cwd: __dirname,
+      // Use the same Node executable that invoked PM2. This prevents an old
+      // absolute NVM interpreter path from surviving a Node upgrade.
+      interpreter: process.execPath,
 
       // Keep a single process until shared sessions and sticky routing are enabled.
       instances: 1,
