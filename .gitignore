@@ -3,7 +3,6 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-package-lock.json
 
 # ApostropheCMS specific
 /data
@@ -177,6 +176,3 @@ coverage/
 /docs
 
 start.sh
-ecosystem.config.cjs
-ecosystem.config.jsecosystem.config.cjs
-ecosystem.config.cjs

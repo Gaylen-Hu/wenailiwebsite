@@ -19,10 +19,20 @@ import dotenv from 'dotenv';
 
 // Local development overrides stay out of git and take precedence over .env.
 dotenv.config({ path: [ '.env.local', '.env' ] });
+
+const isProduction = process.env.NODE_ENV === 'production';
+const appSecret = process.env.APOS_SECRET || (
+  isProduction ? undefined : 'development-only-app-secret'
+);
+
+if (!appSecret) {
+  throw new Error('APOS_SECRET must be set in production.');
+}
+
 apostrophe({
   root: import.meta,
   shortName: 'wenaili',
-  secret: process.env.APOS_SECRET||'my-app',
+  secret: appSecret,
   baseUrl: process.env.APOS_BASE_URL || 'http://localhost:3000',
   nestedModuleSubdirs: true,
   modules: {

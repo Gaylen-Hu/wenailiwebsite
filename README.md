@@ -1,206 +1,125 @@
-# ApostropheCMS essentials starter kit
+# 闻爱里企业官网
 
-## Getting started
+基于 ApostropheCMS 4 的企业官网项目，包含案例、新闻、FAQ、服务页面及后台内容管理。
 
-This Starter Kit, also known as a boilerplate project, serves as a template for initiating new projects and is intended for use in two main ways:
+## 环境要求
 
-1. **Using Our CLI Tool**: Run our [CLI tool](https://github.com/apostrophecms/cli) to clone this template locally, install its dependencies, and set up an initial admin user. You accomplish this using:
-   
-   `apos create <my-project-name>`
-  
-2. **Manual Setup**: Manually `git clone` this repository and install its dependencies using `npm install`. Add an initial admin user with `node app @apostrophecms/user:add admin admin`.
+- Node.js `>=20.18.1 <23`
+- npm `>=10`
+- MongoDB 7+
 
-For those who need to create multiple projects with additional base modules, consider [forking this repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/about-forks) into your organizational or personal GitHub account. Customize it to fit your needs. To use your customized template, run the following CLI command:
+## 本地开发
 
-  `apos create <project-name> --starter=<repo-name>`
+1. 复制环境变量模板并填写本地配置：
 
-Here, `<repo-name>` should be the URL of your forked repository, excluding the `https://github.com/` part.
+   ```powershell
+   Copy-Item .env.example .env.local
+   ```
 
-**Note: This template is NOT designed to be installed into an existing project.**
+2. 安装依赖并启动：
 
-## Running the project
+   ```powershell
+   npm ci
+   npm run dev
+   ```
 
-Run `npm run dev` to build the Apostrophe UI and start the site up. Remember, this is during alpha development, so we're all in "dev mode." The `dev` script will watch for saves in client-side CSS and Javascript and trigger a build and page refresh if they are detected. It will also restart the app when server-side code is saved.
+3. 访问 `http://localhost:3000`。
 
-## Making it your own
+在 Windows CMD 中切换到项目目录时，应使用：
 
-This boilerplate is designed so you can install and start running it right away. If you are starting a project that will go into production one day, there are a few things you should be sure to check:
-
-- [ ] **Update the shortname.** You don't need to perform this step if you created your project using the CLI tool. The `shortname` option in `app.js` is used for the database name (unless another is given in the `@apostrophecms/db` module). You should change this to an appropriate project name before you start adding any users or content you would like to keep.
-- [ ] **Update the Express.js session secret.** The secret is set to `undefined` initially in the `modules/@apostrophecms/express/index.js` file. You should update this to a unique string.
-- [ ] **Decide if you want hot reloading on.** This boilerplate uses nodemon to restart the app when files are changed. In `modules/@apostrophecms/asset/index.js` there is an option enabled to refresh the browser on restart. If you like this, do nothing. If you don't, remove the option or set it to `false`. The option has no effect when the app is in production.
-- [ ] **Update the `className` options in `app.js`.** This option is set for core widget types to provide CSS styling hooks. It is namespaced with `bp-` for "boilerplate." You will likely want to update that to match your general CSS class naming practices.
-
-## You really want the docs
-
-Right now, [all the juicy info is in the ApostropheCMS docs](https://docs.apostrophecms.org), so head over there and start reading! This boilerplate project is a fun introduction to the UI, but you'll want to know more to really try it out.
-
-
-## 启动与部署（PM2）
-
-本项目为 Node.js 服务端应用（ApostropheCMS + Express/Koa），前端静态资源会构建到 `apos-build/` 与 `public/`，但线上进程入口始终为仓库根目录的 `./app.js`。  
-已内置 `ecosystem.config.js`，可通过 [PM2](https://pm2.keymetrics.io/) 进行守护与多进程运行。
-
-### 1）安装依赖并构建前端资源
-
-```bash
-npm ci          # 或 npm install
-# 视项目脚本而定（若有）：
-npm run build   # 产出/更新 apos-build 与 public 静态资源
+```bat
+cd /d D:\demo\web\naili\wenailiwebsite
 ```
 
-> 说明：`apos-build/` 是 Apostrophe 管理端/前端资源的构建产物目录，不是 Node 进程入口。应用的启动文件始终是根目录下的 `app.js`。
+## GitHub Actions CI/CD
 
-### 2）本地开发启动
+工作流位于 `.github/workflows/ci-cd.yml`。
 
-开发模式（热更新/自动重载）通常使用：
+- Pull Request 到 `master`：安装锁定依赖、检查 JavaScript 语法、连接 MongoDB 7 和 Redis 7、验证数据库迁移并完成 Apostrophe 生产构建。
+- 推送到 `master`：CI 全部通过后部署到生产服务器。
+- 手动运行：在 GitHub Actions 页面使用 `workflow_dispatch`，仅从 `master` 部署。
+- 部署过程：检出本次已经通过 CI 的提交，运行 `npm ci`、生产资源构建、数据库迁移、sitemap 刷新、PM2 重载和 HTTP 健康检查。
+- 同一时间只允许一个生产部署，避免并发修改同一服务器目录。
+
+### GitHub 生产环境
+
+在仓库的 `Settings → Environments` 中创建名为 `production` 的 Environment。建议只允许 `master` 部署，并按需要开启人工审批。
+
+在该 Environment 中添加以下 Secrets：
+
+| Secret | 说明 |
+| --- | --- |
+| `DEPLOY_HOST` | 生产服务器域名或 IP |
+| `DEPLOY_PORT` | SSH 端口，通常为 `22` |
+| `DEPLOY_USER` | 非 root 部署用户 |
+| `DEPLOY_SSH_KEY` | 专用部署私钥，公钥需加入服务器 `authorized_keys` |
+| `DEPLOY_KNOWN_HOSTS` | 服务器 SSH 主机公钥记录 |
+| `DEPLOY_PATH` | 服务器上的仓库绝对路径，例如 `/var/www/wenailiwebsite` |
+
+可以在可信网络中生成 `DEPLOY_KNOWN_HOSTS` 的值：
 
 ```bash
-npm run dev
+ssh-keyscan -p 22 -H your.server.example.com
 ```
 
-或使用 PM2 的 development 环境：
+不要把主机指纹检查关闭，也不要把应用密钥放进工作流文件。
+
+### 生产服务器首次准备
+
+服务器需要安装 Git、Node.js 20、npm 10、PM2、curl，并能够访问生产 MongoDB。部署用户需要拥有项目目录的写权限，同时具备拉取 GitHub 仓库的权限。
 
 ```bash
-pm2 start ecosystem.config.js --env development
-pm2 logs
+sudo npm install --global pm2
+git clone git@github.com:Gaylen-Hu/wenailiwebsite.git /var/www/wenailiwebsite
+cd /var/www/wenailiwebsite
+cp .env.example .env
+chmod 600 .env
 ```
 
-### 3）生产部署（PM2）
+编辑服务器上的 `.env`，至少配置以下生产值：
 
-1. 准备环境变量（建议使用 `.env` / 系统级环境变量，避免把敏感信息写入仓库）  
-   例如创建 `.env` 或 `.env.production`（示例字段，仅供参考）：
-
-```bash
-NODE_ENV=production
-PORT=3000
-APOS_BASE_URL=https://your-domain.com
-APOS_MONGODB_URI=mongodb://user:pass@host:27017/dbname
-APOSTROPHE_SESSION_SECRET=please-change-me
-# 如使用对象存储（S3/OSS），请配置相应密钥（示例占位）：
+```dotenv
+APOS_BASE_URL=https://www.wenaili.com
+APOS_MONGODB_URI=mongodb://user:password@host:27017/wenaili
+APOS_SECRET=生成的长随机值
+APOSTROPHE_SESSION_SECRET=另一个长随机值
+NEWS_API_KEY=生成的长随机值
 APOS_S3_BUCKET=your-bucket
-APOS_S3_KEY=AKIAxxxx
-APOS_S3_SECRET=xxxx
-APOS_S3_REGION=your-region
-APOS_S3_ENDPOINT=https://s3.your-cloud.com
+APOS_S3_KEY=your-access-key
+APOS_S3_SECRET=your-access-secret
+APOS_S3_REGION=oss-cn-hangzhou
+APOS_S3_ENDPOINT=https://oss-cn-hangzhou.aliyuncs.com
 ```
 
-> 不建议将真实密钥直接硬编码到 `ecosystem.config.js`；更推荐在服务器环境中通过 `export` 或使用 PM2 的 `--env production` 配合外部环境文件的方式注入。
+生产密钥只保存在服务器的 `.env` 中。PM2 配置文件不包含密钥，部署时会保留服务器上的 `.env`。
 
-2. 启动生产进程：
+如果服务器目录中已有未被 Git 跟踪的 `package-lock.json` 或 `ecosystem.config.cjs`，首次启用该工作流前请先将它们备份到项目目录之外，否则 Git 会为避免覆盖本地文件而停止部署。
+
+服务器首次准备完成后，推送 `master` 或在 Actions 页面手动运行工作流即可。PM2 会使用 `ecosystem.config.cjs` 启动或无停机重载应用，并将日志写入 `logs/`。
+
+### 常用生产命令
 
 ```bash
-pm2 start ecosystem.config.js --env production
 pm2 status
-pm2 logs
-```
-
-3. 开机自启动（可选）：
-
-```bash
+pm2 logs wenaili-app
+pm2 restart wenaili-app --update-env
 pm2 save
-pm2 startup
 ```
 
-### 4）常用 PM2 命令
+## 手动生产构建
+
+如果需要在服务器上手动发布：
 
 ```bash
-pm2 start ecosystem.config.js --env production   # 启动
-pm2 restart wenaili-app                          # 重启
-pm2 stop wenaili-app                             # 停止
-pm2 logs                                         # 查看日志
-pm2 monit                                        # 监控
-pm2 list                                         # 查看列表
-pm2 delete wenaili-app                           # 删除进程
-```
-
-### 5）生产环境部署步骤
-
-**重要：在生产环境启动前，必须先构建前端资源！**
-
-```bash
-# 1. 构建前端静态资源（生成到 apos-build/ 和 public/apos-frontend/）
+export NODE_ENV=production
+export APOS_RELEASE_ID="$(git rev-parse HEAD)"
+npm ci
 npm run build
-
-# 2. 启动应用（使用生产环境配置）
-pm2 start ecosystem.config.js --env production
+node app @apostrophecms/migration:migrate
+npm run sitemap:refresh
+mkdir -p logs
+pm2 startOrReload ecosystem.config.cjs --env production --update-env
+pm2 save
 ```
 
-**为什么需要构建？**
-
-- 开发环境：Vite 提供热模块替换（HMR），资源通过开发服务器提供
-- 生产环境：必须构建静态资源，否则会尝试访问 `__vite/@vite/client` 等开发服务器路径
-- 构建后：所有前端资源会打包到 `public/apos-frontend/`，通过静态文件服务提供
-
-**验证构建是否成功：**
-
-```bash
-# 检查构建产物
-ls -la public/apos-frontend/default/
-# 应该看到 apos-bundle.css 和 apos-module-bundle.js 等文件
-```
-
-### 6）日志位置
-
-`ecosystem.config.js` 中已配置：
-
-- 合并日志：`./logs/combined.log`
-- 标准输出：`./logs/out.log`
-- 错误日志：`./logs/error.log`
-- 时间格式：`YYYY-MM-DD HH:mm Z`
-
-> 注意：生产环境建议配合 logrotate 或外部日志系统（如 ELK、Cloud Logging），避免单文件无限增长。
-
-### 7）故障排查
-
-**问题：访问时出现 `__vite/@vite/client` 404 错误**
-
-- **原因**：生产环境未构建或 Vite HMR 未禁用
-- **解决**：
-  1. 运行 `npm run build` 构建前端资源
-  2. 确认 `app.js` 中 Vite 配置：`hmr: process.env.NODE_ENV === 'production' ? false : 'public'`
-  3. 重启应用：`pm2 restart wenaili-app --env production`
-
-**问题：静态资源路径不正确**
-
-- **原因**：`APOS_BASE_URL` 环境变量未设置或设置错误
-- **解决**：在 `ecosystem.config.cjs` 的 `env_production` 中设置正确的 `APOS_BASE_URL`
-
-**问题：无法读取环境变量（如 OSS 配置）**
-
-- **原因**：环境变量未在系统或 PM2 配置中设置
-- **解决**：
-  1. **方式一（推荐）**：在服务器系统环境变量中设置
-     ```bash
-     # 编辑 ~/.bashrc 或 ~/.profile
-     export APOS_S3_KEY="your-key"
-     export APOS_S3_SECRET="your-secret"
-     export APOS_S3_BUCKET="your-bucket"
-     # ... 其他变量
-     
-     # 重新加载配置
-     source ~/.bashrc
-     
-     # 然后启动 PM2（会继承系统环境变量）
-     pm2 start ecosystem.config.cjs --env production
-     ```
-  
-  2. **方式二**：直接在 `ecosystem.config.cjs` 的 `env_production` 中硬编码（仅用于测试）
-     ```javascript
-     env_production: {
-       APOS_S3_KEY: 'your-actual-key',
-       APOS_S3_SECRET: 'your-actual-secret',
-       // ...
-     }
-     ```
-  
-  3. **验证环境变量**：
-     ```bash
-     # 运行检查脚本
-     chmod +x check-env.sh
-     ./check-env.sh
-     
-     # 或在 PM2 中查看
-     pm2 env wenaili-app
-     ```
-
+ApostropheCMS 的生产部署说明见：[Hosting Apostrophe in production](https://apostrophecms.com/docs/guide/hosting.html)。

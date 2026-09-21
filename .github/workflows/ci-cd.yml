@@ -1,0 +1,184 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  ci:
+    name: Check and build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    concurrency:
+      group: ci-${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      APOS_BASE_URL: http://127.0.0.1:3000
+      APOS_MONGODB_URI: mongodb://127.0.0.1:27017/wenaili_ci
+      APOS_SECRET: ci-only-app-secret
+      APOSTROPHE_SESSION_SECRET: ci-only-session-secret
+      NEWS_API_KEY: ci-only-news-api-key
+      APOS_S3_BUCKET: ci-placeholder
+      APOS_S3_KEY: ci-placeholder
+      APOS_S3_SECRET: ci-placeholder
+      APOS_S3_REGION: oss-cn-hangzhou
+      APOS_S3_ENDPOINT: https://oss-cn-hangzhou.aliyuncs.com
+      REDIS_URL: redis://127.0.0.1:6379
+      DISABLE_SCHEDULED_PUBLISHER: '1'
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 20.19.5
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Check JavaScript syntax
+        run: |
+          git ls-files -z -- '*.js' | xargs -0 -n 1 node --check
+          node --check ecosystem.config.cjs
+
+      - name: Run database migrations
+        run: node app @apostrophecms/migration:migrate
+        env:
+          NODE_ENV: production
+          APOS_RELEASE_ID: ${{ github.sha }}
+
+      - name: Build production assets
+        run: npm run build
+        env:
+          NODE_ENV: production
+          APOS_RELEASE_ID: ${{ github.sha }}
+
+  deploy:
+    name: Deploy production
+    if: github.ref == 'refs/heads/master' && github.event_name != 'pull_request'
+    needs: ci
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    environment: production
+    concurrency:
+      group: production
+      cancel-in-progress: false
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Deploy the tested commit over SSH
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          set -Eeuo pipefail
+
+          for name in DEPLOY_HOST DEPLOY_PORT DEPLOY_USER DEPLOY_SSH_KEY DEPLOY_KNOWN_HOSTS DEPLOY_PATH; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "Missing required production secret: ${name}" >&2
+              exit 1
+            fi
+          done
+
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$DEPLOY_SSH_KEY" > "$HOME/.ssh/deploy_key"
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/deploy_key" "$HOME/.ssh/known_hosts"
+
+          deploy_path_b64="$(printf '%s' "$DEPLOY_PATH" | base64 -w 0)"
+
+          ssh \
+            -i "$HOME/.ssh/deploy_key" \
+            -p "$DEPLOY_PORT" \
+            -o BatchMode=yes \
+            -o IdentitiesOnly=yes \
+            -o StrictHostKeyChecking=yes \
+            "$DEPLOY_USER@$DEPLOY_HOST" \
+            "DEPLOY_PATH_B64='$deploy_path_b64' EXPECTED_SHA='$GITHUB_SHA' bash -s" <<'REMOTE_SCRIPT'
+          set -Eeuo pipefail
+
+          deploy_path="$(printf '%s' "$DEPLOY_PATH_B64" | base64 -d)"
+          cd "$deploy_path"
+
+          if ! git diff --quiet || ! git diff --cached --quiet; then
+            echo 'Deployment stopped: the server checkout has tracked local changes.' >&2
+            exit 1
+          fi
+
+          git fetch --prune origin master
+          git checkout master
+          git merge --ff-only "$EXPECTED_SHA"
+
+          if [[ "$(git rev-parse HEAD)" != "$EXPECTED_SHA" ]]; then
+            echo 'Deployment stopped: the checked-out commit does not match the tested commit.' >&2
+            exit 1
+          fi
+
+          export NODE_ENV=production
+          export APOS_RELEASE_ID="$EXPECTED_SHA"
+          export DISABLE_SCHEDULED_PUBLISHER=1
+
+          npm ci --no-audit --no-fund
+          npm run build
+          node app @apostrophecms/migration:migrate
+          npm run sitemap:refresh
+
+          unset DISABLE_SCHEDULED_PUBLISHER
+          mkdir -p logs
+          pm2 startOrReload ecosystem.config.cjs --env production --update-env
+          pm2 save
+
+          for attempt in {1..20}; do
+            if curl --fail --silent --show-error \
+              http://127.0.0.1:3000/ > /dev/null; then
+              echo "Deployment health check passed for $EXPECTED_SHA."
+              exit 0
+            fi
+            sleep 3
+          done
+
+          echo 'Deployment health check failed.' >&2
+          pm2 describe wenaili-app || true
+          pm2 logs wenaili-app --lines 80 --nostream || true
+          exit 1
+          REMOTE_SCRIPT
