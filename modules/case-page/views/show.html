@@ -54,8 +54,10 @@
     </div>
   </section>
 
-  <!-- 案例正文内容 - 包含所有小部件 -->
-  {% area data.piece, 'body' %}
+  <!-- 案例正文内容 - 设计型组件保持通栏，富文本与 API HTML 使用统一文章排版 -->
+  <div class="case-detail">
+    {% area data.piece, 'body' %}
+  </div>
 
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto">

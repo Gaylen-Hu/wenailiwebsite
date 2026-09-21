@@ -1,3 +1,5 @@
-<div class="html-content-widget" data-html-content-widget>
-  {{ apos.htmlContent.sanitize(data.widget.html) | safe }}
+{# Widgets created before styleMode existed keep their original inline styling. #}
+{% set styleMode = data.widget.styleMode or 'legacy' %}
+<div class="article-content article-content--html html-content-widget html-content-widget--{{ styleMode }}" data-html-content-widget>
+  {{ apos.htmlContent.sanitize(data.widget.html, styleMode == 'legacy') | safe }}
 </div>

@@ -24,6 +24,21 @@ const allowedTags = [
   'details', 'dialog', 'summary'
 ];
 
+// New API-authored articles should use semantic markup and the shared article
+// stylesheet. The broader list above remains available for existing content.
+const semanticAllowedTags = [
+  'article', 'aside', 'section', 'h2', 'h3', 'h4', 'h5', 'h6',
+  'blockquote', 'dd', 'div', 'dl', 'dt', 'figcaption', 'figure', 'hr', 'li',
+  'ol', 'p', 'pre', 'ul',
+  'a', 'abbr', 'b', 'br', 'cite', 'code', 'del', 'em', 'i', 'ins', 'kbd',
+  'mark', 'q', 's', 'samp', 'small', 'span', 'strong', 'sub', 'sup', 'time',
+  'u', 'var', 'wbr',
+  'audio', 'img', 'picture', 'source', 'track', 'video',
+  'caption', 'col', 'colgroup', 'table', 'tbody', 'td', 'tfoot', 'th',
+  'thead', 'tr',
+  'details', 'summary'
+];
+
 const allowedAttributes = {
   '*': [ 'id', 'class', 'title', 'lang', 'dir', 'hidden', 'role', 'tabindex', 'translate', 'data-*', 'aria-*', 'style' ],
   a: [ 'href', 'target', 'rel', 'download', 'name', 'hreflang', 'type', 'referrerpolicy' ],
@@ -75,25 +90,50 @@ export default {
         type: 'string',
         label: 'HTML 代码',
         textarea: true,
-        help: '粘贴正文 HTML，保存后即可在页面中预览。为保障安全，仅移除 script、事件属性（如 onclick）、javascript: 链接等可执行内容，标签、样式、data 属性等会尽量保留。'
+        help: '推荐只使用标题、段落、列表、引用、图片和表格等语义化 HTML，由网站统一控制排版。'
+      },
+      styleMode: {
+        type: 'select',
+        label: '排版模式',
+        def: 'semantic',
+        choices: [
+          {
+            label: '统一文章样式（推荐）',
+            value: 'semantic'
+          },
+          {
+            label: '保留内联样式（兼容旧内容）',
+            value: 'legacy'
+          }
+        ],
+        help: 'API 新建内容请使用 semantic；legacy 仅用于依赖内联样式的旧文章。'
       }
     },
     group: {
       content: {
         label: 'HTML 内容',
-        fields: [ 'html' ]
+        fields: [ 'styleMode', 'html' ]
       }
     }
   },
   helpers(self) {
     return {
-      sanitize(html) {
+      sanitize(html, preserveInlineStyles = false) {
         if (typeof html !== 'string' || !html.length) {
           return '';
         }
+        const attributes = Object.fromEntries(
+          Object.entries(allowedAttributes).map(([ tag, values ]) => [
+            tag,
+            preserveInlineStyles
+              ? values
+              : values.filter(attribute => attribute !== 'style')
+          ])
+        );
+
         return sanitizeHtml(html, {
-          allowedTags,
-          allowedAttributes,
+          allowedTags: preserveInlineStyles ? allowedTags : semanticAllowedTags,
+          allowedAttributes: attributes,
           // 相对链接、#锚点 不受此限制；仅拦截 javascript: 等危险协议
           allowedSchemes: [ 'http', 'https', 'mailto', 'tel' ],
           // 允许 base64 内嵌图片/音视频

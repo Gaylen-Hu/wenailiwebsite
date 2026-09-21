@@ -12,9 +12,11 @@
 {% import 'fragments/header.html' as header %} {# 引入头部 #}
 {% set defaultTitle = '货代市场部代运营与AI/GEO优化服务商｜上海奈李' %}
 {% set defaultDescription = '上海奈李专注货代行业市场部与技术部代运营，提供货代GEO优化、AI数字化落地、官网建设、品牌设计与数据分析服务。' %}
+{% set defaultKeywords = '货代市场部代运营,货代技术部代运营,货代GEO优化,货代AI,物流数字营销,上海奈李' %}
 {% set inferredTitle = data.piece.title or data.page.title %}
-{% set seoTitle = data.piece.seoTitle or data.page.seoTitle or inferredTitle or defaultTitle %}
-{% set seoDescription = data.piece.seoDescription or data.page.seoDescription or defaultDescription %}
+{% set seoTitle = data.seoResolved.title or data.piece.seoTitle or data.page.seoTitle or inferredTitle or defaultTitle %}
+{% set seoDescription = data.seoResolved.description or data.piece.seoDescription or data.page.seoDescription or defaultDescription %}
+{% set seoKeywords = data.seoResolved.keywords or data.piece.seoKeywords or data.page.seoKeywords or defaultKeywords %}
 {% set siteName = data.global.title or 'Wenaili' %}
 {% set document = data.piece or data.page %}
 {% set isEnglish = data.locale == 'en' or (document and (document.aposLocale == 'en:published' or document.aposLocale == 'en:draft')) %}
@@ -29,15 +31,16 @@
 {% set shareImageUrl = coverImageUrl or defaultShareImageUrl %}
 {% set languageCode = 'en' if isEnglish else 'zh-CN' %}
 {% block title %}
-  {{ data.piece.seoTitle or data.page.seoTitle or data.piece.title or data.page.title or '货代市场部代运营与AI/GEO优化服务商｜上海奈李' }}
+  {{ seoTitle }}
 {% endblock %}
 
 {% block extraHead %}
   {{ super() }}
   {% set document = data.piece or data.page %}
   {% set defaultDescription = '上海奈李专注货代行业市场部与技术部代运营，提供货代GEO优化、AI数字化落地、官网建设、品牌设计与数据分析服务。' %}
-  {% set seoTitle = data.piece.seoTitle or data.page.seoTitle or data.piece.title or data.page.title or '货代市场部代运营与AI/GEO优化服务商｜上海奈李' %}
-  {% set seoDescription = data.piece.seoDescription or data.page.seoDescription or data.home.seoDescription or defaultDescription %}
+  {% set seoTitle = data.seoResolved.title or data.piece.seoTitle or data.page.seoTitle or data.piece.title or data.page.title or '货代市场部代运营与AI/GEO优化服务商｜上海奈李' %}
+  {% set seoDescription = data.seoResolved.description or data.piece.seoDescription or data.page.seoDescription or data.home.seoDescription or defaultDescription %}
+  {% set seoKeywords = data.seoResolved.keywords or data.piece.seoKeywords or data.page.seoKeywords or defaultKeywords %}
   {% set siteName = data.global.title or 'Wenaili 奈李' %}
   {% set isEnglish = data.locale == 'en' or (document and (document.aposLocale == 'en:published' or document.aposLocale == 'en:draft')) %}
   {% set pageCanonical = document._seoCanonical[0]._url if document and document._seoCanonical and document._seoCanonical.length else null %}
@@ -51,10 +54,11 @@
   {% set shareImageUrl = coverImageUrl or defaultShareImageUrl %}
   {% set languageCode = 'en' if isEnglish else 'zh-CN' %}
 
-  {% if not (data.piece.seoDescription or data.page.seoDescription or data.home.seoDescription) %}
-    <meta name="description" content="{{ defaultDescription }}">
-  {% endif %}
-  {% if not (document and document.seoRobots and document.seoRobots.length) %}
+  <meta name="description" content="{{ seoDescription }}">
+  <meta name="keywords" content="{{ seoKeywords }}">
+  {% if data.seoResolved.isNotFound %}
+    <meta name="robots" content="noindex,follow">
+  {% elseif not (document and document.seoRobots and document.seoRobots.length) %}
     <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
   {% endif %}
   {% if not (pageCanonical or pieceCanonical) %}

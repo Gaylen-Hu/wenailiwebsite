@@ -17,7 +17,8 @@
 import apostrophe from 'apostrophe';
 import dotenv from 'dotenv';
 
-dotenv.config();
+// Local development overrides stay out of git and take precedence over .env.
+dotenv.config({ path: [ '.env.local', '.env' ] });
 apostrophe({
   root: import.meta,
   shortName: 'wenaili',
@@ -54,7 +55,91 @@ apostrophe({
     },
     '@apostrophecms/rich-text-widget': {
       options: {
-        className: 'bp-rich-text'
+        className: 'bp-rich-text',
+        defaultOptions: {
+          toolbar: [
+            'styles',
+            '|',
+            'bold',
+            'italic',
+            'underline',
+            'strike',
+            '|',
+            'blockquote',
+            'bulletList',
+            'orderedList',
+            '|',
+            'alignLeft',
+            'alignCenter',
+            'alignRight',
+            '|',
+            'link',
+            'anchor',
+            'image',
+            'horizontalRule'
+          ],
+          styles: [
+            {
+              tag: 'p',
+              label: '正文'
+            },
+            {
+              tag: 'p',
+              label: '导语',
+              class: 'article-lead'
+            },
+            {
+              tag: 'p',
+              label: '提示框',
+              class: 'article-note'
+            },
+            {
+              tag: 'h2',
+              label: '二级标题'
+            },
+            {
+              tag: 'h3',
+              label: '三级标题'
+            },
+            {
+              tag: 'h4',
+              label: '四级标题'
+            },
+            {
+              tag: 'span',
+              label: '品牌强调',
+              class: 'article-highlight'
+            }
+          ],
+          insert: [
+            'image',
+            'table',
+            'horizontalRule'
+          ]
+        },
+        imageStyles: [
+          {
+            value: 'article-image-wide',
+            label: '通栏图片'
+          },
+          {
+            value: 'article-image-center',
+            label: '居中图片'
+          },
+          {
+            value: 'article-image-float-left',
+            label: '左侧环绕'
+          },
+          {
+            value: 'article-image-float-right',
+            label: '右侧环绕'
+          }
+        ],
+        linkWithType: [
+          '@apostrophecms/any-page-type',
+          'news',
+          'case'
+        ]
       }
     },
     '@apostrophecms/image-widget': {
