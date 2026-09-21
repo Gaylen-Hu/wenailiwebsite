@@ -51,6 +51,9 @@ function installWhenReady(attempt) {
     return;
   }
   if (attempt >= MAX_INSTALL_ATTEMPTS) {
+    // 本模块所有失败路径都是静默的，这里留一条日志，
+    // 便于日后排查「压缩为什么没生效」
+    console.warn('[AposImageUploadCompression] 安装超时，本次上传不会压缩');
     return;
   }
   window.setTimeout(() => installWhenReady(attempt + 1), INSTALL_RETRY_MS);
@@ -71,16 +74,26 @@ function install() {
 
   const wrapped = async function (url, options, callback) {
     // 保留 apos.http 原有的回调写法：带 callback 时直接放行
-    if (!callback && shouldHandle(url, options)) {
-      try {
-        const body = await compressFormData(options.body);
-        const patched = Object.assign({}, options, { body });
-        return await original.call(this, url, patched, callback);
-      } catch (e) {
-        // 压缩失败 → 按原样上传，不影响功能
-      }
+    if (callback || !shouldHandle(url, options)) {
+      return original.call(this, url, options, callback);
     }
-    return original.call(this, url, options, callback);
+
+    // 只把「压缩」放进 try。上传请求本身绝不能落在 catch 的射程内：
+    // 一旦上传失败（504 / 413 / 断网），会被 catch 吞掉并落到下面的
+    // 「按原样上传」，用未压缩的原始文件再发一次同样的请求 —— 既让耗时翻倍、
+    // 更容易再次失败，又可能在首次请求其实已在服务端成功（只是响应丢失）时
+    // 留下一个孤儿附件。压缩成功就一律用压缩结果，只有压缩失败才回退原文件。
+    let body = options.body;
+    try {
+      body = await compressFormData(options.body);
+    } catch (e) {
+      // 压缩失败 → 按原样上传，不影响功能
+    }
+
+    if (body === options.body) {
+      return original.call(this, url, options, callback);
+    }
+    return original.call(this, url, Object.assign({}, options, { body }), callback);
   };
 
   wrapped.__aposImageCompression = true;
@@ -164,24 +177,35 @@ async function compressImage(file) {
   }
 }
 
-// 解码时要求应用 EXIF 方向，否则手机直出的照片会躺倒
+// 解码必须应用 EXIF 方向，否则手机直出的照片会躺倒。
+// 首选 <img> 路径：HTML 规范规定 <img> 默认按 EXIF 方向渲染
+// （image-orientation: from-image），再经 drawImage 编码即可把方向「烧进」像素。
+// createImageBitmap 的 { imageOrientation: 'from-image' } 在部分浏览器会被
+// 静默忽略；一旦被忽略，重编码又会连 EXIF 方向标记一起丢掉，照片就永久躺倒，
+// 服务端 sharp 也无从纠正，因此只把它作为兜底。
 async function decode(file) {
-  if (typeof window.createImageBitmap === 'function') {
-    for (const options of [ { imageOrientation: 'from-image' }, undefined ]) {
-      try {
-        const bitmap = await window.createImageBitmap(file, options);
-        return {
-          image: bitmap,
-          width: bitmap.width,
-          height: bitmap.height,
-          release: () => bitmap.close && bitmap.close()
-        };
-      } catch (e) {
-        // 换下一种解码方式
-      }
-    }
+  const viaImg = await decodeViaImg(file);
+  if (viaImg) {
+    return viaImg;
   }
-  return decodeViaImg(file);
+  return decodeViaBitmap(file);
+}
+
+async function decodeViaBitmap(file) {
+  if (typeof window.createImageBitmap !== 'function') {
+    return null;
+  }
+  try {
+    const bitmap = await window.createImageBitmap(file, { imageOrientation: 'from-image' });
+    return {
+      image: bitmap,
+      width: bitmap.width,
+      height: bitmap.height,
+      release: () => bitmap.close && bitmap.close()
+    };
+  } catch (e) {
+    return null;
+  }
 }
 
 async function decodeViaImg(file) {

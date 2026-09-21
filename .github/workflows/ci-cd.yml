@@ -154,11 +154,17 @@ jobs:
             exit 1
           fi
 
-          export NODE_ENV=production
           export APOS_RELEASE_ID="$EXPECTED_SHA"
           export DISABLE_SCHEDULED_PUBLISHER=1
 
+          # 注意顺序：此时不能先 export NODE_ENV=production。
+          # npm 见到 NODE_ENV=production 会默认 --omit=dev，跳过 devDependencies，
+          # 而下面的 npm run build 依赖 devDependency `cross-env`，
+          # 否则会以 `cross-env: not found`（退出码 127）中止整个部署。
+          # npm run build 自身通过 cross-env 设置 NODE_ENV，无需在此提前导出。
           npm ci --no-audit --no-fund
+
+          export NODE_ENV=production
           npm run build
           node app @apostrophecms/migration:migrate
           npm run sitemap:refresh

@@ -29,17 +29,36 @@
  * uploadfs 的 S3 驱动 → 阿里云 OSS。即附件仍会经过应用服务器。
  */
 
+// 这些值一律不做兜底。uploadfs 仅在 `secret` 为真时才设置显式凭据
+// （见 node_modules/uploadfs/lib/storage/s3.js:42），空串会让 S3 客户端回退到
+// AWS SDK 的默认凭据链（AWS_ACCESS_KEY_ID/SECRET、~/.aws/credentials、
+// ECS/EC2 实例角色等）；endpoint 为空则会落到默认的 s3.amazonaws.com。
+// 也就是说配置丢失时应用照常启动、不报任何错，却把附件写到非预期的位置，
+// 直到很晚才以签名/网络错误的形式暴露。这与本仓库正在清理的
+// `|| 'changeme'` 属于同一类静默兜底，因此改为启动即校验。
+const REQUIRED = [ 'APOS_S3_KEY', 'APOS_S3_SECRET', 'APOS_S3_BUCKET', 'APOS_S3_ENDPOINT' ];
+const missing = REQUIRED.filter((name) => !process.env[name]);
+
 export default {
+  init(self) {
+    if (missing.length) {
+      throw new Error(
+        `[uploadfs] 缺少 OSS 配置：${missing.join(', ')}。` +
+        '这些值不做兜底 —— 缺失时宁可启动失败，也不要静默回退到 AWS 默认凭据链。'
+      );
+    }
+  },
+
   options: {
     uploadfs: {
       // 使用S3兼容模式（阿里云OSS兼容S3协议）
       storage: 's3',
 
       // 阿里云OSS配置
-      key: process.env.APOS_S3_KEY || '',
-      secret: process.env.APOS_S3_SECRET || '',
-      bucket: process.env.APOS_S3_BUCKET || 'wenaili',
-      endpoint: process.env.APOS_S3_ENDPOINT || '',
+      key: process.env.APOS_S3_KEY,
+      secret: process.env.APOS_S3_SECRET,
+      bucket: process.env.APOS_S3_BUCKET,
+      endpoint: process.env.APOS_S3_ENDPOINT,
 
       // 使用HTTPS
       https: true,

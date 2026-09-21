@@ -6,7 +6,7 @@
  * （见 node_modules/apostrophe/modules/@apostrophecms/attachment/index.js:1192），
  * 由 AposMediaUploaderUi.vue 显示「最大 XX MB」，服务端与前端都不做校验。
  *
- * 真正生效的服务端体积上限在 modules/@apostrophecms/express/index.js 的中间件里。
+ * 真正生效的服务端体积上限在 modules/upload-limit/index.js 的中间件里。
  *
  * 历史背景：本文件原为 index.cjs，存在两处致命问题，导致配置从未生效——
  *   1. 文件名：Apostrophe 的模块加载器只识别 index.js

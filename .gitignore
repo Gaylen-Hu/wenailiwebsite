@@ -179,3 +179,6 @@ start.sh
 
 # Claude Code — 本地权限/偏好，不应入库（团队共享的 settings.json 仍可提交）
 .claude/settings.local.json
+
+# Apostrophe 的资源发布标识（本机状态，由部署流程用 APOS_RELEASE_ID 覆盖）
+release-id
