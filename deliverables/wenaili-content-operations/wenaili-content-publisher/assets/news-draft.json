@@ -1,0 +1,16 @@
+{
+  "title": "__填写已核验的新闻标题__",
+  "category": "industry",
+  "publishedAt": "__YYYY-MM-DD__",
+  "author": "奈李资讯团队",
+  "excerpt": "__填写准确摘要__",
+  "_coverImage": [{ "_id": "__真实图片文档ID__" }],
+  "tags": [],
+  "highlight": false,
+  "readUrl": "",
+  "seoTitle": "__本篇SEO标题__",
+  "seoDescription": "__本篇SEO描述__",
+  "seoKeywords": "__关键词用逗号分隔__",
+  "seoRobots": [],
+  "body": { "items": [{ "type": "html-content", "styleMode": "semantic", "html": "__填入处理完成的news-body.html内容__" }] }
+}

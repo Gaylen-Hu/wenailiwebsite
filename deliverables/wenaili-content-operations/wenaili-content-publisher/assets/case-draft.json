@@ -1,0 +1,16 @@
+{
+  "title": "__填写真实案例标题__",
+  "category": "tech",
+  "company": "__获准公开的客户名或匿名描述__",
+  "projectPeriod": "__实际项目周期__",
+  "industry": "__实际客户行业__",
+  "summary": "__填写真实项目概述__",
+  "_coverImage": [{ "_id": "__真实图片文档ID__" }],
+  "featured": false,
+  "results": [],
+  "seoTitle": "__本篇SEO标题__",
+  "seoDescription": "__本篇SEO描述__",
+  "seoKeywords": "__关键词用逗号分隔__",
+  "seoRobots": [],
+  "body": { "items": [{ "type": "html-content", "styleMode": "semantic", "html": "__填入处理完成的case-body.html内容__" }] }
+}
