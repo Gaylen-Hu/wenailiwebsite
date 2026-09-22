@@ -44,19 +44,10 @@ export default {
         ],
         def: 'industry'
       },
-      scheduledPublish: {
-        type: 'boolean',
-        label: '定时发布',
-        def: false,
-        help: '启用后，文章将在指定的发布时间自动发布'
-      },
       publishedAt: {
         type: 'date',
         label: '发布时间',
         required: function(data, name, object, field, callback) {
-          if (data.scheduledPublish && !data.publishedAt) {
-            return callback('启用定时发布时，发布时间为必填项');
-          }
           if (!data.publishedAt) {
             return callback('发布时间为必填项');
           }
@@ -121,7 +112,7 @@ export default {
     group: {
       basics: {
         label: '基础信息',
-        fields: [ 'title', 'category', 'scheduledPublish', 'publishedAt', 'author', '_coverImage', 'excerpt', 'highlight' ]
+        fields: [ 'title', 'category', 'publishedAt', 'author', '_coverImage', 'excerpt', 'highlight' ]
       },
       metadata: {
         label: '附加信息',
@@ -153,160 +144,36 @@ export default {
     };
   },
   
-  // 添加定时发布方法
+  init(self) {
+    self.addScheduledPublishingMigration();
+  },
+
   methods(self) {
     return {
-      async startScheduledCheck() {
-        try {
-          // 每小时检查一次
-          const CHECK_INTERVAL = 60 * 60 * 1000;
-          
-          console.log('新闻模块：启动定时发布检查，间隔：1小时');
-          
-          // 立即执行一次检查（延迟5秒，让服务器完全启动）
-          setTimeout(async () => {
-            try {
-              await self.publishScheduledNews();
-            } catch (error) {
-              console.error('首次定时发布检查失败:', error);
-            }
-          }, 5000);
-          
-          // 设置定时器
-          self.scheduleInterval = setInterval(async () => {
-            try {
-              await self.publishScheduledNews();
-            } catch (error) {
-              console.error('定时发布检查失败:', error);
-            }
-          }, CHECK_INTERVAL);
-          
-          console.log('新闻模块：定时发布检查服务已成功启动');
-        } catch (error) {
-          console.error('新闻模块：启动定时检查失败:', error);
-        }
-      },
-        // 停止定时检查
-        stopScheduledCheck() {
-          if (self.scheduleInterval) {
-            clearInterval(self.scheduleInterval);
-            self.scheduleInterval = null;
-            console.log('新闻模块：定时发布检查已停止');
-          }
-        },
-        
-      // 简化版：发布定时文章
-      async publishScheduledNews() {
-        const cache = self.apos.modules['cache-layer'];
-        const lockKey = 'locks:news:scheduled-publish';
-        const lockToken = `${process.pid}:${Date.now()}:${Math.random()}`;
-        let ownsLock = false;
+      addScheduledPublishingMigration() {
+        self.apos.migration.add('wenaili:news-scheduled-publishing-v2', async () => {
+          await self.apos.migration.eachDoc({
+            type: self.__meta.name,
+            scheduledPublish: { $type: 'bool' }
+          }, async doc => {
+            let scheduledPublish = null;
 
-        try {
-          const req = self.apos.task.getReq();
-          if (cache?.isConnected && cache.client) {
-            try {
-              const lockResult = await cache.client.set(lockKey, lockToken, {
-                NX: true,
-                EX: 300
-              });
-              if (lockResult !== 'OK') {
-                return;
+            if (doc.scheduledPublish && doc.publishedAt) {
+              const date = new Date(doc.publishedAt);
+              if (!Number.isNaN(date.getTime())) {
+                scheduledPublish = date.toISOString();
               }
-              ownsLock = true;
-            } catch (error) {
-              console.warn('定时发布锁不可用，继续使用单实例发布流程:', error.message);
             }
-          }
 
-          const now = new Date();
-          
-          // 使用标准的 find 方法，不重写它
-          const scheduledPieces = await self.find(req, {
-            scheduledPublish: true,
-            publishedAt: { $lte: now },
-            aposMode: 'draft',
-            archived: { $ne: true }
-          }).toArray();
-          
-          if (scheduledPieces.length === 0) {
-            console.log(`没有需要发布的文章`);
-            return;
-          }
-          
-          console.log(`找到 ${scheduledPieces.length} 篇文章`);
-          
-          let publishedCount = 0;
-          
-          for (const piece of scheduledPieces) {
-            try {
-              await self.update(req, {
-                ...piece,
-                aposMode: 'published'
-              });
-              
-              publishedCount++;
-              console.log(`✓ 已发布: ${piece.title}`);
-              
-            } catch (error) {
-              console.error(`发布失败: ${piece.title}`, error.message);
-            }
-          }
-          
-          console.log(`完成，发布 ${publishedCount} 篇文章`);
-          
-        } catch (error) {
-          console.error('定时发布失败:', error);
-        } finally {
-          if (ownsLock && cache?.client) {
-            try {
-              await cache.client.eval(
-                'if redis.call("get", KEYS[1]) == ARGV[1] then return redis.call("del", KEYS[1]) else return 0 end',
-                {
-                  keys: [ lockKey ],
-                  arguments: [ lockToken ]
-                }
-              );
-            } catch (error) {
-              console.error('定时发布锁释放失败:', error.message);
-            }
-          }
-        }
+            await self.apos.doc.db.updateOne({ _id: doc._id }, {
+              $set: { scheduledPublish }
+            });
+          });
+        });
       }
     };
   },
 
-  tasks(self) {
-    return {
-      // 简化的命令行任务
-      publishScheduled: {
-        usage: '手动发布定时文章\n用法: node app news:publishScheduled',
-        async task(argv) {
-          await self.publishScheduledNews();
-        }
-      }
-    };
-  },
-
-  
-  // 使用 init 方法启动定时任务（更简单的方式）
-  async init(self) {
-    // Build and verification commands can opt out without changing production behavior.
-    if (process.env.DISABLE_SCHEDULED_PUBLISHER === '1') {
-      return;
-    }
-
-    // 使用 setTimeout 延迟启动，确保所有模块都已初始化完成
-    setTimeout(async () => {
-      try {
-        await self.startScheduledCheck();
-      } catch (error) {
-        console.error('新闻模块：定时发布服务启动失败:', error);
-      }
-    }, 10000); // 10秒后启动
-  },
-  
-  // 其他方法保持不变...
   handlers(self) {
     return {
       afterSave: {
@@ -360,7 +227,7 @@ export default {
           req.locale || req.data?.locale || 'default',
           JSON.stringify(data)
         );
-        if (cacheKey && cache?.isConnected) {
+        if (cacheKey && cache?.canCache(req)) {
           const cached = await cache.get(cacheKey);
           if (cached) return JSON.parse(cached);
         }
@@ -451,7 +318,7 @@ export default {
           buttonLabel,
           categoryLabels
         };
-        if (cacheKey && cache?.isConnected) await cache.set(cacheKey, JSON.stringify(result), 900);
+        if (cacheKey && cache?.canCache(req)) await cache.set(cacheKey, JSON.stringify(result), 900);
         return result;
       }
     };

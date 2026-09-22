@@ -1,0 +1,19 @@
+{
+  "301": "永久重定向（状态码 301）",
+  "302": "临时重定向（状态码 302）",
+  "errorInfiniteRedirect": "无限重定向：{{ originalSlug }} 不能与 {{ external }} 相同",
+  "external": "URL",
+  "forwardQuery": "转发查询参数",
+  "ignoreQuery": "匹配时忽略查询参数",
+  "label": "重定向",
+  "newPage": "目标页面",
+  "originalSlug": "旧 URL",
+  "originalSlugHelp": "请以斜杠开头，例如 /old-url",
+  "pluralLabel": "重定向管理",
+  "statusCode": "重定向类型",
+  "statusCodeHtmlHelp": "<ul><li>临时调整或测试时使用<strong>临时重定向</strong>。</li><li>确认无误后使用<strong>永久重定向</strong>，更符合 SEO 最佳实践。搜索引擎会缓存永久重定向，请仔细检查。</li></ul>",
+  "title": "说明",
+  "urlType": "链接类型",
+  "urlTypeExternal": "URL",
+  "urlTypeInternal": "站内页面"
+}

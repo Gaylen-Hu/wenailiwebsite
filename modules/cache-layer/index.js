@@ -12,8 +12,7 @@ export default {
   },
 
   async init(self) {
-    // Deployment CLI tasks should exit as soon as their work is complete.
-    // A connected Redis socket would otherwise keep the Node.js event loop alive.
+    self.prefix = `${process.env.REDIS_CACHE_PREFIX || 'wenaili:core'}:business:`;
     if (process.env.DISABLE_REDIS === '1') {
       self.client = null;
       self.isConnected = false;
@@ -25,7 +24,9 @@ export default {
 
     self.client = createClient({
       url: redisUrl,
+      disableOfflineQueue: true,
       socket: {
+        connectTimeout: 3000,
         reconnectStrategy: (retries) => {
           if (retries > 10) {
             console.error('[Cache-Layer] Redis 重连失败，已达到最大重试次数');
@@ -42,15 +43,15 @@ export default {
       }
     });
 
-    self.client.on('connect', () => {
+    self.client.on('ready', () => {
       self.isConnected = true;
       console.log('[Cache-Layer] Redis 已连接');
     });
 
-    self.client.on('disconnect', () => {
+    self.client.on('reconnecting', () => {
       self.isConnected = false;
-      console.warn('[Cache-Layer] Redis 已断开连接');
     });
+    self.client.on('end', () => { self.isConnected = false; });
 
     try {
       await self.client.connect();
@@ -62,8 +63,25 @@ export default {
     }
   },
 
+  handlers(self) {
+    return {
+      'apostrophe:destroy': {
+        async closeRedisConnection() {
+          if (self.client?.isOpen) {
+            self.client.destroy();
+          }
+          self.isConnected = false;
+        }
+      }
+    };
+  },
+
   methods(self) {
     return {
+      canCache(req) {
+        return self.isConnected && !req.user && req.mode === 'published' &&
+          !req.query?.aposShareKey && !req.query?.aposShare;
+      },
       /**
        * 获取缓存数据
        * @param {string} key - 缓存键
@@ -75,7 +93,7 @@ export default {
         }
 
         try {
-          const value = await self.client.get(key);
+          const value = await self.client.get(self.prefix + key);
           if (self.options.debug && value) {
             console.log(`[Cache-Layer] 命中缓存: ${key}`);
           }
@@ -99,7 +117,7 @@ export default {
         }
 
         try {
-          await self.client.setEx(key, ttl, value);
+          await self.client.setEx(self.prefix + key, ttl, value);
           if (self.options.debug) {
             console.log(`[Cache-Layer] 设置缓存: ${key} (TTL: ${ttl}s)`);
           }
@@ -121,7 +139,7 @@ export default {
         }
 
         try {
-          await self.client.del(key);
+          await self.client.del(self.prefix + key);
           if (self.options.debug) {
             console.log(`[Cache-Layer] 删除缓存: ${key}`);
           }
@@ -144,7 +162,7 @@ export default {
 
         try {
           let deleted = 0;
-          for await (const keys of self.client.scanIterator({ MATCH: pattern, COUNT: 100 })) {
+          for await (const keys of self.client.scanIterator({ MATCH: self.prefix + pattern, COUNT: 100 })) {
             if (keys.length) {
               deleted += await self.client.unlink(keys);
             }
@@ -204,7 +222,7 @@ export default {
         }
 
         try {
-          await self.client.flushDb();
+          await self.delPattern('*');
           console.log('[Cache-Layer] 已清空所有缓存');
           return true;
         } catch (error) {

@@ -17,8 +17,13 @@
 import apostrophe from 'apostrophe';
 import dotenv from 'dotenv';
 
-// Local development overrides stay out of git and take precedence over .env.
-dotenv.config({ path: [ '.env.local', '.env' ] });
+// Production never loads local development overrides. Explicit process
+// variables (CI/PM2) retain precedence over values in these files.
+dotenv.config({
+  path: process.env.NODE_ENV === 'production'
+    ? [ '.env.production', '.env' ]
+    : [ '.env.local', '.env' ]
+});
 
 const isProduction = process.env.NODE_ENV === 'production';
 const appSecret = process.env.APOS_SECRET || (
@@ -36,6 +41,10 @@ apostrophe({
   baseUrl: process.env.APOS_BASE_URL || 'http://localhost:3000',
   nestedModuleSubdirs: true,
   modules: {
+    // DISABLE_REDIS=1 keeps the core MongoDB cache for offline development.
+    ...(process.env.DISABLE_REDIS === '1' ? {} : {
+      '@apostrophecms/cache-redis': {}
+    }),
    
     // Apostrophe module configuration
     // *******************************
@@ -56,6 +65,13 @@ apostrophe({
       }
     },
     '@apostrophecms/seo': {},
+    '@apostrophecms/scheduled-publishing': {},
+    '@apostrophecms/redirect': {
+      options: {
+        // Permanent redirects are the safe default for retired production URLs.
+        statusCode: 301
+      }
+    },
     '@apostrophecms/global': {
       options: {
         seoGoogleAnalytics: true,

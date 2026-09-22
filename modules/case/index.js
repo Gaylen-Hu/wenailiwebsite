@@ -162,7 +162,7 @@ export default {
           req.locale || req.data?.locale || 'default',
           JSON.stringify(data)
         );
-        if (cacheKey && cache?.isConnected) {
+        if (cacheKey && cache?.canCache(req)) {
           const cached = await cache.get(cacheKey);
           if (cached) return JSON.parse(cached);
         }
@@ -280,7 +280,7 @@ export default {
           categoryLabels,
           limit
         };
-        if (cacheKey && cache?.isConnected) await cache.set(cacheKey, JSON.stringify(result), 900);
+        if (cacheKey && cache?.canCache(req)) await cache.set(cacheKey, JSON.stringify(result), 900);
         return result;
       }
     };

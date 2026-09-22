@@ -159,12 +159,12 @@ export default {
         cursor.sort({ publishedAt: -1, createdAt: -1 });
 
         // 使用缓存获取标签列表
-        const cacheKey = 'news:tags:list';
+        const cacheKey = `news:tags:list:${req.locale}`;
         const cache = self.apos.modules['cache-layer'];
 
         let availableTags = [];
 
-        if (cache && cache.isConnected) {
+        if (cache?.canCache(req)) {
           // 尝试从缓存获取
           availableTags = await cache.getOrSet(
             cacheKey,

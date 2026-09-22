@@ -55,8 +55,8 @@ jobs:
       APOS_S3_REGION: oss-cn-hangzhou
       APOS_S3_ENDPOINT: https://oss-cn-hangzhou.aliyuncs.com
       REDIS_URL: redis://127.0.0.1:6379
-      DISABLE_REDIS: '1'
-      DISABLE_SCHEDULED_PUBLISHER: '1'
+      DISABLE_REDIS: '0'
+      REDIS_CACHE_PREFIX: wenaili:ci
 
     steps:
       - name: Check out repository
@@ -81,6 +81,9 @@ jobs:
         env:
           NODE_ENV: production
           APOS_RELEASE_ID: ${{ github.sha }}
+
+      - name: Verify Redis cache
+        run: node app @apostrophecms/cache:verify-redis
 
       - name: Build production assets
         run: npm run build
@@ -168,7 +171,7 @@ jobs:
             set -u
           fi
 
-          for required_command in node npm pm2 curl; do
+          for required_command in node npm pm2 curl crontab; do
             if ! command -v "$required_command" > /dev/null 2>&1; then
               echo "Deployment stopped: $required_command is not available on the server." >&2
               exit 127
@@ -179,7 +182,6 @@ jobs:
 
           export APOS_RELEASE_ID="$EXPECTED_SHA"
           export DISABLE_REDIS=1
-          export DISABLE_SCHEDULED_PUBLISHER=1
 
           # 注意顺序：此时不能先 export NODE_ENV=production。
           # npm 见到 NODE_ENV=production 会默认 --omit=dev，跳过 devDependencies，
@@ -190,6 +192,9 @@ jobs:
 
           export NODE_ENV=production
           npm run build
+
+          # Runtime tasks must populate the same Redis cache as the website.
+          unset DISABLE_REDIS
 
           # These tasks can scan the entire production database without writing
           # to stdout for several minutes. Emit progress as well as SSH
@@ -216,9 +221,23 @@ jobs:
           run_with_heartbeat "Database migration" \
             node app @apostrophecms/migration:migrate
           run_with_heartbeat "Sitemap refresh" npm run sitemap:refresh
+          run_with_heartbeat "Scheduled publishing update" \
+            bash scripts/run-scheduled-publishing.sh
 
-          unset DISABLE_REDIS DISABLE_SCHEDULED_PUBLISHER
+          # Keep one idempotent cron entry for the official scheduled-publishing
+          # task. The runner loads NVM and prevents overlapping executions.
           mkdir -p logs
+          cron_marker="# wenaili-scheduled-publishing"
+          printf -v scheduled_script_q '%q' "$deploy_path/scripts/run-scheduled-publishing.sh"
+          printf -v scheduled_log_q '%q' "$deploy_path/logs/scheduled-publishing.log"
+          current_crontab="$(crontab -l 2>/dev/null || true)"
+          {
+            printf '%s\n' "$current_crontab" | grep -Fv "$cron_marker" || true
+            printf '*/5 * * * * bash %s >> %s 2>&1 %s\n' \
+              "$scheduled_script_q" "$scheduled_log_q" "$cron_marker"
+          } | sed '/^[[:space:]]*$/d' | crontab -
+
+          unset DISABLE_REDIS
           pm2 startOrReload ecosystem.config.cjs --env production --update-env
           pm2 save
 

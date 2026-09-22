@@ -6,22 +6,64 @@ const favicon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" rol
 </svg>`;
 
 export default {
-  middleware() {
-    const redirects = {
-      '/aboutme': '/aboutus',
-      '/aboutme/contact': '/contact',
-      '/about': '/aboutus',
-      '/news': '/new',
-      '/server': '/services',
-      '/faqs': '/faq',
-      '/case': '/cases',
-      '/favicon.ico': '/favicon.svg',
-      '/services/technology': '/services/tech',
-      '/services/branding': '/services/brand',
-      '/services/ai': '/services/team'
-    };
+  init(self) {
+    self.addLegacyRedirectMigration();
+  },
+  methods(self) {
     return {
-      legacyRedirects: {
+      addLegacyRedirectMigration() {
+        self.apos.migration.add('wenaili:legacy-redirects-v1', async () => {
+          const redirectModule = self.apos.modules['@apostrophecms/redirect'];
+          const req = self.apos.task.getReq();
+          const redirects = {
+            '/aboutme': '/aboutus',
+            '/aboutme/contact': '/contact',
+            '/about': '/aboutus',
+            '/news': '/new',
+            '/server': '/services',
+            '/faqs': '/faq',
+            '/case': '/cases',
+            '/favicon.ico': '/favicon.svg',
+            '/services/technology': '/services/tech',
+            '/services/branding': '/services/brand',
+            '/services/ai': '/services/team'
+          };
+
+          let imported = 0;
+
+          for (const [ source, destination ] of Object.entries(redirects)) {
+            for (const localePrefix of [ '', '/en' ]) {
+              const redirectSlug = `${localePrefix}${source}`;
+              const existing = await redirectModule.find(req, {
+                redirectSlug
+              }).toObject();
+
+              if (existing) {
+                continue;
+              }
+
+              await redirectModule.insert(req, {
+                ...redirectModule.newInstance(),
+                title: `Legacy redirect: ${redirectSlug}`,
+                redirectSlug,
+                urlType: 'external',
+                externalUrl: `${localePrefix}${destination}`,
+                statusCode: '301',
+                ignoreQueryString: true,
+                forwardQueryString: false
+              });
+              imported++;
+            }
+          }
+
+          self.apos.util.info(`Imported ${imported} legacy redirects.`);
+        });
+      }
+    };
+  },
+  middleware() {
+    return {
+      legacyFavicon: {
         before: '@apostrophecms/express',
         middleware(req, res, next) {
           const normalizedPath = req.path.replace(/\/+$/, '') || '/';
@@ -38,11 +80,7 @@ export default {
             return res.send(favicon);
           }
 
-          const destination = redirects[localPath];
-
-          return destination
-            ? res.redirect(301, `${localePrefix}${destination}`)
-            : next();
+          return next();
         }
       }
     };

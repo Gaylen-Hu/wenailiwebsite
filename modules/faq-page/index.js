@@ -62,12 +62,12 @@ export default {
         }
         
         // 使用缓存获取分类列表
-        const cacheKey = 'faq:categories:list';
+        const cacheKey = `faq:categories:list:${req.locale}`;
         const cache = self.apos.modules['cache-layer'];
 
         let categories = [];
 
-        if (cache && cache.isConnected) {
+        if (cache?.canCache(req)) {
           // 尝试从缓存获取
           categories = await cache.getOrSet(
             cacheKey,
